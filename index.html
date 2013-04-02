@@ -39,7 +39,7 @@
 	<script type="text/javascript">
 	$(document).ready(function(){
 		var options = {
-			init: function( $left, $right ){			
+			startUp: function( $left, $right ){			
 				$right.find('option').each(function(index, option){
 					$left.find('option[value="' + option.value + '"]').remove();
 				});
@@ -55,7 +55,7 @@
 			}
 		};
 	
-		$('#from').mcs(options);
+		$('#from').multiselect(options);
 	});
 	</script>
 

@@ -1,5 +1,5 @@
 ;(function( $ ){
-	$.fn.mcs = function( config ) {
+	$.fn.multiselect = function( config ) {
 		var $this = this;
 		
 		var defaults = {
