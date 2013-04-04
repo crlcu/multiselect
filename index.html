@@ -52,7 +52,7 @@
 		
 		<div class="row-fluid">
 			<div class="span5">
-				<select name="multiselect" id="from" class="span12" size="8" multiple="multiple" data-right="#to" data-right-all="#rightAll" data-right-selected="#rightSelected" data-left-all="#leftAll" data-left-selected="#leftSelected">
+				<select name="from" id="multiselect" class="span12" size="8" multiple="multiple">
 					<option value="1">Item 1</option>
 					<option value="2">Item 5</option>
 					<option value="2">Item 2</option>
@@ -62,14 +62,14 @@
 			</div>
 			
 			<div class="span2">
-				<button type="button" id="rightAll" class="btn btn-block"><i class="icon-forward"></i></button>
-				<button type="button" id="rightSelected" class="btn btn-block"><i class="icon-chevron-right"></i></button>
-				<button type="button" id="leftSelected" class="btn btn-block"><i class="icon-chevron-left"></i></button>
-				<button type="button" id="leftAll" class="btn btn-block"><i class="icon-backward"></i></button>
+				<button type="button" id="multiselect_rightAll" class="btn btn-block"><i class="icon-forward"></i></button>
+				<button type="button" id="multiselect_rightSelected" class="btn btn-block"><i class="icon-chevron-right"></i></button>
+				<button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="icon-chevron-left"></i></button>
+				<button type="button" id="multiselect_leftAll" class="btn btn-block"><i class="icon-backward"></i></button>
 			</div>
 			
 			<div class="span5">
-				<select name="to" id="to" class="span12" size="8" multiple="multiple"></select>
+				<select name="to" id="multiselect_to" class="span12" size="8" multiple="multiple"></select>
 			</div>
 		</div>
 		
@@ -148,7 +148,7 @@ $('#from').multiselect(options);</pre>
 		// make code pretty
 		window.prettyPrint && prettyPrint();
 		
-		$('#from').multiselect();
+		$('#multiselect').multiselect();
 	});
 	</script>
 
