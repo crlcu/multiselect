@@ -13,10 +13,13 @@
 #home {
 	padding-top: 60px;
 }
-
+#home h1{
+	margin-bottom: 20px;
+}
 #demo,
 #examples,
 #support,
 #download {
 	padding-top: 40px;
 }
+
