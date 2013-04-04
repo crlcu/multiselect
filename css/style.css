@@ -1,0 +1,22 @@
+.github.ribbon {
+	position: fixed;
+	display: block;
+	top: 40px;
+	right: 0;
+	border: 0;
+}
+
+.prettyprint {
+	padding: 10px!important;
+}
+
+#home {
+	padding-top: 60px;
+}
+
+#demo,
+#examples,
+#support,
+#download {
+	padding-top: 40px;
+}
