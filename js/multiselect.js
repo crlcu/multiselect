@@ -1,6 +1,6 @@
 /*
  * Multiselect
- * https://github.com/crlcu/multiselect
+ * http://crlcu.github.com/multiselect/
  *
  * Copyright (c) 2013 Adrian Crisan
  * Licensed under the MIT license.
@@ -21,13 +21,14 @@
 				throw "$ is undefined or not a function";
 			}
 			
+			var id = $select.attr('id');
 			this.left = $select;
-			this.right = $( settings.right );
+			this.right = $( settings.right ).lenght ? $( settings.right ) : $('#' + id + '_to');
 			this.actions = {					
-				leftAll: 		$( settings.leftAll ),
-				rightAll: 		$( settings.rightAll ),
-				leftSelected:	$( settings.leftSelected ),
-				rightSelected:	$( settings.rightSelected )
+				leftAll: 		$( settings.leftAll ).length ? $( settings.leftAll ) : $('#' + id + '_leftAll'),
+				rightAll: 		$( settings.rightAll ).length ? $( settings.leftAll ) : $('#' + id + '_rightAll'),
+				leftSelected:	$( settings.leftSelected ).length ? $( settings.leftAll ) : $('#' + id + '_leftSelected'),
+				rightSelected:	$( settings.rightSelected ).length ? $( settings.leftAll ) : $('#' + id + '_rightSelected')
 			};
 			
 			delete settings.leftAll;
