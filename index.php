@@ -40,9 +40,27 @@
 	<div id="home" class="container">
 		<div class="hero-unit">
 			<h1>Multiselect</h1>
-			<p class="lead">This is a small <strong>jQuery plugin</strong> that helps you improve the <strong>user experience</strong> regarding the use of multiple selects</p>
-			<p>It is very <strong>easy to install</strong> and can be <strong>easily customized</strong> because it has <strong>callbaks</strong> for each event
-				and the sorting can be defined in function of the needs of the multiple selects.</p>
+			<p>This is a small  <a href="http://jquery.com/" target="_blank">jQuery</a> plugin that helps you improve the
+				<strong>user experience</strong> regarding the use of multiple cross selects.
+			</p>
+			<p>It is very <strong>easy to install</strong> and can be <strong>easily customized</strong> because it has <strong>callbaks</strong> for many events, such as :
+				<div class="clearfix">
+					<ul class="span4">
+						<li><a href="#beforeMoveOneToRight">beforeMoveOneToRight</a></li>
+						<li><a href="#beforeMoveOneToLeft">beforeMoveOneToLeft</a></li>
+						<li><a href="#beforeMoveAllToRight">beforeMoveAllToRight</a></li>
+						<li><a href="beforeMoveAllToLeft">beforeMoveAllToLeft</a></li>
+					</ul>
+					
+					<ul class="span4">
+						<li><a href="#afterMoveOneToRight">afterMoveOneToRight</a></li>
+						<li><a href="#afterMoveOneToLeft">afterMoveOneToLeft</a></li>
+						<li><a href="#afterMoveAllToRight">afterMoveAllToRight</a></li>
+						<li><a href="afterMoveAllToLeft">afterMoveAllToLeft</a></li>
+					</ul>
+				</div>
+			</p>
+			<p>It also has a <a href="#sort">sort</a> function that can be defined in order of your needs for each multiple select.</p>
 			<p>You can <strong>fully customize</strong> it via <strong>CSS</strong>, you can extend it and have as <strong>many multi selects</strong> as you want on the page.</p>
 
 			<p><a href="#documentation" class="btn btn-primary btn-large">Documentation</a></p>
