@@ -16,14 +16,17 @@
 		@class Multiselect
 		@constructor
 		**/
-		function Multiselect( $select, settings ) {			
+		function Multiselect( $select, settings ) {
 			if ( typeof $ != 'function' ) {
 				throw "$ is undefined or not a function";
 			}
 			
 			var id = $select.attr('id');
+			
 			this.left = $select;
-			this.right = $( settings.right ).lenght ? $( settings.right ) : $('#' + id + '_to');
+			this.right = $( settings.right );
+			
+			this.right = this.right.length ? $( settings.right ) : $('#' + id + '_to');
 			this.actions = {					
 				leftAll: 		$( settings.leftAll ).length ? $( settings.leftAll ) : $('#' + id + '_leftAll'),
 				rightAll: 		$( settings.rightAll ).length ? $( settings.leftAll ) : $('#' + id + '_rightAll'),
