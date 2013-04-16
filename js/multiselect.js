@@ -26,12 +26,17 @@
 			this.left = $select;
 			this.right = $( settings.right );
 			
-			this.right = this.right.length ? $( settings.right ) : $('#' + id + '_to');
+			var $leftAll = $( settings.leftAll );
+			var $rightAll = $( settings.rightAll );
+			var $leftSelected = $( settings.leftSelected );
+			var $rightSelected = $( settings.rightSelected );
+			
+			this.right = this.right.length ? this.right : $('#' + id + '_to');
 			this.actions = {					
-				leftAll: 		$( settings.leftAll ).length ? $( settings.leftAll ) : $('#' + id + '_leftAll'),
-				rightAll: 		$( settings.rightAll ).length ? $( settings.leftAll ) : $('#' + id + '_rightAll'),
-				leftSelected:	$( settings.leftSelected ).length ? $( settings.leftAll ) : $('#' + id + '_leftSelected'),
-				rightSelected:	$( settings.rightSelected ).length ? $( settings.leftAll ) : $('#' + id + '_rightSelected')
+				leftAll: 		$leftAll.length ? $leftAll : $('#' + id + '_leftAll'),
+				rightAll: 		$rightAll.length ? $rightAll : $('#' + id + '_rightAll'),
+				leftSelected:	$leftSelected.length ? $leftSelected : $('#' + id + '_leftSelected'),
+				rightSelected:	$rightSelected.length ? $rightSelected : $('#' + id + '_rightSelected')
 			};
 			
 			delete settings.leftAll;
