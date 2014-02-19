@@ -222,7 +222,11 @@
 			 * will be executed once
 			 * @method startUp
 			**/
-			startUp: function( $left, $right ) {},
+			startUp: function( $left, $right ) {
+				$right.find('option').each(function(index, option){
+					$left.find('option[value="' + option.value + '"]').remove();
+				});
+			},
 			/*
 			 *  will be executed each time before moving one option to right
 			 *  IMPORTANT : this method must return boolean value
