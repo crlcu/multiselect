@@ -30,14 +30,14 @@
 				<div class="nav-collapse collapse">
 					<ul class="nav">
 						<li class=""><a href="#home">Home</a></li>
+						<li class=""><a href="#documentation">Documentation</a></li>
+						<li class=""><a href="#browser-support">Browser Support</a></li>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Demo <b class="caret"></b></a>
 							<ul class="dropdown-menu">
-							  <li><a href="#demo">Zero configuration</a></li>
+							  <li><a href="#demo-zero-configuration">Zero configuration</a></li>
 							</ul>
 						</li>
-						<li class=""><a href="#documentation">Documentation</a></li>
-						<li class=""><a href="#browser-support">Browser Support</a></li>
 						<li class=""><a href="#download">Download</a></li>
 					</ul>
 				</div>
@@ -75,8 +75,163 @@
 		</div>
 	</div>
 	
+	<div id="documentation" class="container">
+		<div class="page-header"><h3>Documentation</h3></div>
+		
+		<h4>Options:</h4>
+		
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>type</th>
+					<th>default</th>
+					<th>description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>right</td>
+					<td><code>string</code> jQuery selector</td>
+					<td><code>multiselect_id</code>_to</td>
+					<td>The <code>select</code> where the options are moved to</td>
+				</tr>
+				<tr>
+					<td>rightSelected</td>
+					<td><code>string</code> jQuery selector</td>
+					<td><code>multiselect_id</code>_rightSelected</td>
+					<td>The <code>button</code> that moves selected options from left to right</td>
+				</tr>
+				<tr>
+					<td>rightAll</td>
+					<td><code>string</code> jQuery selector</td>
+					<td><code>multiselect_id</code>_rightAll</td>
+					<td>The <code>button</code> that moves all options from left to right</td>
+				</tr>
+				<tr>
+					<td>leftSelected</td>
+					<td><code>string</code> jQuery selector</td>
+					<td><code>multiselect_id</code>_leftSelected</td>
+					<td>The <code>button</code> that moves selected options from right to left</td>
+				</tr>
+				<tr>
+					<td>leftAll</td>
+					<td><code>string</code> jQuery selector</td>
+					<td><code>multiselect_id</code>_leftAll</td>
+					<td>The <code>button</code> that moves all options from right to left</td>
+				</tr>
+				<tr>
+					<td>startUp</td>
+					<td><code>function</code> or <code>false</code></td>
+					<td><code>remove</code> from left all options that are present in right</td>
+					<td>Whatever you want to do with <code>$left</code> and <code>$right</code> elements when the <code>multiselect</code> plugin is initialised</td>
+				</tr>
+				<tr>
+					<td>sort</td>
+					<td><code>function</code> or <code>false</code></td>
+					<td><code>sort</code> options alphabetically</td>
+					<td>Will sort options when an action happend into right or left elements.</td>
+				</tr>
+				<tr>
+					<td>beforeMoveOneToRight</td>
+					<td><code>function</code></td>
+					<td>return true</td>
+					<td>
+						Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option</code> elements before they are moved to right.
+						Keep in mind that this function must return a boolean value.<br/>
+						<code>true</code> will let the action to be performed.<br/>
+						<code>false</code> will stop the action
+					</td>
+				</tr>
+				<tr>
+					<td>afterMoveOneToRight</td>
+					<td><code>function</code></td>
+					<td>no action</td>
+					<td>
+						Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option</code> elements after they are moved to right.
+					</td>
+				</tr>
+				<tr>
+					<td>beforeMoveAllToRight</td>
+					<td><code>function</code></td>
+					<td>return true</td>
+					<td>
+						Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option</code> elements before they are moved to right with move all action.
+						Keep in mind that this function must return a boolean value.<br/>
+						<code>true</code> will let the action to be performed.<br/>
+						<code>false</code> will stop the action
+					</td>
+				</tr>
+				<tr>
+					<td>afterMoveAllToRight</td>
+					<td><code>function</code></td>
+					<td>no action</td>
+					<td>
+						Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option</code> elements after they are moved to right with move all action.
+					</td>
+				</tr>
+				<tr>
+					<td>beforeMoveOneToLeft</td>
+					<td><code>function</code></td>
+					<td>return true</td>
+					<td>
+						Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option</code> elements before they are moved to left.
+						Keep in mind that this function must return a boolean value.<br/>
+						<code>true</code> will let the action to be performed.<br/>
+						<code>false</code> will stop the action
+					</td>
+				</tr>
+				<tr>
+					<td>afterMoveOneToLeft</td>
+					<td><code>function</code></td>
+					<td>no action</td>
+					<td>
+						Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option</code> elements after they are moved to left.
+					</td>
+				</tr>
+				<tr>
+					<td>beforeMoveAllToLeft</td>
+					<td><code>function</code></td>
+					<td>return true</td>
+					<td>
+						Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option</code> elements before they are moved to left with move all action.
+						Keep in mind that this function must return a boolean value.<br/>
+						<code>true</code> will let the action to be performed.<br/>
+						<code>false</code> will stop the action
+					</td>
+				</tr>
+				<tr>
+					<td>afterMoveAllToLeft</td>
+					<td><code>function</code></td>
+					<td>no action</td>
+					<td>
+						Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option</code> elements after they are moved to left with move all action.
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<div id="browser-support" class="container">
+		<div class="page-header"><h3>Browser Support</h3></div>
+		
+		<h4>The following browsers are supported:</h4>
+		
+		<div class="row-fluid">
+			<ul>
+				<li>Internet Explorer 7+</li>
+				<li>Google Chrome</li>
+				<li>Mozilla Firefox</li>
+				<li>Safari</li>
+				<li>Opera</li>
+			</ul>
+		</div>	
+	</div>
+	
 	<div id="demo" class="container">
-		<legend>Demo</legend>
+		<div class="page-header"><h3>Demo</h3></div>
+		
+		<h4 id="demo-zero-configuration">Zero configuration</h4>
 		
 		<div class="row-fluid">
 			<div class="span5">
@@ -102,70 +257,44 @@
 		</div>
 		
 		<div class="row-fluid">
-			<pre class="prettyprint">
-&lt;select name="from" id="multiselect" class="span12" size="8" multiple="multiple"&gt;
-	&lt;option value="1"&gt;Item 1&lt;/option&gt;
-	&lt;option value="2"&gt;Item 5&lt;/option&gt;
-	&lt;option value="2"&gt;Item 2&lt;/option&gt;
-	&lt;option value="2"&gt;Item 4&lt;/option&gt;
-	&lt;option value="3"&gt;Item 3&lt;/option&gt;
-&lt;/select&gt;
-
-&lt;button type="button" id="multiselect_rightAll" class="btn btn-block">&lt;i class="icon-forward">&lt;/i>&lt;/button&gt;
-&lt;button type="button" id="multiselect_rightSelected" class="btn btn-block">&lt;i class="icon-chevron-right">&lt;/i>&lt;/button&gt;
-&lt;button type="button" id="multiselect_leftSelected" class="btn btn-block">&lt;i class="icon-chevron-left">&lt;/i>&lt;/button&gt;
-&lt;button type="button" id="multiselect_leftAll" class="btn btn-block">&lt;i class="icon-backward">&lt;/i>&lt;/button&gt;
-
-&lt;select name="to" id="multiselect_to" class="span12" size="8" multiple="multiple"&gt;&lt;/select&gt;
-
-&lt;script type="text/javascript"&gt;
-$(document).ready(function(){
-	// initialize the multiselect for #multiselect element
-	$('#multiselect').multiselect();
+			<h5>HTML</h5>
+<pre class="prettyprint linenums">
+&lt;div class=&quot;row-fluid&quot;&gt;
+	&lt;div class=&quot;span5&quot;&gt;
+		&lt;select name=&quot;from&quot; id=&quot;multiselect&quot; class=&quot;span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
+			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
+			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
+			&lt;option value=&quot;2&quot;&gt;Item 4&lt;/option&gt;
+			&lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
+		&lt;/select&gt;
+	&lt;/div&gt;
+	
+	&lt;div class=&quot;span2&quot;&gt;
+		&lt;button type=&quot;button&quot; id=&quot;multiselect_rightAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;multiselect_rightSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;multiselect_leftSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;multiselect_leftAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+	&lt;/div&gt;
+	
+	&lt;div class=&quot;span5&quot;&gt;
+		&lt;select name=&quot;to&quot; id=&quot;multiselect_to&quot; class=&quot;span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+			<h5>JavaScript</h5>
+<pre class="prettyprint linenums">
+&lt;script type=&quot;text/javascript&quot;&gt;
+jQuery(document).ready(function($) {
+	$(&#39;#multiselect&#39;).multiselect();
 });
-&lt;/script&gt;</pre>
+&lt;/script&gt;
+</pre>
 		</div>
-	</div>
-	
-	<div id="examples" class="container">
-<pre class="prettyprint">
-var options = {
-	startUp: function( $left, $right ){			
-		$right.find('option').each(function(index, option){
-			$left.find('option[value="' + option.value + '"]').remove();
-		});
-	},
-	sort: false,
-	right: '#to2',
-	rightAll: '#rightAll2',
-	rightSelected: '#rightSelected2',
-	leftAll: '#leftAll2',
-	leftSelected: '#leftSelected2'
-};
-
-$('#from').multiselect(options);</pre>
-	</div>
-	
-	<div id="browser-support" class="container">
-		<legend>Browser Support</legend>
-		
-		<div class="page-header">
-			<strong>The following browsers are supported:</strong>
-		</div>
-		
-		<div class="row-fluid">
-			<ul>
-				<li>Internet Explorer 7+</li>
-				<li>Google Chrome</li>
-				<li>Mozilla Firefox</li>
-				<li>Safari</li>
-				<li>Opera</li>
-			</ul>
-		</div>	
 	</div>
 	
 	<div id="download" class="container">
-		<legend>Download</legend>
+		<div class="page-header"><h3>Download</h3></div>
 		
 		<div class="row-fluid">
 			<div class="span4">				
