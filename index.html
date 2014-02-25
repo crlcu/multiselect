@@ -35,7 +35,9 @@
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Demo <b class="caret"></b></a>
 							<ul class="dropdown-menu">
-							  <li><a href="#demo-zero-configuration">Zero configuration</a></li>
+								<li><a href="#demo-zero-configuration">Zero configuration</a></li>
+								<li><a href="#with-data-options">With <code>data</code> options</a></li>
+								<li><a href="#with-javascript-options">With <code>javascript</code> options</a></li>
 							</ul>
 						</li>
 						<li><a href="#download">Download</a></li>
@@ -259,38 +261,166 @@
 			
 			<div class="row-fluid">
 				<h5>HTML</h5>
-	<pre class="prettyprint linenums">
-	&lt;div class=&quot;row-fluid&quot;&gt;
-		&lt;div class=&quot;span5&quot;&gt;
-			&lt;select name=&quot;from&quot; id=&quot;multiselect&quot; class=&quot;span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
-				&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
-				&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
-				&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
-				&lt;option value=&quot;2&quot;&gt;Item 4&lt;/option&gt;
-				&lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
-			&lt;/select&gt;
-		&lt;/div&gt;
-		
-		&lt;div class=&quot;span2&quot;&gt;
-			&lt;button type=&quot;button&quot; id=&quot;multiselect_rightAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-			&lt;button type=&quot;button&quot; id=&quot;multiselect_rightSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-			&lt;button type=&quot;button&quot; id=&quot;multiselect_leftSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-			&lt;button type=&quot;button&quot; id=&quot;multiselect_leftAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;/div&gt;
-		
-		&lt;div class=&quot;span5&quot;&gt;
-			&lt;select name=&quot;to&quot; id=&quot;multiselect_to&quot; class=&quot;span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
-		&lt;/div&gt;
+<pre class="prettyprint linenums">
+&lt;div class=&quot;row-fluid&quot;&gt;
+	&lt;div class=&quot;span5&quot;&gt;
+		&lt;select name=&quot;from&quot; id=&quot;multiselect&quot; class=&quot;span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
+			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
+			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
+			&lt;option value=&quot;2&quot;&gt;Item 4&lt;/option&gt;
+			&lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
+		&lt;/select&gt;
 	&lt;/div&gt;
-	</pre>
-				<h5>JavaScript</h5>
-	<pre class="prettyprint linenums">
-	&lt;script type=&quot;text/javascript&quot;&gt;
-	jQuery(document).ready(function($) {
-		$(&#39;#multiselect&#39;).multiselect();
+	
+	&lt;div class=&quot;span2&quot;&gt;
+		&lt;button type=&quot;button&quot; id=&quot;multiselect_rightAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;multiselect_rightSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;multiselect_leftSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;multiselect_leftAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+	&lt;/div&gt;
+	
+	&lt;div class=&quot;span5&quot;&gt;
+		&lt;select name=&quot;to&quot; id=&quot;multiselect_to&quot; class=&quot;span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+			<h5>JavaScript</h5>
+<pre class="prettyprint linenums">
+&lt;script type=&quot;text/javascript&quot;&gt;
+jQuery(document).ready(function($) {
+	$(&#39;#multiselect&#39;).multiselect();
+});
+&lt;/script&gt;
+</pre>
+			</div>
+			
+			<h4 id="with-data-options">With <code>data</code> options</h4>
+			
+			<div class="row-fluid">
+				<div class="span5">
+					<select name="from" class="multiselect span12" size="8" multiple="multiple" data-right="#multiselect_to_1" data-right-all="#right_All_1" data-right-selected="#right_Selected_1" data-left-all="#left_All_1" data-left-selected="#left_Selected_1">
+						<option value="1">Item 1</option>
+						<option value="2">Item 5</option>
+						<option value="2">Item 2</option>
+						<option value="2">Item 4</option>
+						<option value="3">Item 3</option>
+					</select>
+				</div>
+				
+				<div class="span2">
+					<button type="button" id="right_All_1" class="btn btn-block"><i class="icon-forward"></i></button>
+					<button type="button" id="right_Selected_1" class="btn btn-block"><i class="icon-chevron-right"></i></button>
+					<button type="button" id="left_Selected_1" class="btn btn-block"><i class="icon-chevron-left"></i></button>
+					<button type="button" id="left_All_1" class="btn btn-block"><i class="icon-backward"></i></button>
+				</div>
+				
+				<div class="span5">
+					<select name="to" id="multiselect_to_1" class="span12" size="8" multiple="multiple"></select>
+				</div>
+			</div>
+			
+			<div class="row-fluid">
+				<h5>HTML</h5>
+<pre class="prettyprint linenums">
+&lt;div class=&quot;row-fluid&quot;&gt;
+	&lt;div class=&quot;span5&quot;&gt;
+		&lt;select name=&quot;from&quot; class=&quot;multiselect span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot; data-right=&quot;#multiselect_to_1&quot; data-right-all=&quot;#right_All_1&quot; data-right-selected=&quot;#right_Selected_1&quot; data-left-all=&quot;#left_All_1&quot; data-right-selected=&quot;#left_Selected_1&quot;&gt;
+			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
+			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
+			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
+			&lt;option value=&quot;2&quot;&gt;Item 4&lt;/option&gt;
+			&lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
+		&lt;/select&gt;
+	&lt;/div&gt;
+	
+	&lt;div class=&quot;span2&quot;&gt;
+		&lt;button type=&quot;button&quot; id=&quot;right_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;right_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;left_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;left_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+	&lt;/div&gt;
+	
+	&lt;div class=&quot;span5&quot;&gt;
+		&lt;select name=&quot;to&quot; id=&quot;multiselect_to_1&quot; class=&quot;span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+			<h5>JavaScript</h5>
+<pre class="prettyprint linenums">
+&lt;script type=&quot;text/javascript&quot;&gt;
+jQuery(document).ready(function($) {
+	$(&#39;.multiselect&#39;).multiselect();
+});
+&lt;/script&gt;
+</pre>
+			</div>
+			
+			<h4 id="with-javascript-options">With <code>javascript</code> options</h4>
+			
+			<div class="row-fluid">
+				<div class="span5">
+					<select name="from" class="js-multiselect span12" size="8" multiple="multiple">
+						<option value="1">Item 1</option>
+						<option value="2">Item 5</option>
+						<option value="2">Item 2</option>
+						<option value="2">Item 4</option>
+						<option value="3">Item 3</option>
+					</select>
+				</div>
+				
+				<div class="span2">
+					<button type="button" id="js_right_All_1" class="btn btn-block"><i class="icon-forward"></i></button>
+					<button type="button" id="js_right_Selected_1" class="btn btn-block"><i class="icon-chevron-right"></i></button>
+					<button type="button" id="js_left_Selected_1" class="btn btn-block"><i class="icon-chevron-left"></i></button>
+					<button type="button" id="js_left_All_1" class="btn btn-block"><i class="icon-backward"></i></button>
+				</div>
+				
+				<div class="span5">
+					<select name="to" id="js_multiselect_to_1" class="span12" size="8" multiple="multiple"></select>
+				</div>
+			</div>
+			
+			<div class="row-fluid">
+				<h5>HTML</h5>
+<pre class="prettyprint linenums">
+&lt;div class=&quot;row-fluid&quot;&gt;
+	&lt;div class=&quot;span5&quot;&gt;
+		&lt;select name=&quot;from&quot; class=&quot;js-multiselect span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
+			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
+			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
+			&lt;option value=&quot;2&quot;&gt;Item 4&lt;/option&gt;
+			&lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
+		&lt;/select&gt;
+	&lt;/div&gt;
+	
+	&lt;div class=&quot;span2&quot;&gt;
+		&lt;button type=&quot;button&quot; id=&quot;js_right_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;js_right_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;js_left_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;js_left_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+	&lt;/div&gt;
+	
+	&lt;div class=&quot;span5&quot;&gt;
+		&lt;select name=&quot;to&quot; id=&quot;js_multiselect_to_1&quot; class=&quot;span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+			<h5>JavaScript</h5>
+<pre class="prettyprint linenums">
+&lt;script type=&quot;text/javascript&quot;&gt;
+jQuery(document).ready(function($) {
+	$(&#39;.js-multiselect&#39;).multiselect({
+		right: &#39;#js_multiselect_to_1&#39;,
+		rightAll: &#39;#js_right_All_1&#39;,
+		rightSelected: &#39;#js_right_Selected_1&#39;,
+		leftSelected: &#39;#js_left_Selected_1&#39;,
+		leftAll: &#39;#js_left_All_1&#39;
 	});
-	&lt;/script&gt;
-	</pre>
+});
+&lt;/script&gt;
+</pre>
 			</div>
 		</div>
 		
@@ -342,6 +472,14 @@
 		});
 		
 		$('#multiselect').multiselect();
+		$('.multiselect').multiselect();
+		$('.js-multiselect').multiselect({
+			right: '#js_multiselect_to_1',
+			rightAll: '#js_right_All_1',
+			rightSelected: '#js_right_Selected_1',
+			leftSelected: '#js_left_Selected_1',
+			leftAll: '#js_left_All_1'
+		});
 	});
 	
 	function scrollTo( id ) {
