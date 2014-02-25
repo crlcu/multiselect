@@ -1,13 +1,12 @@
 /*
  * Multiselect
- * http://crlcu.github.com/multiselect/
+ * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2013 Adrian Crisan
  * Licensed under the MIT license.
  */
-
 ;(function( $ ) {
-	var Multiselect = (function( $ ){
+	var Multiselect = (function( $ ) {
 		"use strict";
 		
 		/**
@@ -22,21 +21,13 @@
 			}
 			
 			var id = $select.attr('id');
-			
 			this.left = $select;
-			this.right = $( settings.right );
-			
-			var $leftAll = $( settings.leftAll );
-			var $rightAll = $( settings.rightAll );
-			var $leftSelected = $( settings.leftSelected );
-			var $rightSelected = $( settings.rightSelected );
-			
-			this.right = this.right.length ? this.right : $('#' + id + '_to');
+			this.right = $( settings.right ).length ? $( settings.right ) : $('#' + id + '_to');
 			this.actions = {					
-				leftAll: 		$leftAll.length ? $leftAll : $('#' + id + '_leftAll'),
-				rightAll: 		$rightAll.length ? $rightAll : $('#' + id + '_rightAll'),
-				leftSelected:	$leftSelected.length ? $leftSelected : $('#' + id + '_leftSelected'),
-				rightSelected:	$rightSelected.length ? $rightSelected : $('#' + id + '_rightSelected')
+				leftAll: 		$( settings.leftAll ).length ? $( settings.leftAll ) : $('#' + id + '_leftAll'),
+				rightAll: 		$( settings.rightAll ).length ? $( settings.rightAll ) : $('#' + id + '_rightAll'),
+				leftSelected:	$( settings.leftSelected ).length ? $( settings.leftSelected ) : $('#' + id + '_leftSelected'),
+				rightSelected:	$( settings.rightSelected ).length ? $( settings.rightSelected ) : $('#' + id + '_rightSelected')
 			};
 			
 			delete settings.leftAll;
