@@ -10,11 +10,12 @@
 	padding: 10px!important;
 }
 
-#home {
-	padding-top: 60px;
+#wrap {
+	padding-top: 70px;
 }
-#home h1{
-	margin-bottom: 20px;
+
+#home h1 {
+	margin-bottom: 30px;
 }
 #demo,
 #examples,
@@ -22,4 +23,3 @@
 #download {
 	padding-top: 40px;
 }
-

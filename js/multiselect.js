@@ -1,11 +1,10 @@
 /*
  * Multiselect
- * http://crlcu.github.com/multiselect/
+ * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2013 Adrian Crisan
  * Licensed under the MIT license.
  */
-
 ;(function( $ ) {
 	var Multiselect = (function( $ ){
 		"use strict";
