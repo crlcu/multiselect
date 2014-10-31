@@ -1,0 +1,17 @@
+{
+  "name": "multiselect",
+  "version": "1.0.0",
+  "homepage": "https://github.com/crlcu/multiselect",
+  "authors": [
+    "Adrian Crisan <adrian.crisan@certcore.com>"
+  ],
+  "description": "jQuery multiselect plugin with two sides",
+  "main": "js/multiselect.min.js",
+  "keywords": [
+    "multiselect"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "jquery": ">= 1.7"
+  }
+}
