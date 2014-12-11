@@ -59,10 +59,6 @@
 		Multiselect.prototype = {
 			init: function() {
 				var self = this;
-				
-				if ( typeof self.callbacks.startUp == 'function' ) {
-					self.callbacks.startUp( self.left, self.right );
-				}
 
 				if (self.options.keepRenderingSort) {
 					self.skipInitSort = true;
@@ -74,6 +70,10 @@
 					self.left.find('option').each(function(index, option) {
 						$(option).data('position', index);
 					});
+				}
+
+				if ( typeof self.callbacks.startUp == 'function' ) {
+					self.callbacks.startUp( self.left, self.right );
 				}
 				
 				if ( !self.skipInitSort && typeof self.callbacks.sort == 'function' ) {
