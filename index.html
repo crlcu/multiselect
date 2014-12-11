@@ -38,6 +38,7 @@
 								<li><a href="#demo-zero-configuration">Zero configuration</a></li>
 								<li><a href="#with-data-options">With <code>data</code> options</a></li>
 								<li><a href="#with-javascript-options">With <code>javascript</code> options</a></li>
+								<li><a href="#demo-keep-rendering-sort">Keep rendering sort</a></li>
 							</ul>
 						</li>
 						<li><a href="#download">Download</a></li>
@@ -211,6 +212,15 @@
 							Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option</code> elements after they are moved to left with move all action.
 						</td>
 					</tr>
+					<tr>
+						<td>keepRenderingSort</td>
+						<td><code>boolean</code></td>
+						<td><code>false</code></td>
+						<td>
+							When you want to keep options sorted as they was rendered, <code>keepRenderingSort</code> must be <code>true</code>.<br/>
+							When <code>keepRenderingSort</code> is <code>true</code>, <code>sort</code> function will be ignored.
+						</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
@@ -239,11 +249,11 @@
 			<div class="row-fluid">
 				<div class="span5">
 					<select name="from" id="multiselect" class="span12" size="8" multiple="multiple">
-						<option value="1">Item 1</option>
-						<option value="2">Item 5</option>
-						<option value="2">Item 2</option>
-						<option value="2">Item 4</option>
-						<option value="3">Item 3</option>
+						<option value="1" data-position="1">Item 1</option>
+						<option value="2" data-position="2">Item 5</option>
+						<option value="2" data-position="3">Item 2</option>
+						<option value="2" data-position="4">Item 4</option>
+						<option value="3" data-position="5">Item 3</option>
 					</select>
 				</div>
 				
@@ -422,6 +432,69 @@ jQuery(document).ready(function($) {
 &lt;/script&gt;
 </pre>
 			</div>
+
+			<h4 id="demo-keep-rendering-sort">Keep rendering sort</h4>
+			
+			<div class="row-fluid">
+				<div class="span5">
+					<select name="from" id="keepRenderingSort" class="span12" size="8" multiple="multiple">
+						<option value="1" data-position="1">Item 1</option>
+						<option value="2" data-position="2">Item 5</option>
+						<option value="2" data-position="3">Item 2</option>
+						<option value="2" data-position="4">Item 4</option>
+						<option value="3" data-position="5">Item 3</option>
+					</select>
+				</div>
+				
+				<div class="span2">
+					<button type="button" id="keepRenderingSort_rightAll" class="btn btn-block"><i class="icon-forward"></i></button>
+					<button type="button" id="keepRenderingSort_rightSelected" class="btn btn-block"><i class="icon-chevron-right"></i></button>
+					<button type="button" id="keepRenderingSort_leftSelected" class="btn btn-block"><i class="icon-chevron-left"></i></button>
+					<button type="button" id="keepRenderingSort_leftAll" class="btn btn-block"><i class="icon-backward"></i></button>
+				</div>
+				
+				<div class="span5">
+					<select name="to" id="keepRenderingSort_to" class="span12" size="8" multiple="multiple"></select>
+				</div>
+			</div>
+			
+			<div class="row-fluid">
+				<h5>HTML</h5>
+<pre class="prettyprint linenums">
+&lt;div class=&quot;row-fluid&quot;&gt;
+	&lt;div class=&quot;span5&quot;&gt;
+		&lt;select name=&quot;from&quot; id=&quot;keepRenderingSort&quot; class=&quot;span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
+			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
+			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
+			&lt;option value=&quot;2&quot;&gt;Item 4&lt;/option&gt;
+			&lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
+		&lt;/select&gt;
+	&lt;/div&gt;
+	
+	&lt;div class=&quot;span2&quot;&gt;
+		&lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_rightAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_rightSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_leftSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_leftAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+	&lt;/div&gt;
+	
+	&lt;div class=&quot;span5&quot;&gt;
+		&lt;select name=&quot;to&quot; id=&quot;keepRenderingSort_to&quot; class=&quot;span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+			<h5>JavaScript</h5>
+<pre class="prettyprint linenums">
+&lt;script type=&quot;text/javascript&quot;&gt;
+jQuery(document).ready(function($) {
+	$(&#39;#multiselect&#39;).multiselect({
+		keepRenderingSort: true
+	});
+});
+&lt;/script&gt;
+</pre>
+			</div>
 		</div>
 		
 		<div id="download" class="container">
@@ -446,7 +519,7 @@ jQuery(document).ready(function($) {
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="lib/google-code-prettify/prettify.js"></script>
-	<script type="text/javascript" src="js/multiselect.js"></script>
+	<script type="text/javascript" src="js/multiselect.min.js"></script>
 	
 	<script>
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -479,6 +552,10 @@ jQuery(document).ready(function($) {
 			rightSelected: '#js_right_Selected_1',
 			leftSelected: '#js_left_Selected_1',
 			leftAll: '#js_left_All_1'
+		});
+
+		$('#keepRenderingSort').multiselect({
+			keepRenderingSort: true
 		});
 	});
 	

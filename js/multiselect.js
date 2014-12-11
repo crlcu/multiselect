@@ -45,6 +45,12 @@
 			delete settings.rightAll;
 			delete settings.rightSelected;
 			
+			this.options = {
+				keepRenderingSort: settings.keepRenderingSort
+			};
+
+			delete settings.keepRenderingSort;
+
 			this.callbacks = settings;
 			
 			this.init();
@@ -57,8 +63,20 @@
 				if ( typeof self.callbacks.startUp == 'function' ) {
 					self.callbacks.startUp( self.left, self.right );
 				}
+
+				if (self.options.keepRenderingSort) {
+					self.skipInitSort = true;
+
+					self.callbacks.sort = function(a, b) {
+						return $(a).data('position') > $(b).data('position') ? 1 : -1;
+					};
+
+					self.left.find('option').each(function(index, option) {
+						$(option).data('position', index);
+					});
+				}
 				
-				if ( typeof self.callbacks.sort == 'function' ) {
+				if ( !self.skipInitSort && typeof self.callbacks.sort == 'function' ) {
 					self.left.find('option').sort(self.callbacks.sort).appendTo(self.left);
 					self.right.find('option').sort(self.callbacks.sort).appendTo(self.right);
 				}
