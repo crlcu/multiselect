@@ -114,6 +114,8 @@
 					
 					if ( option )
 						self.moveOneToRight(option);
+
+					$(this).blur();
 				});
 				
 				actions.leftSelected.on('click', function(e) {
@@ -122,6 +124,8 @@
 					
 					if ( option )
 						self.moveOneToLeft(option);
+
+					$(this).blur();
 				});
 				
 				actions.rightAll.on('click', function(e){
@@ -130,6 +134,8 @@
 					
 					if ( options )
 						self.moveAllToRight(options);
+
+					$(this).blur();
 				});
 				
 				actions.leftAll.on('click', function(e){
@@ -139,6 +145,8 @@
 					
 					if ( options )
 						self.moveAllToLeft(options);
+
+					$(this).blur();
 				});
 			},
 			
