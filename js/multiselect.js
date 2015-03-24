@@ -6,13 +6,13 @@
  * Licensed under the MIT license.
  */
  ;(function (factory) {
-   if (typeof define === 'function' && define.amd) {
-     // AMD. Register as an anonymous module depending on jQuery.
-     define(['jquery'], factory);
-   } else {
-     // No AMD. Register plugin with global jQuery object.
-     factory(jQuery);
-   }
+   	if (typeof define === 'function' && define.amd) {
+     	// AMD. Register as an anonymous module depending on jQuery.
+     	define(['jquery'], factory);
+   	} else {
+    	// No AMD. Register plugin with global jQuery object.
+    	factory(jQuery);
+   	}
  }(function ($) {
 
  	var Multiselect = (function( $ ) {
@@ -32,7 +32,7 @@
 			var id = $select.attr('id');
 			this.left = $select;
 			this.right = $( settings.right ).length ? $( settings.right ) : $('#' + id + '_to');
-			this.actions = {					
+			this.actions = {
 				leftAll: 		$( settings.leftAll ).length ? $( settings.leftAll ) : $('#' + id + '_leftAll'),
 				rightAll: 		$( settings.rightAll ).length ? $( settings.rightAll ) : $('#' + id + '_rightAll'),
 				leftSelected:	$( settings.leftSelected ).length ? $( settings.leftSelected ) : $('#' + id + '_leftSelected'),
@@ -52,6 +52,8 @@
 			delete settings.keepRenderingSort;
 
 			this.callbacks = settings;
+			this.undoStack = [];
+			this.redoStack = [];
 			
 			this.init();
 		}
@@ -99,11 +101,11 @@
 				
 				// dblclick support for IE
 				if ( navigator.userAgent.match(/MSIE/i)  || navigator.userAgent.indexOf('Trident/') > 0 || navigator.userAgent.indexOf('Edge/') > 0) {
-					self.left.dblclick(function(e){
+					self.left.dblclick(function(e) {
 						actions.rightSelected.trigger('click');
 					});
 					
-					self.right.dblclick(function(e){
+					self.right.dblclick(function(e) {
 						actions.leftSelected.trigger('click');
 					});
 				}
@@ -112,8 +114,9 @@
 					e.preventDefault();
 					var option = self.left.find('option:selected');
 					
-					if ( option )
+					if ( option ) {
 						self.moveOneToRight(option);
+					}
 
 					$(this).blur();
 				});
@@ -122,29 +125,32 @@
 					e.preventDefault();
 					var option = self.right.find('option:selected');
 					
-					if ( option )
+					if ( option ) {
 						self.moveOneToLeft(option);
+					}
 
 					$(this).blur();
 				});
 				
-				actions.rightAll.on('click', function(e){
+				actions.rightAll.on('click', function(e) {
 					e.preventDefault();
 					var options = self.left.find('option');
 					
-					if ( options )
+					if ( options ) {
 						self.moveAllToRight(options);
+					}
 
 					$(this).blur();
 				});
 				
-				actions.leftAll.on('click', function(e){
+				actions.leftAll.on('click', function(e) {
 					e.preventDefault();
 					
 					var options = self.right.find('option');
 					
-					if ( options )
+					if ( options ) {
 						self.moveAllToLeft(options);
+					}
 
 					$(this).blur();
 				});
@@ -154,8 +160,9 @@
 				var self = this;
 				
 				if ( typeof self.callbacks.beforeMoveOneToRight == 'function' && !silent ) {
-					if ( !self.callbacks.beforeMoveOneToRight( self.left, self.right, option ) )
+					if ( !self.callbacks.beforeMoveOneToRight( self.left, self.right, option ) ) {
 						return false;
+					}
 				}
 				
 				self.right.append(option);
@@ -175,8 +182,9 @@
 				var self = this;
 				
 				if ( typeof self.callbacks.beforeMoveOneToLeft == 'function' && !silent ) {
-					if ( !self.callbacks.beforeMoveOneToLeft( self.left, self.right, option ) )
+					if ( !self.callbacks.beforeMoveOneToLeft( self.left, self.right, option ) ) {
 						return false;
+					}
 				}
 					
 				self.left.append(option);
@@ -196,8 +204,9 @@
 				var self = this;
 				
 				if ( typeof self.callbacks.beforeMoveAllToRight == 'function' ) {
-					if ( !self.callbacks.beforeMoveAllToRight( self.left, self.right, options ) )
+					if ( !self.callbacks.beforeMoveAllToRight( self.left, self.right, options ) ) {
 						return false;
+					}
 				}
 				
 				for ( var i = 0; options[i]; i++ ) {
@@ -219,8 +228,9 @@
 				var self = this;
 				
 				if ( typeof self.callbacks.beforeMoveAllToLeft == 'function' ) {
-					if ( !self.callbacks.beforeMoveAllToLeft( self.left, self.right, options ) )
+					if ( !self.callbacks.beforeMoveAllToLeft( self.left, self.right, options ) ) {
 						return false;
+					}
 				}
 				
 				for ( var i = 0; options[i]; i++ ) {
@@ -243,13 +253,13 @@
 	})( jQuery );
 	
 	$.multiselect = {
-		defaults : {
+		defaults: {
 			/*
 			 * will be executed once
 			 * @method startUp
 			**/
 			startUp: function( $left, $right ) {
-				$right.find('option').each(function(index, option){
+				$right.find('option').each(function(index, option) {
 					$left.find('option[value="' + option.value + '"]').remove();
 				});
 			},
@@ -288,14 +298,14 @@
 		setup: {}
 	}
     
-    $.fn.multiselect = function( options ) {        
-        return this.each(function() {	
+    $.fn.multiselect = function( options ) {
+        return this.each(function() {
 			var $this = $(this),
 				data = $this.data();
 			
 			var settings = $.extend({}, $.multiselect.defaults, $.multiselect.setup, data, options);
 			
-            return new Multiselect($(this), settings);
+            return new Multiselect($this, settings);
         });  
     };
  }));
