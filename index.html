@@ -7,7 +7,7 @@
 	<title>jQuery multiselect plugin with two sides</title>
 	
 	<link rel="icon" type="image/x-icon" href="https://github.com/favicon.ico" />
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/2.3.1/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="lib/google-code-prettify/prettify.css" />
 	<link rel="stylesheet" href="css/style.css" />
 </head>
@@ -19,26 +19,29 @@
 	<div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container">
-				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#">Multiselect</a>
+				</div>
 				
-				<a class="brand" href="#home">Multiselect</a>
-				
-				<div class="nav-collapse collapse">
-					<ul class="nav">
+				<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav">
 						<li><a href="#home">Home</a></li>
 						<li><a href="#documentation">Documentation</a></li>
 						<li><a href="#browser-support">Browser Support</a></li>
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Demo <b class="caret"></b></a>
-							<ul class="dropdown-menu">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Demo <span  class="caret"></span ></a>
+							<ul class="dropdown-menu" role="menu">
 								<li><a href="#demo-zero-configuration">Zero configuration</a></li>
 								<li><a href="#with-data-options">With <code>data</code> options</a></li>
 								<li><a href="#with-javascript-options">With <code>javascript</code> options</a></li>
 								<li><a href="#demo-keep-rendering-sort">Keep rendering sort</a></li>
+								<li><a href="#demo-undo-redo">Undo / Redo</a></li>
 							</ul>
 						</li>
 						<li><a href="#download">Download</a></li>
@@ -50,32 +53,32 @@
 	
 	<div id="wrap">
 		<div id="home" class="container">
-			<div class="hero-unit">
+			<div class="jumbotron">
 				<h1>Multiselect</h1>
 				<p>This is a small  <a href="http://jquery.com/" target="_blank">jQuery</a> plugin that helps you improve the
 					<strong>user experience</strong> regarding the use of multiple cross selects.
 				</p>
 				<p>It is very <strong>easy to install</strong> and can be <strong>easily customized</strong> because it has <strong>callbaks</strong> for many events, such as :
-					<div class="clearfix">
-						<ul class="span4">
-							<li><a href="#beforeMoveOneToRight">beforeMoveOneToRight</a></li>
-							<li><a href="#beforeMoveOneToLeft">beforeMoveOneToLeft</a></li>
-							<li><a href="#beforeMoveAllToRight">beforeMoveAllToRight</a></li>
-							<li><a href="beforeMoveAllToLeft">beforeMoveAllToLeft</a></li>
-						</ul>
+					<div class="row">
+						<div  class="col-xs-6">
+							<ul>
+								<li><a href="#beforeMoveToRight">beforeMoveToRight</a></li>
+								<li><a href="#beforeMoveToLeft">beforeMoveToLeft</a></li>
+							</ul>
+						</div>
 						
-						<ul class="span4">
-							<li><a href="#afterMoveOneToRight">afterMoveOneToRight</a></li>
-							<li><a href="#afterMoveOneToLeft">afterMoveOneToLeft</a></li>
-							<li><a href="#afterMoveAllToRight">afterMoveAllToRight</a></li>
-							<li><a href="afterMoveAllToLeft">afterMoveAllToLeft</a></li>
-						</ul>
+						<div  class="col-xs-6">
+							<ul>
+								<li><a href="#afterMoveToRight">afterMoveToRight</a></li>
+								<li><a href="#afterMoveToLeft">afterMoveToLeft</a></li>
+							</ul>
+						</div>
 					</div>
 				</p>
 				<p>It also has a <a href="#sort">sort</a> function that can be defined in order of your needs for each multiple select.</p>
 				<p>You can <strong>fully customize</strong> it via <strong>CSS</strong>, you can extend it and have as <strong>many multi selects</strong> as you want on the page.</p>
 	
-				<p><a href="#documentation" class="btn btn-primary btn-large">Documentation</a></p>
+				<p><a href="#documentation" class="btn btn-primary btn-lg">Documentation</a></p>
 			</div>
 		</div>
 		
@@ -130,86 +133,48 @@
 						<td><code>remove</code> from left all options that are present in right</td>
 						<td>Whatever you want to do with <code>$left</code> and <code>$right</code> elements when the <code>multiselect</code> plugin is initialised</td>
 					</tr>
-					<tr>
+					<tr id="sort">
 						<td>sort</td>
 						<td><code>function</code> or <code>false</code></td>
 						<td><code>sort</code> options alphabetically</td>
 						<td>Will sort options when an action happend into right or left elements.</td>
 					</tr>
-					<tr>
-						<td>beforeMoveOneToRight</td>
+					<tr id="beforeMoveToRight">
+						<td>beforeMoveToRight</td>
 						<td><code>function</code></td>
 						<td>return true</td>
 						<td>
-							Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option</code> elements before they are moved to right.
+							Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option[s]</code> elements before they are moved to right.
 							Keep in mind that this function must return a boolean value.<br/>
 							<code>true</code> will let the action to be performed.<br/>
 							<code>false</code> will stop the action
 						</td>
 					</tr>
-					<tr>
-						<td>afterMoveOneToRight</td>
+					<tr id="afterMoveToRight">
+						<td>afterMoveToRight</td>
 						<td><code>function</code></td>
 						<td>no action</td>
 						<td>
-							Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option</code> elements after they are moved to right.
+							Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option[s]</code> elements after they are moved to right.
 						</td>
 					</tr>
-					<tr>
-						<td>beforeMoveAllToRight</td>
+					<tr id="beforeMoveToLeft">
+						<td>beforeMoveToLeft</td>
 						<td><code>function</code></td>
 						<td>return true</td>
 						<td>
-							Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option</code> elements before they are moved to right with move all action.
+							Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option[s]</code> elements before they are moved to left.
 							Keep in mind that this function must return a boolean value.<br/>
 							<code>true</code> will let the action to be performed.<br/>
 							<code>false</code> will stop the action
 						</td>
 					</tr>
-					<tr>
-						<td>afterMoveAllToRight</td>
+					<tr id="afterMoveToLeft">
+						<td>afterMoveToLeft</td>
 						<td><code>function</code></td>
 						<td>no action</td>
 						<td>
-							Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option</code> elements after they are moved to right with move all action.
-						</td>
-					</tr>
-					<tr>
-						<td>beforeMoveOneToLeft</td>
-						<td><code>function</code></td>
-						<td>return true</td>
-						<td>
-							Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option</code> elements before they are moved to left.
-							Keep in mind that this function must return a boolean value.<br/>
-							<code>true</code> will let the action to be performed.<br/>
-							<code>false</code> will stop the action
-						</td>
-					</tr>
-					<tr>
-						<td>afterMoveOneToLeft</td>
-						<td><code>function</code></td>
-						<td>no action</td>
-						<td>
-							Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option</code> elements after they are moved to left.
-						</td>
-					</tr>
-					<tr>
-						<td>beforeMoveAllToLeft</td>
-						<td><code>function</code></td>
-						<td>return true</td>
-						<td>
-							Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option</code> elements before they are moved to left with move all action.
-							Keep in mind that this function must return a boolean value.<br/>
-							<code>true</code> will let the action to be performed.<br/>
-							<code>false</code> will stop the action
-						</td>
-					</tr>
-					<tr>
-						<td>afterMoveAllToLeft</td>
-						<td><code>function</code></td>
-						<td>no action</td>
-						<td>
-							Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option</code> elements after they are moved to left with move all action.
+							Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option[s]</code> elements after they are moved to left.
 						</td>
 					</tr>
 					<tr>
@@ -230,15 +195,13 @@
 			
 			<h4>The following browsers are supported:</h4>
 			
-			<div class="row-fluid">
-				<ul>
-					<li>Internet Explorer 7+</li>
-					<li>Google Chrome</li>
-					<li>Mozilla Firefox</li>
-					<li>Safari</li>
-					<li>Opera</li>
-				</ul>
-			</div>	
+			<ul>
+				<li>Internet Explorer 7+</li>
+				<li>Google Chrome</li>
+				<li>Mozilla Firefox</li>
+				<li>Safari</li>
+				<li>Opera</li>
+			</ul>
 		</div>
 		
 		<div id="demo" class="container">
@@ -246,9 +209,9 @@
 			
 			<h4 id="demo-zero-configuration">Zero configuration</h4>
 			
-			<div class="row-fluid">
-				<div class="span5">
-					<select name="from" id="multiselect" class="span12" size="8" multiple="multiple">
+			<div class="row">
+				<div class="col-sm-5">
+					<select name="from" id="multiselect" class="form-control" size="8" multiple="multiple">
 						<option value="1" data-position="1">Item 1</option>
 						<option value="2" data-position="2">Item 5</option>
 						<option value="2" data-position="3">Item 2</option>
@@ -257,24 +220,25 @@
 					</select>
 				</div>
 				
-				<div class="span2">
-					<button type="button" id="multiselect_rightAll" class="btn btn-block"><i class="icon-forward"></i></button>
-					<button type="button" id="multiselect_rightSelected" class="btn btn-block"><i class="icon-chevron-right"></i></button>
-					<button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="icon-chevron-left"></i></button>
-					<button type="button" id="multiselect_leftAll" class="btn btn-block"><i class="icon-backward"></i></button>
+				<div class="col-sm-2">
+					<button type="button" id="multiselect_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+					<button type="button" id="multiselect_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+					<button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+					<button type="button" id="multiselect_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
 				</div>
 				
-				<div class="span5">
-					<select name="to" id="multiselect_to" class="span12" size="8" multiple="multiple"></select>
+				<div class="col-sm-5">
+					<select name="to" id="multiselect_to" class="form-control" size="8" multiple="multiple"></select>
 				</div>
 			</div>
 			
-			<div class="row-fluid">
-				<h5>HTML</h5>
+			<div class="row">
+				<div class="col-xs-12">
+					<h5>HTML</h5>
 <pre class="prettyprint linenums">
-&lt;div class=&quot;row-fluid&quot;&gt;
-	&lt;div class=&quot;span5&quot;&gt;
-		&lt;select name=&quot;from&quot; id=&quot;multiselect&quot; class=&quot;span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+&lt;div class=&quot;row&quot;&gt;
+	&lt;div class=&quot;col-xs-5&quot;&gt;
+		&lt;select name=&quot;from&quot; id=&quot;multiselect&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
 			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
 			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
 			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
@@ -283,15 +247,15 @@
 		&lt;/select&gt;
 	&lt;/div&gt;
 	
-	&lt;div class=&quot;span2&quot;&gt;
-		&lt;button type=&quot;button&quot; id=&quot;multiselect_rightAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;multiselect_rightSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;multiselect_leftSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;multiselect_leftAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+	&lt;div class=&quot;col-xs-2&quot;&gt;
+		&lt;button type=&quot;button&quot; id=&quot;multiselect_rightAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;multiselect_rightSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;multiselect_leftSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;multiselect_leftAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
 	&lt;/div&gt;
 	
-	&lt;div class=&quot;span5&quot;&gt;
-		&lt;select name=&quot;to&quot; id=&quot;multiselect_to&quot; class=&quot;span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+	&lt;div class=&quot;col-xs-5&quot;&gt;
+		&lt;select name=&quot;to&quot; id=&quot;multiselect_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
 	&lt;/div&gt;
 &lt;/div&gt;
 </pre>
@@ -303,13 +267,14 @@ jQuery(document).ready(function($) {
 });
 &lt;/script&gt;
 </pre>
+				</div>
 			</div>
 			
 			<h4 id="with-data-options">With <code>data</code> options</h4>
 			
-			<div class="row-fluid">
-				<div class="span5">
-					<select name="from" class="multiselect span12" size="8" multiple="multiple" data-right="#multiselect_to_1" data-right-all="#right_All_1" data-right-selected="#right_Selected_1" data-left-all="#left_All_1" data-left-selected="#left_Selected_1">
+			<div class="row">
+				<div class="col-xs-5">
+					<select name="from" class="multiselect form-control" size="8" multiple="multiple" data-right="#multiselect_to_1" data-right-all="#right_All_1" data-right-selected="#right_Selected_1" data-left-all="#left_All_1" data-left-selected="#left_Selected_1">
 						<option value="1">Item 1</option>
 						<option value="2">Item 5</option>
 						<option value="2">Item 2</option>
@@ -318,24 +283,25 @@ jQuery(document).ready(function($) {
 					</select>
 				</div>
 				
-				<div class="span2">
-					<button type="button" id="right_All_1" class="btn btn-block"><i class="icon-forward"></i></button>
-					<button type="button" id="right_Selected_1" class="btn btn-block"><i class="icon-chevron-right"></i></button>
-					<button type="button" id="left_Selected_1" class="btn btn-block"><i class="icon-chevron-left"></i></button>
-					<button type="button" id="left_All_1" class="btn btn-block"><i class="icon-backward"></i></button>
+				<div class="col-xs-2">
+					<button type="button" id="right_All_1" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+					<button type="button" id="right_Selected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+					<button type="button" id="left_Selected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+					<button type="button" id="left_All_1" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
 				</div>
 				
-				<div class="span5">
-					<select name="to" id="multiselect_to_1" class="span12" size="8" multiple="multiple"></select>
+				<div class="col-xs-5">
+					<select name="to" id="multiselect_to_1" class="form-control" size="8" multiple="multiple"></select>
 				</div>
 			</div>
 			
-			<div class="row-fluid">
-				<h5>HTML</h5>
+			<div class="row">
+				<div class="col-xs-12">
+					<h5>HTML</h5>
 <pre class="prettyprint linenums">
-&lt;div class=&quot;row-fluid&quot;&gt;
-	&lt;div class=&quot;span5&quot;&gt;
-		&lt;select name=&quot;from&quot; class=&quot;multiselect span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot; data-right=&quot;#multiselect_to_1&quot; data-right-all=&quot;#right_All_1&quot; data-right-selected=&quot;#right_Selected_1&quot; data-left-all=&quot;#left_All_1&quot; data-right-selected=&quot;#left_Selected_1&quot;&gt;
+&lt;div class=&quot;row&quot;&gt;
+	&lt;div class=&quot;col-xs-5&quot;&gt;
+		&lt;select name=&quot;from&quot; class=&quot;multiselect form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot; data-right=&quot;#multiselect_to_1&quot; data-right-all=&quot;#right_All_1&quot; data-right-selected=&quot;#right_Selected_1&quot; data-left-all=&quot;#left_All_1&quot; data-right-selected=&quot;#left_Selected_1&quot;&gt;
 			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
 			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
 			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
@@ -344,15 +310,15 @@ jQuery(document).ready(function($) {
 		&lt;/select&gt;
 	&lt;/div&gt;
 	
-	&lt;div class=&quot;span2&quot;&gt;
-		&lt;button type=&quot;button&quot; id=&quot;right_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;right_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;left_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;left_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+	&lt;div class=&quot;col-xs-2&quot;&gt;
+		&lt;button type=&quot;button&quot; id=&quot;right_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;right_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;left_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;left_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
 	&lt;/div&gt;
 	
-	&lt;div class=&quot;span5&quot;&gt;
-		&lt;select name=&quot;to&quot; id=&quot;multiselect_to_1&quot; class=&quot;span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+	&lt;div class=&quot;col-xs-5&quot;&gt;
+		&lt;select name=&quot;to&quot; id=&quot;multiselect_to_1&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
 	&lt;/div&gt;
 &lt;/div&gt;
 </pre>
@@ -364,13 +330,14 @@ jQuery(document).ready(function($) {
 });
 &lt;/script&gt;
 </pre>
+				</div>
 			</div>
 			
 			<h4 id="with-javascript-options">With <code>javascript</code> options</h4>
 			
-			<div class="row-fluid">
-				<div class="span5">
-					<select name="from" class="js-multiselect span12" size="8" multiple="multiple">
+			<div class="row">
+				<div class="col-xs-5">
+					<select name="from" class="js-multiselect form-control" size="8" multiple="multiple">
 						<option value="1">Item 1</option>
 						<option value="2">Item 5</option>
 						<option value="2">Item 2</option>
@@ -379,24 +346,25 @@ jQuery(document).ready(function($) {
 					</select>
 				</div>
 				
-				<div class="span2">
-					<button type="button" id="js_right_All_1" class="btn btn-block"><i class="icon-forward"></i></button>
-					<button type="button" id="js_right_Selected_1" class="btn btn-block"><i class="icon-chevron-right"></i></button>
-					<button type="button" id="js_left_Selected_1" class="btn btn-block"><i class="icon-chevron-left"></i></button>
-					<button type="button" id="js_left_All_1" class="btn btn-block"><i class="icon-backward"></i></button>
+				<div class="col-xs-2">
+					<button type="button" id="js_right_All_1" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+					<button type="button" id="js_right_Selected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+					<button type="button" id="js_left_Selected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+					<button type="button" id="js_left_All_1" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
 				</div>
 				
-				<div class="span5">
-					<select name="to" id="js_multiselect_to_1" class="span12" size="8" multiple="multiple"></select>
+				<div class="col-xs-5">
+					<select name="to" id="js_multiselect_to_1" class="form-control" size="8" multiple="multiple"></select>
 				</div>
 			</div>
 			
-			<div class="row-fluid">
-				<h5>HTML</h5>
+			<div class="row">
+				<div class="col-xs-12">
+					<h5>HTML</h5>
 <pre class="prettyprint linenums">
-&lt;div class=&quot;row-fluid&quot;&gt;
-	&lt;div class=&quot;span5&quot;&gt;
-		&lt;select name=&quot;from&quot; class=&quot;js-multiselect span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+&lt;div class=&quot;row&quot;&gt;
+	&lt;div class=&quot;col-xs-5&quot;&gt;
+		&lt;select name=&quot;from&quot; class=&quot;js-multiselect form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
 			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
 			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
 			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
@@ -405,15 +373,15 @@ jQuery(document).ready(function($) {
 		&lt;/select&gt;
 	&lt;/div&gt;
 	
-	&lt;div class=&quot;span2&quot;&gt;
-		&lt;button type=&quot;button&quot; id=&quot;js_right_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;js_right_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;js_left_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;js_left_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+	&lt;div class=&quot;col-xs-2&quot;&gt;
+		&lt;button type=&quot;button&quot; id=&quot;js_right_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;js_right_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;js_left_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;js_left_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
 	&lt;/div&gt;
 	
-	&lt;div class=&quot;span5&quot;&gt;
-		&lt;select name=&quot;to&quot; id=&quot;js_multiselect_to_1&quot; class=&quot;span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+	&lt;div class=&quot;col-xs-5&quot;&gt;
+		&lt;select name=&quot;to&quot; id=&quot;js_multiselect_to_1&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
 	&lt;/div&gt;
 &lt;/div&gt;
 </pre>
@@ -431,13 +399,14 @@ jQuery(document).ready(function($) {
 });
 &lt;/script&gt;
 </pre>
+				</div>
 			</div>
 
 			<h4 id="demo-keep-rendering-sort">Keep rendering sort</h4>
 			
-			<div class="row-fluid">
-				<div class="span5">
-					<select name="from" id="keepRenderingSort" class="span12" size="8" multiple="multiple">
+			<div class="row">
+				<div class="col-xs-5">
+					<select name="from" id="keepRenderingSort" class="form-control" size="8" multiple="multiple">
 						<option value="1" data-position="1">Item 1</option>
 						<option value="2" data-position="2">Item 5</option>
 						<option value="2" data-position="3">Item 2</option>
@@ -446,24 +415,25 @@ jQuery(document).ready(function($) {
 					</select>
 				</div>
 				
-				<div class="span2">
-					<button type="button" id="keepRenderingSort_rightAll" class="btn btn-block"><i class="icon-forward"></i></button>
-					<button type="button" id="keepRenderingSort_rightSelected" class="btn btn-block"><i class="icon-chevron-right"></i></button>
-					<button type="button" id="keepRenderingSort_leftSelected" class="btn btn-block"><i class="icon-chevron-left"></i></button>
-					<button type="button" id="keepRenderingSort_leftAll" class="btn btn-block"><i class="icon-backward"></i></button>
+				<div class="col-xs-2">
+					<button type="button" id="keepRenderingSort_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+					<button type="button" id="keepRenderingSort_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+					<button type="button" id="keepRenderingSort_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+					<button type="button" id="keepRenderingSort_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
 				</div>
 				
-				<div class="span5">
-					<select name="to" id="keepRenderingSort_to" class="span12" size="8" multiple="multiple"></select>
+				<div class="col-xs-5">
+					<select name="to" id="keepRenderingSort_to" class="form-control" size="8" multiple="multiple"></select>
 				</div>
 			</div>
 			
-			<div class="row-fluid">
-				<h5>HTML</h5>
+			<div class="row">
+				<div class="col-xs-12">
+					<h5>HTML</h5>
 <pre class="prettyprint linenums">
-&lt;div class=&quot;row-fluid&quot;&gt;
-	&lt;div class=&quot;span5&quot;&gt;
-		&lt;select name=&quot;from&quot; id=&quot;keepRenderingSort&quot; class=&quot;span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+&lt;div class=&quot;row&quot;&gt;
+	&lt;div class=&quot;col-xs-5&quot;&gt;
+		&lt;select name=&quot;from&quot; id=&quot;keepRenderingSort&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
 			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
 			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
 			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
@@ -472,15 +442,15 @@ jQuery(document).ready(function($) {
 		&lt;/select&gt;
 	&lt;/div&gt;
 	
-	&lt;div class=&quot;span2&quot;&gt;
-		&lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_rightAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_rightSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_leftSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_leftAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;icon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+	&lt;div class=&quot;col-xs-2&quot;&gt;
+		&lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_rightAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_rightSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_leftSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_leftAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
 	&lt;/div&gt;
 	
-	&lt;div class=&quot;span5&quot;&gt;
-		&lt;select name=&quot;to&quot; id=&quot;keepRenderingSort_to&quot; class=&quot;span12&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+	&lt;div class=&quot;col-xs-5&quot;&gt;
+		&lt;select name=&quot;to&quot; id=&quot;keepRenderingSort_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
 	&lt;/div&gt;
 &lt;/div&gt;
 </pre>
@@ -494,30 +464,66 @@ jQuery(document).ready(function($) {
 });
 &lt;/script&gt;
 </pre>
+				</div>
+			</div>
+
+			<h4 id="demo-undo-redo">Undo / Redo</h4>
+			
+			<div class="row">
+				<div class="col-xs-5">
+					<select name="from" id="undo_redo" class="form-control" size="13" multiple="multiple">
+						<option value="1">C++</option>
+						<option value="2">C#</option>
+						<option value="3">Haskell</option>
+						<option value="4">Java</option>
+						<option value="5">JavaScript</option>
+						<option value="6">Lisp</option>
+						<option value="7">Lua</option>
+						<option value="8">MATLAB</option>
+						<option value="9">NewLISP</option>
+						<option value="10">PHP</option>
+						<option value="11">Perl</option>
+						<option value="12">SQL</option>
+						<option value="13">Unix shell</option>
+					</select>
+				</div>
+				
+				<div class="col-xs-2">
+					<button type="button" id="undo_redo_undo" class="btn btn-primary btn-block">undo</button>
+					<button type="button" id="undo_redo_rightAll" class="btn btn-default btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+					<button type="button" id="undo_redo_rightSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+					<button type="button" id="undo_redo_leftSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+					<button type="button" id="undo_redo_leftAll" class="btn btn-default btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+					<button type="button" id="undo_redo_redo" class="btn btn-warning btn-block">redo</button>
+				</div>
+				
+				<div class="col-xs-5">
+					<select name="to" id="undo_redo_to" class="form-control" size="13" multiple="multiple"></select>
+				</div>
 			</div>
 		</div>
 		
 		<div id="download" class="container">
 			<div class="page-header"><h3>Download</h3></div>
 			
-			<div class="row-fluid">
-				<div class="span4">				
-					<p><a class="btn btn-large btn-primary" href="https://raw.github.com/crlcu/multiselect/master/js/multiselect.js">Download multiselect.js</a></p>
+			<div class="row">
+				<div class="col-xs-4">				
+					<p><a class="btn btn-lg btn-primary" href="https://raw.github.com/crlcu/multiselect/master/js/multiselect.js">Download multiselect.js</a></p>
 				</div>
 				
-				<div class="span4">				
-					<p><a class="btn btn-large btn-success" href="https://raw.github.com/crlcu/multiselect/master/js/multiselect.min.js">Download multiselect.min.js</a></p>
+				<div class="col-xs-4">				
+					<p><a class="btn btn-lg btn-success" href="https://raw.github.com/crlcu/multiselect/master/js/multiselect.min.js">Download multiselect.min.js</a></p>
 				</div>
 				
-				<div class="span4">				
-					<p><a class="btn btn-large btn-inverse" href="https://github.com/crlcu/multiselect/archive/master.zip">Download multiselect.zip</a></p>
+				<div class="col-xs-4">				
+					<p><a class="btn btn-lg btn-info" href="https://github.com/crlcu/multiselect/archive/master.zip">Download multiselect.zip</a></p>
 				</div>
 			</div>	
 		</div>
 	</div>
 	
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-	<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/2.3.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
 	<script type="text/javascript" src="js/multiselect.js"></script>
 	
@@ -557,6 +563,8 @@ jQuery(document).ready(function($) {
 		$('#keepRenderingSort').multiselect({
 			keepRenderingSort: true
 		});
+
+		$('#undo_redo').multiselect();
 	});
 	
 	function scrollTo( id ) {
