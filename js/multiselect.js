@@ -36,7 +36,10 @@
 				leftAll: 		$( settings.leftAll ).length ? $( settings.leftAll ) : $('#' + id + '_leftAll'),
 				rightAll: 		$( settings.rightAll ).length ? $( settings.rightAll ) : $('#' + id + '_rightAll'),
 				leftSelected:	$( settings.leftSelected ).length ? $( settings.leftSelected ) : $('#' + id + '_leftSelected'),
-				rightSelected:	$( settings.rightSelected ).length ? $( settings.rightSelected ) : $('#' + id + '_rightSelected')
+				rightSelected:	$( settings.rightSelected ).length ? $( settings.rightSelected ) : $('#' + id + '_rightSelected'),
+
+				undo:			$('#' + id + '_undo'),
+				redo:			$('#' + id + '_redo')
 			};
 			
 			delete settings.leftAll;
@@ -91,12 +94,12 @@
 				
 				self.left.on('dblclick', 'option', function(e) {
 					e.preventDefault();
-					self.moveOneToRight(this);
+					self.moveToRight(this);
 				});
 				
 				self.right.on('dblclick', 'option', function(e) {
 					e.preventDefault();
-					self.moveOneToLeft(this);
+					self.moveToLeft(this);
 				});
 				
 				// dblclick support for IE
@@ -112,10 +115,10 @@
 				
 				actions.rightSelected.on('click', function(e) {
 					e.preventDefault();
-					var option = self.left.find('option:selected');
+					var options = self.left.find('option:selected');
 					
-					if ( option ) {
-						self.moveOneToRight(option);
+					if ( options ) {
+						self.moveToRight(options);
 					}
 
 					$(this).blur();
@@ -123,10 +126,10 @@
 				
 				actions.leftSelected.on('click', function(e) {
 					e.preventDefault();
-					var option = self.right.find('option:selected');
+					var options = self.right.find('option:selected');
 					
-					if ( option ) {
-						self.moveOneToLeft(option);
+					if ( options ) {
+						self.moveToLeft(options);
 					}
 
 					$(this).blur();
@@ -137,7 +140,7 @@
 					var options = self.left.find('option');
 					
 					if ( options ) {
-						self.moveAllToRight(options);
+						self.moveToRight(options);
 					}
 
 					$(this).blur();
@@ -149,100 +152,102 @@
 					var options = self.right.find('option');
 					
 					if ( options ) {
-						self.moveAllToLeft(options);
+						self.moveToLeft(options);
 					}
 
 					$(this).blur();
 				});
+
+				actions.undo.on('click', function(e) {
+					e.preventDefault();
+
+					var last = self.undoStack.pop();
+					console.log('undo', last, self.undoStack);
+
+					if ( last ) {
+						self.redoStack.push(last);
+
+						switch(last[0]) {
+							case 'left':
+								self.moveToRight(last[1], false, true);
+								break;
+							case 'right':
+								self.moveToLeft(last[1], false, true);
+								break;
+						}
+					}
+				});
+
+				actions.redo.on('click', function(e) {
+					e.preventDefault();
+
+					var last = self.redoStack.pop();
+					console.log('redo', last, self.redoStack);
+
+					if ( last ) {
+						self.undoStack.push(last);
+
+						switch(last[0]) {
+							case 'left':
+								self.moveToLeft(last[1], false, true);
+								break;
+							case 'right':
+								self.moveToRight(last[1], false, true);
+								break;
+						}
+					}
+				});
 			},
 			
-			moveOneToRight: function( option, silent ) {
+			moveToRight: function( options, silent, skipStack ) {
 				var self = this;
 				
-				if ( typeof self.callbacks.beforeMoveOneToRight == 'function' && !silent ) {
-					if ( !self.callbacks.beforeMoveOneToRight( self.left, self.right, option ) ) {
+				if ( typeof self.callbacks.beforeMoveToRight == 'function' && !silent ) {
+					if ( !self.callbacks.beforeMoveToRight( self.left, self.right, options ) ) {
 						return false;
 					}
 				}
 				
-				self.right.append(option);
-				
-				if ( typeof self.callbacks.sort == 'function' && !silent ) {
-					self.right.find('option').sort(self.callbacks.sort).appendTo(self.right);		
+				self.right.append(options);
+
+				if ( !skipStack ) {
+					self.undoStack.push(['right', options ]);
+					self.redoStack = [];
 				}
 				
-				if ( typeof self.callbacks.afterMoveOneToRight == 'function' && !silent ){
-					self.callbacks.afterMoveOneToRight( self.left, self.right, option );
+				if ( typeof self.callbacks.sort == 'function' && !silent ) {
+					self.right.find('option').sort(self.callbacks.sort).appendTo(self.right);
+				}
+				
+				if ( typeof self.callbacks.afterMoveToRight == 'function' && !silent ){
+					self.callbacks.afterMoveToRight( self.left, self.right, options );
 				}
 				
 				return self;
 			},
 			
-			moveOneToLeft: function( option, silent ) {
+			moveToLeft: function( options, silent, skipStack ) {
 				var self = this;
 				
-				if ( typeof self.callbacks.beforeMoveOneToLeft == 'function' && !silent ) {
-					if ( !self.callbacks.beforeMoveOneToLeft( self.left, self.right, option ) ) {
+				if ( typeof self.callbacks.beforeMoveToLeft == 'function' && !silent ) {
+					if ( !self.callbacks.beforeMoveToLeft( self.left, self.right, options ) ) {
 						return false;
 					}
 				}
 					
-				self.left.append(option);
+				self.left.append(options);
+				
+				if ( !skipStack ) {
+					self.undoStack.push(['left', options ]);
+					self.redoStack = [];
+				}
 				
 				if ( typeof self.callbacks.sort == 'function' && !silent ) {
 					self.left.find('option').sort(self.callbacks.sort).appendTo(self.left);		
 				}
 				
-				if ( typeof self.callbacks.afterMoveOneToLeft == 'function' && !silent ) {
-					self.callbacks.afterMoveOneToLeft( self.left, self.right, option );	
-				}
-				
-				return self;
-			},
-			
-			moveAllToRight: function( options ) {
-				var self = this;
-				
-				if ( typeof self.callbacks.beforeMoveAllToRight == 'function' ) {
-					if ( !self.callbacks.beforeMoveAllToRight( self.left, self.right, options ) ) {
-						return false;
-					}
-				}
-				
-				for ( var i = 0; options[i]; i++ ) {
-					self.moveOneToRight(options[i], true);
-				}
-				
-				if ( typeof self.callbacks.sort == 'function' ) {
-					self.right.find('option').sort(self.callbacks.sort).appendTo(self.right);		
-				}
-				
-				if ( typeof self.callbacks.afterMoveAllToRight == 'function' ){
-					self.callbacks.afterMoveAllToRight( self.left, self.right, options );	
-				}
-				
-				return self;
-			},
-			
-			moveAllToLeft: function( options ) {
-				var self = this;
-				
-				if ( typeof self.callbacks.beforeMoveAllToLeft == 'function' ) {
-					if ( !self.callbacks.beforeMoveAllToLeft( self.left, self.right, options ) ) {
-						return false;
-					}
-				}
-				
-				for ( var i = 0; options[i]; i++ ) {
-					self.moveOneToLeft(options[i], true);
-				}
-				
-				if ( typeof self.callbacks.sort == 'function' ){
-					self.left.find('option').sort(self.callbacks.sort).appendTo(self.left);		
-				}
-				
-				if ( typeof self.callbacks.afterMoveAllToLeft == 'function' ){
-					self.callbacks.afterMoveAllToLeft( self.left, self.right, options );	
+				if ( typeof self.callbacks.afterMoveToLeft == 'function' && !silent ) {
+					self.callbacks.afterMoveToLeft( self.left, self.right, options );
 				}
 				
 				return self;
@@ -266,10 +271,10 @@
 			/*
 			 *  will be executed each time before moving one option to right
 			 *  IMPORTANT : this method must return boolean value
-			 *      true    : continue to moveOneToRight method
+			 *      true    : continue to moveToRight method
 			 *      false   : stop
 			 * 
-			 *  @method beforeMoveOneToRight
+			 *  @method beforeMoveToRight
 			 *  @attribute $left jQuery object
 			 *  @attribute $right jQuery object
 			 *  @attribute option HTML object (the option which was selected to be moved)
@@ -277,12 +282,12 @@
 			 *  @default true
 			 *  @return {boolean}
 			**/
-			beforeMoveOneToRight: function($left, $right, option) { return true; },
-			afterMoveOneToRight: function($left, $right, option){},
+			beforeMoveToRight: function($left, $right, option) { return true; },
+			afterMoveToRight: function($left, $right, option){},
 			beforeMoveAllToRight: function($left, $right, options){ return true; },
 			afterMoveAllToRight: function($left, $right, options){},
-			beforeMoveOneToLeft: function($left, $right, option){ return true; },
-			afterMoveOneToLeft: function($left, $right, option){},
+			beforeMoveToLeft: function($left, $right, option){ return true; },
+			afterMoveToLeft: function($left, $right, option){},
 			beforeMoveAllToLeft: function($left, $right, options){ return true; },
 			afterMoveAllToLeft: function($left, $right, options){},
 			sort: function(a, b) {
