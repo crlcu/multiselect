@@ -1,9 +1,9 @@
-/*
- * Multiselect
+/*!
+ * Multiselect v2.0.0
  * http://crlcu.github.io/multiselect/
  *
- * Copyright (c) 2013 Adrian Crisan
- * Licensed under the MIT license.
+ * Copyright (c) 2015 Adrian Crisan
+ * Licensed under the MIT license (https://github.com/crlcu/multiselect/blob/master/LICENSE)
  */
  ;(function (factory) {
    	if (typeof define === 'function' && define.amd) {
