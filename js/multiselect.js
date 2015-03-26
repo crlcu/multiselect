@@ -18,11 +18,10 @@
  	var Multiselect = (function( $ ) {
 		"use strict";
 		
-		/**
-		Multiselect object constructor
-		
-		@class Multiselect
-		@constructor
+		/**	Multiselect object constructor
+		 *
+		 *	@class Multiselect
+		 *	@constructor
 		**/
 		function Multiselect( $select, settings ) {
 			if ( typeof $ != 'function' ) {
@@ -161,39 +160,13 @@
 				actions.undo.on('click', function(e) {
 					e.preventDefault();
 
-					var last = self.undoStack.pop();
-
-					if ( last ) {
-						self.redoStack.push(last);
-
-						switch(last[0]) {
-							case 'left':
-								self.moveToRight(last[1], false, true);
-								break;
-							case 'right':
-								self.moveToLeft(last[1], false, true);
-								break;
-						}
-					}
+					self.undo();
 				});
 
 				actions.redo.on('click', function(e) {
 					e.preventDefault();
 
-					var last = self.redoStack.pop();
-
-					if ( last ) {
-						self.undoStack.push(last);
-
-						switch(last[0]) {
-							case 'left':
-								self.moveToLeft(last[1], false, true);
-								break;
-							case 'right':
-								self.moveToRight(last[1], false, true);
-								break;
-						}
-					}
+					self.redo();
 				});
 			},
 			
@@ -249,6 +222,41 @@
 				}
 				
 				return self;
+			},
+
+			undo: function() {
+				var self = this;
+				var last = self.undoStack.pop();
+
+				if ( last ) {
+					self.redoStack.push(last);
+
+					switch(last[0]) {
+						case 'left':
+							self.moveToRight(last[1], false, true);
+							break;
+						case 'right':
+							self.moveToLeft(last[1], false, true);
+							break;
+					}
+				}
+			},
+			redo: function() {
+				var self = this;
+				var last = self.redoStack.pop();
+
+				if ( last ) {
+					self.undoStack.push(last);
+
+					switch(last[0]) {
+						case 'left':
+							self.moveToLeft(last[1], false, true);
+							break;
+						case 'right':
+							self.moveToRight(last[1], false, true);
+							break;
+					}
+				}
 			}
 		}
 		
@@ -257,37 +265,74 @@
 	
 	$.multiselect = {
 		defaults: {
-			/*
-			 * will be executed once
-			 * @method startUp
+			/**	will be executed once - remove from $left all options that are already in $right
+			 *
+			 *	@method startUp
 			**/
 			startUp: function( $left, $right ) {
 				$right.find('option').each(function(index, option) {
 					$left.find('option[value="' + option.value + '"]').remove();
 				});
 			},
-			/*
-			 *  will be executed each time before moving one option to right
-			 *  IMPORTANT : this method must return boolean value
+
+			/**	will be executed each time before moving option[s] to right
+			 *  
+			 *	IMPORTANT : this method must return boolean value
 			 *      true    : continue to moveToRight method
 			 *      false   : stop
 			 * 
 			 *  @method beforeMoveToRight
 			 *  @attribute $left jQuery object
 			 *  @attribute $right jQuery object
-			 *  @attribute option HTML object (the option which was selected to be moved)
+			 *  @attribute options HTML object (the option[s] which was selected to be moved)
 			 *  
 			 *  @default true
 			 *  @return {boolean}
 			**/
-			beforeMoveToRight: function($left, $right, option) { return true; },
-			afterMoveToRight: function($left, $right, option){},
-			beforeMoveAllToRight: function($left, $right, options){ return true; },
-			afterMoveAllToRight: function($left, $right, options){},
+			beforeMoveToRight: function($left, $right, options) { return true; },
+
+			/*	will be executed each time after moving option[s] to right
+			 * 
+			 *  @method afterMoveToRight
+			 *  @attribute $left jQuery object
+			 *  @attribute $right jQuery object
+			 *  @attribute options HTML object (the option[s] which was selected to be moved)
+			**/
+			afterMoveToRight: function($left, $right, options){},
+
+			/**	will be executed each time before moving option[s] to left
+			 *  
+			 *	IMPORTANT : this method must return boolean value
+			 *      true    : continue to moveToRight method
+			 *      false   : stop
+			 * 
+			 *  @method beforeMoveToLeft
+			 *  @attribute $left jQuery object
+			 *  @attribute $right jQuery object
+			 *  @attribute options HTML object (the option[s] which was selected to be moved)
+			 *  
+			 *  @default true
+			 *  @return {boolean}
+			**/
 			beforeMoveToLeft: function($left, $right, option){ return true; },
+
+			/*	will be executed each time after moving option[s] to left
+			 * 
+			 *  @method afterMoveToLeft
+			 *  @attribute $left jQuery object
+			 *  @attribute $right jQuery object
+			 *  @attribute options HTML object (the option[s] which was selected to be moved)
+			**/
 			afterMoveToLeft: function($left, $right, option){},
-			beforeMoveAllToLeft: function($left, $right, options){ return true; },
-			afterMoveAllToLeft: function($left, $right, options){},
+
+			/**	sort options by option text
+			 * 
+			 *  @method sort
+			 *  @attribute a HTML option
+			 *  @attribute b HTML option
+			 *
+			 *  @return 1/-1
+			**/
 			sort: function(a, b) {
 				if (a.innerHTML == 'NA') {
 					return 1;   
