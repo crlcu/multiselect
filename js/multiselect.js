@@ -38,8 +38,8 @@
 				leftSelected:	$( settings.leftSelected ).length ? $( settings.leftSelected ) : $('#' + id + '_leftSelected'),
 				rightSelected:	$( settings.rightSelected ).length ? $( settings.rightSelected ) : $('#' + id + '_rightSelected'),
 
-				undo:			$('#' + id + '_undo'),
-				redo:			$('#' + id + '_redo')
+				undo:			$( settings.undo ).length ? $( settings.undo ) : $('#' + id + '_undo'),
+				redo:			$( settings.redo ).length ? $( settings.redo ) : $('#' + id + '_redo')
 			};
 			
 			delete settings.leftAll;
@@ -162,7 +162,6 @@
 					e.preventDefault();
 
 					var last = self.undoStack.pop();
-					console.log('undo', last, self.undoStack);
 
 					if ( last ) {
 						self.redoStack.push(last);
@@ -182,7 +181,6 @@
 					e.preventDefault();
 
 					var last = self.redoStack.pop();
-					console.log('redo', last, self.redoStack);
 
 					if ( last ) {
 						self.undoStack.push(last);
