@@ -100,6 +100,12 @@
 					e.preventDefault();
 					self.moveToLeft(this);
 				});
+
+				// select all the options that are in right side
+				// when submiting the parent form
+				self.right.closest('form').on('submit', function(e) {
+					self.right.children().attr('selected', true);
+				});
 				
 				// dblclick support for IE
 				if ( navigator.userAgent.match(/MSIE/i)  || navigator.userAgent.indexOf('Trident/') > 0 || navigator.userAgent.indexOf('Edge/') > 0) {
