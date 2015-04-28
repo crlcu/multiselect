@@ -5,6 +5,10 @@ jQuery multiselect plugin with two sides. The user can select one or more items 
 
 # [Demo](http://crlcu.github.com/multiselect/)
 
+## Requirements
+
+- jQuery 1.7 or higher
+
 ## Quick start
 
 Several quick start options are available:

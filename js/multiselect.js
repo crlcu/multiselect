@@ -5,7 +5,22 @@
  * Copyright (c) 2015 Adrian Crisan
  * Licensed under the MIT license (https://github.com/crlcu/multiselect/blob/master/LICENSE)
  */
- ;(function (factory) {
+
+if (typeof jQuery === 'undefined') {
+	throw new Error('multiselect requires jQuery');
+}
+
+;(function ($) {
+	'use strict';
+
+	var version = $.fn.jquery.split(' ')[0].split('.');
+	
+	if (version[0] < 2 && version[1] < 7) {
+		throw new Error('multiselect requires jQuery version 1.7 or higher');
+	}
+})(jQuery);
+
+;(function (factory) {
    	if (typeof define === 'function' && define.amd) {
      	// AMD. Register as an anonymous module depending on jQuery.
      	define(['jquery'], factory);
@@ -13,21 +28,16 @@
     	// No AMD. Register plugin with global jQuery object.
     	factory(jQuery);
    	}
- }(function ($) {
+}(function ($) {
+	'use strict';
 
- 	var Multiselect = (function( $ ) {
-		"use strict";
-		
+ 	var Multiselect = (function($) {
 		/**	Multiselect object constructor
 		 *
 		 *	@class Multiselect
 		 *	@constructor
 		**/
 		function Multiselect( $select, settings ) {
-			if ( typeof $ != 'function' ) {
-				throw "$ is undefined or not a function";
-			}
-			
 			var id = $select.attr('id');
 			this.left = $select;
 			this.right = $( settings.right ).length ? $( settings.right ) : $('#' + id + '_to');
@@ -101,9 +111,10 @@
 					self.moveToLeft(this);
 				});
 
-				// select all the options that are in right side
+				// select all the options from left and right side
 				// when submiting the parent form
 				self.right.closest('form').on('submit', function(e) {
+					self.left.children().attr('selected', true);
 					self.right.children().attr('selected', true);
 				});
 				
@@ -267,7 +278,7 @@
 		}
 		
 		return Multiselect;
-	})( jQuery );
+	})($);
 	
 	$.multiselect = {
 		defaults: {
@@ -348,18 +359,17 @@
 				
 				return (a.innerHTML > b.innerHTML) ? 1 : -1;
 			}
-		},
-		setup: {}
-	}
+		}
+	};
     
     $.fn.multiselect = function( options ) {
         return this.each(function() {
 			var $this = $(this),
 				data = $this.data();
 			
-			var settings = $.extend({}, $.multiselect.defaults, $.multiselect.setup, data, options);
+			var settings = $.extend({}, $.multiselect.defaults, data, options);
 			
             return new Multiselect($this, settings);
         });  
     };
- }));
+}));
