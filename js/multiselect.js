@@ -94,8 +94,16 @@ if (typeof jQuery === 'undefined') {
 				}
 				
 				if ( !self.skipInitSort && typeof self.callbacks.sort == 'function' ) {
-					self.left.find('option').sort(self.callbacks.sort).appendTo(self.left);
-					self.right.find('option').sort(self.callbacks.sort).appendTo(self.right);
+					self.left.find('option')
+						.sort(self.callbacks.sort)
+						.appendTo(self.left);
+					
+					self.right
+						.each(function(i, select) {
+						$(select).find('option')
+							.sort(self.callbacks.sort)
+							.appendTo(select);
+					});
 				}
 				
 				self.events( self.actions );
