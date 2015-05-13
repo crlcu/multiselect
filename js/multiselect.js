@@ -64,13 +64,16 @@ if (typeof jQuery === 'undefined') {
 			delete settings.keepRenderingSort;
 
 			this.callbacks = settings;
-			this.undoStack = [];
-			this.redoStack = [];
 			
 			this.init();
 		}
 		
 		Multiselect.prototype = {
+			// Vars
+			undoStack: [],
+			redoStack: [],
+
+			// Functions
 			init: function() {
 				var self = this;
 
@@ -103,12 +106,12 @@ if (typeof jQuery === 'undefined') {
 				
 				self.left.on('dblclick', 'option', function(e) {
 					e.preventDefault();
-					self.moveToRight(this);
+					self.moveToRight(this, e);
 				});
 				
 				self.right.on('dblclick', 'option', function(e) {
 					e.preventDefault();
-					self.moveToLeft(this);
+					self.moveToLeft(this, e);
 				});
 
 				// select all the options from left and right side
@@ -134,7 +137,7 @@ if (typeof jQuery === 'undefined') {
 					var options = self.left.find('option:selected');
 					
 					if ( options ) {
-						self.moveToRight(options);
+						self.moveToRight(options, e);
 					}
 
 					$(this).blur();
@@ -145,7 +148,7 @@ if (typeof jQuery === 'undefined') {
 					var options = self.right.find('option:selected');
 					
 					if ( options ) {
-						self.moveToLeft(options);
+						self.moveToLeft(options, e);
 					}
 
 					$(this).blur();
@@ -156,7 +159,7 @@ if (typeof jQuery === 'undefined') {
 					var options = self.left.find('option');
 					
 					if ( options ) {
-						self.moveToRight(options);
+						self.moveToRight(options, e);
 					}
 
 					$(this).blur();
@@ -168,7 +171,7 @@ if (typeof jQuery === 'undefined') {
 					var options = self.right.find('option');
 					
 					if ( options ) {
-						self.moveToLeft(options);
+						self.moveToLeft(options, e);
 					}
 
 					$(this).blur();
@@ -177,71 +180,79 @@ if (typeof jQuery === 'undefined') {
 				actions.undo.on('click', function(e) {
 					e.preventDefault();
 
-					self.undo();
+					self.undo(e);
 				});
 
 				actions.redo.on('click', function(e) {
 					e.preventDefault();
 
-					self.redo();
+					self.redo(e);
 				});
 			},
 			
-			moveToRight: function( options, silent, skipStack ) {
+			moveToRight: function( options, event, silent, skipStack ) {
 				var self = this;
-				
-				if ( typeof self.callbacks.beforeMoveToRight == 'function' && !silent ) {
-					if ( !self.callbacks.beforeMoveToRight( self.left, self.right, options ) ) {
-						return false;
-					}
-				}
-				
-				self.right.append(options);
 
-				if ( !skipStack ) {
-					self.undoStack.push(['right', options ]);
-					self.redoStack = [];
+				if ( typeof self.callbacks.moveToRight == 'function' ) {
+					return self.callbacks.moveToRight( self, options, event, silent, skipStack );
+				} else {
+					if ( typeof self.callbacks.beforeMoveToRight == 'function' && !silent ) {
+						if ( !self.callbacks.beforeMoveToRight( self.left, self.right, options ) ) {
+							return false;
+						}
+					}
+					
+					self.right.append(options);
+
+					if ( !skipStack ) {
+						self.undoStack.push(['right', options ]);
+						self.redoStack = [];
+					}
+					
+					if ( typeof self.callbacks.sort == 'function' && !silent ) {
+						self.right.find('option').sort(self.callbacks.sort).appendTo(self.right);
+					}
+					
+					if ( typeof self.callbacks.afterMoveToRight == 'function' && !silent ){
+						self.callbacks.afterMoveToRight( self.left, self.right, options );
+					}
+					
+					return self;
 				}
-				
-				if ( typeof self.callbacks.sort == 'function' && !silent ) {
-					self.right.find('option').sort(self.callbacks.sort).appendTo(self.right);
-				}
-				
-				if ( typeof self.callbacks.afterMoveToRight == 'function' && !silent ){
-					self.callbacks.afterMoveToRight( self.left, self.right, options );
-				}
-				
-				return self;
 			},
 			
-			moveToLeft: function( options, silent, skipStack ) {
+			moveToLeft: function( options, event, silent, skipStack ) {
 				var self = this;
 				
-				if ( typeof self.callbacks.beforeMoveToLeft == 'function' && !silent ) {
-					if ( !self.callbacks.beforeMoveToLeft( self.left, self.right, options ) ) {
-						return false;
+				if ( typeof self.callbacks.moveToLeft == 'function' ) {
+					return self.callbacks.moveToLeft( self, options, event, silent, skipStack );
+				} else {
+					if ( typeof self.callbacks.beforeMoveToLeft == 'function' && !silent ) {
+						if ( !self.callbacks.beforeMoveToLeft( self.left, self.right, options ) ) {
+							return false;
+						}
 					}
-				}
+						
+					self.left.append(options);
 					
-				self.left.append(options);
-				
-				if ( !skipStack ) {
-					self.undoStack.push(['left', options ]);
-					self.redoStack = [];
+					if ( !skipStack ) {
+						self.undoStack.push(['left', options ]);
+						self.redoStack = [];
+					}
+					
+					if ( typeof self.callbacks.sort == 'function' && !silent ) {
+						self.left.find('option').sort(self.callbacks.sort).appendTo(self.left);		
+					}
+					
+					if ( typeof self.callbacks.afterMoveToLeft == 'function' && !silent ) {
+						self.callbacks.afterMoveToLeft( self.left, self.right, options );
+					}
+					
+					return self;
 				}
-				
-				if ( typeof self.callbacks.sort == 'function' && !silent ) {
-					self.left.find('option').sort(self.callbacks.sort).appendTo(self.left);		
-				}
-				
-				if ( typeof self.callbacks.afterMoveToLeft == 'function' && !silent ) {
-					self.callbacks.afterMoveToLeft( self.left, self.right, options );
-				}
-				
-				return self;
 			},
 
-			undo: function() {
+			undo: function(event) {
 				var self = this;
 				var last = self.undoStack.pop();
 
@@ -250,15 +261,15 @@ if (typeof jQuery === 'undefined') {
 
 					switch(last[0]) {
 						case 'left':
-							self.moveToRight(last[1], false, true);
+							self.moveToRight(last[1], event, false, true);
 							break;
 						case 'right':
-							self.moveToLeft(last[1], false, true);
+							self.moveToLeft(last[1], event, false, true);
 							break;
 					}
 				}
 			},
-			redo: function() {
+			redo: function(event) {
 				var self = this;
 				var last = self.redoStack.pop();
 
@@ -267,10 +278,10 @@ if (typeof jQuery === 'undefined') {
 
 					switch(last[0]) {
 						case 'left':
-							self.moveToLeft(last[1], false, true);
+							self.moveToLeft(last[1], event, false, true);
 							break;
 						case 'right':
-							self.moveToRight(last[1], false, true);
+							self.moveToRight(last[1], event, false, true);
 							break;
 					}
 				}
