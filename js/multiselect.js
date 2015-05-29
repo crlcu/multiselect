@@ -1,5 +1,5 @@
 /*!
- * Multiselect v2.1.0
+ * Multiselect v2.1.1
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2015 Adrian Crisan
@@ -38,7 +38,7 @@ if (typeof jQuery === 'undefined') {
 		 *	@constructor
 		**/
 		function Multiselect( $select, settings ) {
-			var id = $select.attr('id');
+			var id = $select.prop('id');
 			this.left = $select;
 			this.right = $( settings.right ).length ? $( settings.right ) : $('#' + id + '_to');
 			this.actions = {
@@ -125,8 +125,8 @@ if (typeof jQuery === 'undefined') {
 				// select all the options from left and right side
 				// when submiting the parent form
 				self.right.closest('form').on('submit', function(e) {
-					self.left.children().attr('selected', true);
-					self.right.children().attr('selected', true);
+					self.left.children().prop('selected', true);
+					self.right.children().prop('selected', true);
 				});
 				
 				// dblclick support for IE
