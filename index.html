@@ -212,7 +212,7 @@
 			
 			<div class="row">
 				<div class="col-sm-5">
-					<select name="from" id="multiselect" class="form-control" size="8" multiple="multiple">
+					<select name="from[]" id="multiselect" class="form-control" size="8" multiple="multiple">
 						<option value="1" data-position="1">Item 1</option>
 						<option value="2" data-position="2">Item 5</option>
 						<option value="2" data-position="3">Item 2</option>
@@ -229,7 +229,7 @@
 				</div>
 				
 				<div class="col-sm-5">
-					<select name="to" id="multiselect_to" class="form-control" size="8" multiple="multiple"></select>
+					<select name="to[]" id="multiselect_to" class="form-control" size="8" multiple="multiple"></select>
 				</div>
 			</div>
 			
@@ -275,7 +275,7 @@ jQuery(document).ready(function($) {
 			
 			<div class="row">
 				<div class="col-xs-5">
-					<select name="from" class="multiselect form-control" size="8" multiple="multiple" data-right="#multiselect_to_1" data-right-all="#right_All_1" data-right-selected="#right_Selected_1" data-left-all="#left_All_1" data-left-selected="#left_Selected_1">
+					<select name="from[]" class="multiselect form-control" size="8" multiple="multiple" data-right="#multiselect_to_1" data-right-all="#right_All_1" data-right-selected="#right_Selected_1" data-left-all="#left_All_1" data-left-selected="#left_Selected_1">
 						<option value="1">Item 1</option>
 						<option value="2">Item 5</option>
 						<option value="2">Item 2</option>
@@ -292,7 +292,7 @@ jQuery(document).ready(function($) {
 				</div>
 				
 				<div class="col-xs-5">
-					<select name="to" id="multiselect_to_1" class="form-control" size="8" multiple="multiple"></select>
+					<select name="to[]" id="multiselect_to_1" class="form-control" size="8" multiple="multiple"></select>
 				</div>
 			</div>
 			
@@ -338,7 +338,7 @@ jQuery(document).ready(function($) {
 			
 			<div class="row">
 				<div class="col-xs-5">
-					<select name="from" class="js-multiselect form-control" size="8" multiple="multiple">
+					<select name="from[]" class="js-multiselect form-control" size="8" multiple="multiple">
 						<option value="1">Item 1</option>
 						<option value="2">Item 5</option>
 						<option value="2">Item 2</option>
@@ -355,7 +355,7 @@ jQuery(document).ready(function($) {
 				</div>
 				
 				<div class="col-xs-5">
-					<select name="to" id="js_multiselect_to_1" class="form-control" size="8" multiple="multiple"></select>
+					<select name="to[]" id="js_multiselect_to_1" class="form-control" size="8" multiple="multiple"></select>
 				</div>
 			</div>
 			
@@ -407,7 +407,7 @@ jQuery(document).ready(function($) {
 			
 			<div class="row">
 				<div class="col-xs-5">
-					<select name="from" id="keepRenderingSort" class="form-control" size="8" multiple="multiple">
+					<select name="from[]" id="keepRenderingSort" class="form-control" size="8" multiple="multiple">
 						<option value="1" data-position="1">Item 1</option>
 						<option value="2" data-position="2">Item 5</option>
 						<option value="2" data-position="3">Item 2</option>
@@ -424,7 +424,7 @@ jQuery(document).ready(function($) {
 				</div>
 				
 				<div class="col-xs-5">
-					<select name="to" id="keepRenderingSort_to" class="form-control" size="8" multiple="multiple"></select>
+					<select name="to[]" id="keepRenderingSort_to" class="form-control" size="8" multiple="multiple"></select>
 				</div>
 			</div>
 			
@@ -472,7 +472,7 @@ jQuery(document).ready(function($) {
 			
 			<div class="row">
 				<div class="col-xs-5">
-					<select name="from" id="undo_redo" class="form-control" size="13" multiple="multiple">
+					<select name="from[]" id="undo_redo" class="form-control" size="13" multiple="multiple">
 						<option value="1">C++</option>
 						<option value="2">C#</option>
 						<option value="3">Haskell</option>
@@ -499,7 +499,7 @@ jQuery(document).ready(function($) {
 				</div>
 				
 				<div class="col-xs-5">
-					<select name="to" id="undo_redo_to" class="form-control" size="13" multiple="multiple"></select>
+					<select name="to[]" id="undo_redo_to" class="form-control" size="13" multiple="multiple"></select>
 				</div>
 			</div>
 
@@ -555,7 +555,7 @@ jQuery(document).ready(function($) {
 			
 			<div class="row">
 				<div class="col-xs-5">
-					<select name="from" id="multi_d" class="form-control" size="26" multiple="multiple">
+					<select name="from[]" id="multi_d" class="form-control" size="26" multiple="multiple">
 						<option value="1">C++</option>
 						<option value="2">C#</option>
 						<option value="3">Haskell</option>
@@ -588,7 +588,7 @@ jQuery(document).ready(function($) {
 				
 				<div class="col-xs-5">
 					<b>Known languages</b>
-					<select name="to" id="multi_d_to" class="form-control" size="8" multiple="multiple">
+					<select name="to[]" id="multi_d_to" class="form-control" size="8" multiple="multiple">
 						<option value="1">C++</option>
 						<option value="2">C#</option>
 					</select>
@@ -596,7 +596,7 @@ jQuery(document).ready(function($) {
 					<br/><hr/><br/>
 
 					<b>I want to learn</b>
-					<select name="to_2" id="multi_d_to_2" class="form-control" size="8" multiple="multiple">
+					<select name="to_2[]" id="multi_d_to_2" class="form-control" size="8" multiple="multiple">
 						<option value="12">SQL</option>
 						<option value="13">Unix shell</option>
 					</select>
