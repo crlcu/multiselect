@@ -239,7 +239,7 @@
 <pre class="prettyprint linenums">
 &lt;div class=&quot;row&quot;&gt;
 	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;from&quot; id=&quot;multiselect&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+		&lt;select name=&quot;from[]&quot; id=&quot;multiselect&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
 			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
 			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
 			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
@@ -256,7 +256,7 @@
 	&lt;/div&gt;
 	
 	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;to&quot; id=&quot;multiselect_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+		&lt;select name=&quot;to[]&quot; id=&quot;multiselect_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
 	&lt;/div&gt;
 &lt;/div&gt;
 </pre>
@@ -302,7 +302,7 @@ jQuery(document).ready(function($) {
 <pre class="prettyprint linenums">
 &lt;div class=&quot;row&quot;&gt;
 	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;from&quot; class=&quot;multiselect form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot; data-right=&quot;#multiselect_to_1&quot; data-right-all=&quot;#right_All_1&quot; data-right-selected=&quot;#right_Selected_1&quot; data-left-all=&quot;#left_All_1&quot; data-right-selected=&quot;#left_Selected_1&quot;&gt;
+		&lt;select name=&quot;from[]&quot; class=&quot;multiselect form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot; data-right=&quot;#multiselect_to_1&quot; data-right-all=&quot;#right_All_1&quot; data-right-selected=&quot;#right_Selected_1&quot; data-left-all=&quot;#left_All_1&quot; data-right-selected=&quot;#left_Selected_1&quot;&gt;
 			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
 			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
 			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
@@ -319,7 +319,7 @@ jQuery(document).ready(function($) {
 	&lt;/div&gt;
 	
 	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;to&quot; id=&quot;multiselect_to_1&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+		&lt;select name=&quot;to[]&quot; id=&quot;multiselect_to_1&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
 	&lt;/div&gt;
 &lt;/div&gt;
 </pre>
@@ -365,7 +365,7 @@ jQuery(document).ready(function($) {
 <pre class="prettyprint linenums">
 &lt;div class=&quot;row&quot;&gt;
 	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;from&quot; class=&quot;js-multiselect form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+		&lt;select name=&quot;from[]&quot; class=&quot;js-multiselect form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
 			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
 			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
 			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
@@ -382,7 +382,7 @@ jQuery(document).ready(function($) {
 	&lt;/div&gt;
 	
 	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;to&quot; id=&quot;js_multiselect_to_1&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+		&lt;select name=&quot;to[]&quot; id=&quot;js_multiselect_to_1&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
 	&lt;/div&gt;
 &lt;/div&gt;
 </pre>
@@ -434,7 +434,7 @@ jQuery(document).ready(function($) {
 <pre class="prettyprint linenums">
 &lt;div class=&quot;row&quot;&gt;
 	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;from&quot; id=&quot;keepRenderingSort&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+		&lt;select name=&quot;from[]&quot; id=&quot;keepRenderingSort&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
 			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
 			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
 			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
@@ -451,7 +451,7 @@ jQuery(document).ready(function($) {
 	&lt;/div&gt;
 	
 	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;to&quot; id=&quot;keepRenderingSort_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+		&lt;select name=&quot;to[]&quot; id=&quot;keepRenderingSort_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
 	&lt;/div&gt;
 &lt;/div&gt;
 </pre>
@@ -509,7 +509,7 @@ jQuery(document).ready(function($) {
 <pre class="prettyprint linenums">
 &lt;div class=&quot;row&quot;&gt;
 	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;from&quot; id=&quot;undo_redo&quot; class=&quot;form-control&quot; size=&quot;13&quot; multiple=&quot;multiple&quot;&gt;
+		&lt;select name=&quot;from[]&quot; id=&quot;undo_redo&quot; class=&quot;form-control&quot; size=&quot;13&quot; multiple=&quot;multiple&quot;&gt;
 			&lt;option value=&quot;1&quot;&gt;C++&lt;/option&gt;
 			&lt;option value=&quot;2&quot;&gt;C#&lt;/option&gt;
 			&lt;option value=&quot;3&quot;&gt;Haskell&lt;/option&gt;
@@ -536,7 +536,7 @@ jQuery(document).ready(function($) {
 	&lt;/div&gt;
 	
 	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;to&quot; id=&quot;undo_redo_to&quot; class=&quot;form-control&quot; size=&quot;13&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+		&lt;select name=&quot;to[]&quot; id=&quot;undo_redo_to&quot; class=&quot;form-control&quot; size=&quot;13&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
 	&lt;/div&gt;
 &lt;/div&gt;
 </pre>
@@ -609,7 +609,7 @@ jQuery(document).ready(function($) {
 <pre class="prettyprint linenums">
 &lt;div class=&quot;row&quot;&gt;
 	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;from&quot; id=&quot;multi_d&quot; class=&quot;form-control&quot; size=&quot;26&quot; multiple=&quot;multiple&quot;&gt;
+		&lt;select name=&quot;from[]&quot; id=&quot;multi_d&quot; class=&quot;form-control&quot; size=&quot;26&quot; multiple=&quot;multiple&quot;&gt;
 			&lt;option value=&quot;1&quot;&gt;C++&lt;/option&gt;
 			&lt;option value=&quot;2&quot;&gt;C#&lt;/option&gt;
 			&lt;option value=&quot;3&quot;&gt;Haskell&lt;/option&gt;
@@ -642,12 +642,12 @@ jQuery(document).ready(function($) {
     
 	&lt;div class=&quot;col-xs-5&quot;&gt;
 		&lt;b&gt;Known languages&lt;/b&gt;
-		&lt;select name=&quot;to&quot; id=&quot;multi_d_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+		&lt;select name=&quot;to[]&quot; id=&quot;multi_d_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
         
 		&lt;br/&gt;&lt;hr/&gt;&lt;br/&gt;
         
 		&lt;b&gt;I want to learn&lt;/b&gt;
-		&lt;select name=&quot;to_2&quot; id=&quot;multi_d_to_2&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+		&lt;select name=&quot;to_2[]&quot; id=&quot;multi_d_to_2&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
 	&lt;/div&gt;
 &lt;/div&gt;
 </pre>
