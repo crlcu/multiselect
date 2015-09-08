@@ -305,7 +305,7 @@ if (typeof jQuery === 'undefined') {
 		return Multiselect;
 	})($);
 	
-	$.multiselect = {
+	$.twosidemultiselect = {
 		defaults: {
 			/**	will be executed once - remove from $left all options that are already in $right
 			 *
@@ -387,12 +387,12 @@ if (typeof jQuery === 'undefined') {
 		}
 	};
 
-	$.fn.multiselect = function( options ) {
+	$.fn.twosidemultiselect = function( options ) {
 		return this.each(function() {
 			var $this = $(this),
 				data = $this.data();
 			
-			var settings = $.extend({}, $.multiselect.defaults, data, options);
+			var settings = $.extend({}, $.twosidemultiselect.defaults, data, options);
 			
 			return new Multiselect($this, settings);
 		});
