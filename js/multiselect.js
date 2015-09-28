@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.1.1
+ * Multiselect v2.1.3
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2015 Adrian Crisan
@@ -58,12 +58,14 @@ if (typeof jQuery === 'undefined') {
 			delete settings.right;
 			delete settings.rightAll;
 			delete settings.rightSelected;
-			
+
 			this.options = {
-				keepRenderingSort: settings.keepRenderingSort
+				keepRenderingSort: settings.keepRenderingSort,
+				submitAllLeft: settings.submitAllLeft !== undefined ? settings.submitAllLeft : true,
+				submitAllRight: settings.submitAllRight !== undefined ? settings.submitAllLeft : true,
 			};
 
-			delete settings.keepRenderingSort;
+			delete settings.keepRenderingSort, settings.submitAllLeft, settings.submitAllRight;
 
 			this.callbacks = settings;
 			
@@ -131,8 +133,8 @@ if (typeof jQuery === 'undefined') {
 				// select all the options from left and right side
 				// when submiting the parent form
 				self.right.closest('form').on('submit', function(e) {
-					self.left.children().prop('selected', true);
-					self.right.children().prop('selected', true);
+					self.left.children().prop('selected', self.options.submitAllLeft);
+					self.right.children().prop('selected', self.options.submitAllRight);
 				});
 				
 				// dblclick support for IE
@@ -383,7 +385,7 @@ if (typeof jQuery === 'undefined') {
 				}
 				
 				return (a.innerHTML > b.innerHTML) ? 1 : -1;
-			}
+			},
 		}
 	};
 
