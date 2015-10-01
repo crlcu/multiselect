@@ -231,6 +231,26 @@
 							When you don&rsquo;t want to send all options from the right side to server, <code>submitAllRight</code> must be <code>false</code>.
 						</td>
 					</tr>
+					<tr>
+						<td>search</td>
+						<td><code>Object</code></td>
+						<td><code>null</code></td>
+						<td>
+							When you want to have search fields for <code>left</code> and <code>right</code> elements you can do this by providing following value:<br/>
+							<pre class="prettyprint linenums">
+search: {
+	left: &#39;&lt;input type=&quot;text&quot; name=&quot;q&quot; class=&quot;form-control&quot; placeholder=&quot;Search...&quot; /&gt;&#39;,
+	right: &#39;&lt;input type=&quot;text&quot; name=&quot;q&quot; class=&quot;form-control&quot; placeholder=&quot;Search...&quot; /&gt;&#39;,
+}
+</pre>
+							When you want to have search field only for <code>left</code> element you can do this by providing following value:<br/>
+							<pre class="prettyprint linenums">
+search: {
+	left: &#39;&lt;input type=&quot;text&quot; name=&quot;q&quot; class=&quot;form-control&quot; placeholder=&quot;Search...&quot; /&gt;&#39;,
+}
+</pre>
+						</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
@@ -440,6 +460,74 @@ jQuery(document).ready(function($) {
 		rightSelected: &#39;#js_right_Selected_1&#39;,
 		leftSelected: &#39;#js_left_Selected_1&#39;,
 		leftAll: &#39;#js_left_All_1&#39;
+	});
+});
+&lt;/script&gt;
+</pre>
+				</div>
+			</div>
+
+			<h4 id="demo-search">With search</h4>
+			
+			<div class="row">
+				<div class="col-sm-5">
+					<select name="from[]" id="search" class="form-control" size="8" multiple="multiple">
+						<option value="1" data-position="1">Item 1</option>
+						<option value="2" data-position="2">Item 5</option>
+						<option value="2" data-position="3">Item 2</option>
+						<option value="2" data-position="4">Item 4</option>
+						<option value="3" data-position="5">Item 3</option>
+					</select>
+				</div>
+				
+				<div class="col-sm-2">
+					<button type="button" id="search_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+					<button type="button" id="search_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+					<button type="button" id="search_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+					<button type="button" id="search_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+				</div>
+				
+				<div class="col-sm-5">
+					<select name="to[]" id="search_to" class="form-control" size="8" multiple="multiple"></select>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-xs-12">
+					<h5>HTML</h5>
+<pre class="prettyprint linenums">
+&lt;div class=&quot;row&quot;&gt;
+	&lt;div class=&quot;col-xs-5&quot;&gt;
+		&lt;select name=&quot;from[]&quot; id=&quot;search&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
+			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
+			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
+			&lt;option value=&quot;2&quot;&gt;Item 4&lt;/option&gt;
+			&lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
+		&lt;/select&gt;
+	&lt;/div&gt;
+	
+	&lt;div class=&quot;col-xs-2&quot;&gt;
+		&lt;button type=&quot;button&quot; id=&quot;search_rightAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;search_rightSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;search_leftSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+		&lt;button type=&quot;button&quot; id=&quot;search_leftAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+	&lt;/div&gt;
+	
+	&lt;div class=&quot;col-xs-5&quot;&gt;
+		&lt;select name=&quot;to[]&quot; id=&quot;search_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+			<h5>JavaScript</h5>
+<pre class="prettyprint linenums">
+&lt;script type=&quot;text/javascript&quot;&gt;
+jQuery(document).ready(function($) {
+	$(&#39;#search&#39;).multiselect({
+		search: {
+			left: &#39;&lt;input type=&quot;text&quot; name=&quot;q&quot; class=&quot;form-control&quot; placeholder=&quot;Search...&quot; /&gt;&#39;,
+			right: &#39;&lt;input type=&quot;text&quot; name=&quot;q&quot; class=&quot;form-control&quot; placeholder=&quot;Search...&quot; /&gt;&#39;,
+		}
 	});
 });
 &lt;/script&gt;
@@ -828,6 +916,27 @@ jQuery(document).ready(function($) {
 		});
 
 		$('#multiselect').multiselect();
+
+		$('[name="q"]').on('keyup', function(e) {
+			var search = this.value;
+			var $options = $(this).next('select').find('option');
+
+			$options.each(function(i, option) {
+				if (option.text.indexOf(search) > -1) {
+					$(option).show();
+				} else {
+					$(option).hide();
+				}
+			});
+		});
+
+		$('#search').multiselect({
+			search: {
+				left: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
+				right: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
+			}
+		});
+
 		$('.multiselect').multiselect();
 		$('.js-multiselect').multiselect({
 			right: '#js_multiselect_to_1',

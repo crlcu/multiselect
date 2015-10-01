@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.1.3
+ * Multiselect v2.1.4
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2015 Adrian Crisan
@@ -60,12 +60,13 @@ if (typeof jQuery === 'undefined') {
 			delete settings.rightSelected;
 
 			this.options = {
-				keepRenderingSort: settings.keepRenderingSort,
-				submitAllLeft: settings.submitAllLeft !== undefined ? settings.submitAllLeft : true,
-				submitAllRight: settings.submitAllRight !== undefined ? settings.submitAllLeft : true,
+				keepRenderingSort:	settings.keepRenderingSort,
+				submitAllLeft:		settings.submitAllLeft !== undefined ? settings.submitAllLeft : true,
+				submitAllRight:		settings.submitAllRight !== undefined ? settings.submitAllLeft : true,
+				search: 			settings.search,
 			};
 
-			delete settings.keepRenderingSort, settings.submitAllLeft, settings.submitAllRight;
+			delete settings.keepRenderingSort, settings.submitAllLeft, settings.submitAllRight, settings.search;
 
 			this.callbacks = settings;
 			
@@ -113,6 +114,16 @@ if (typeof jQuery === 'undefined') {
 							.appendTo(select);
 					});
 				}
+
+				if (self.options.search && self.options.search.left) {
+					self.options.search.left = $(self.options.search.left);
+					self.left.before(self.options.search.left);
+				}
+
+				if (self.options.search && self.options.search.right) {
+					self.options.search.right = $(self.options.search.right);
+					self.right.before($(self.options.search.right));
+				}
 				
 				self.events( self.actions );
 			},
@@ -129,6 +140,36 @@ if (typeof jQuery === 'undefined') {
 					e.preventDefault();
 					self.moveToLeft(this, e);
 				});
+
+				// append left filter
+				if (self.options.search && self.options.search.left) {
+					self.options.search.left.on('keyup', function(e) {
+						var search = this.value;
+
+						self.left.find('option').each(function(i, option) {
+							if (option.text.indexOf(search) > -1) {
+								$(option).show();
+							} else {
+								$(option).hide();
+							}
+						});
+					});
+				}
+
+				// append right filter
+				if (self.options.search && self.options.search.right) {
+					self.options.search.right.on('keyup', function(e) {
+						var search = this.value;
+
+						self.right.find('option').each(function(i, option) {
+							if (option.text.indexOf(search) > -1) {
+								$(option).show();
+							} else {
+								$(option).hide();
+							}
+						});
+					});
+				}
 
 				// select all the options from left and right side
 				// when submiting the parent form
