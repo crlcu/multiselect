@@ -144,10 +144,10 @@ if (typeof jQuery === 'undefined') {
 				// append left filter
 				if (self.options.search && self.options.search.left) {
 					self.options.search.left.on('keyup', function(e) {
-						var search = this.value;
+						var regex = new RegExp(this.value,"ig");
 
 						self.left.find('option').each(function(i, option) {
-							if (option.text.indexOf(search) > -1) {
+							if (option.text.search(regex) >= 0) {
 								$(option).show();
 							} else {
 								$(option).hide();
@@ -159,10 +159,10 @@ if (typeof jQuery === 'undefined') {
 				// append right filter
 				if (self.options.search && self.options.search.right) {
 					self.options.search.right.on('keyup', function(e) {
-						var search = this.value;
+						var regex = new RegExp(this.value,"ig");
 
 						self.right.find('option').each(function(i, option) {
-							if (option.text.indexOf(search) > -1) {
+							if (option.text.search(regex) >= 0) {
 								$(option).show();
 							} else {
 								$(option).hide();
