@@ -239,8 +239,6 @@ if (typeof jQuery === 'undefined') {
                     e.preventDefault();
                     
                     var options = self.right.find('> option');
-
-                    console.log(options);
                     
                     if ( options ) {
                         self.moveToLeft(options, e);
