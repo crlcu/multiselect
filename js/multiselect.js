@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.1.6
+ * Multiselect v2.1.7
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2015 Adrian Crisan
@@ -169,9 +169,15 @@ if (typeof jQuery === 'undefined') {
 
                         self.right.find('option').each(function(i, option) {
                             if (option.text.search(regex) >= 0) {
+                                // Remove <span> to make it compatible with IE
+                                if($(option).parent().is('span')) {
+                                    $(option).parent().replaceWith(option);
+                                }
+
                                 $(option).show();
                             } else {
-                                $(option).hide();
+                                // Wrap with <span> to make it compatible with IE
+                                $(option).wrap('<span>').hide();
                             }
                         });
                     });
@@ -219,8 +225,9 @@ if (typeof jQuery === 'undefined') {
                 
                 actions.rightAll.on('click', function(e) {
                     e.preventDefault();
-                    var options = self.left.find('option');
-                    
+
+                    var options = self.left.find('> option');
+
                     if ( options ) {
                         self.moveToRight(options, e);
                     }
@@ -231,7 +238,9 @@ if (typeof jQuery === 'undefined') {
                 actions.leftAll.on('click', function(e) {
                     e.preventDefault();
                     
-                    var options = self.right.find('option');
+                    var options = self.right.find('> option');
+
+                    console.log(options);
                     
                     if ( options ) {
                         self.moveToLeft(options, e);
