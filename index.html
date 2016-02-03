@@ -1,1041 +1,1045 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta name="description" lang="en" content="jQuery multiselect plugin with two sides. The user can select one or more items and send them to the other side."/>
-	<meta name="keywords" lang="en" content="jQuery multiselect plugin" />
+    <meta name="description" lang="en" content="jQuery multiselect plugin with two sides. The user can select one or more items and send them to the other side."/>
+    <meta name="keywords" lang="en" content="jQuery multiselect plugin" />
 
-	<title>jQuery multiselect plugin with two sides</title>
-	
-	<link rel="icon" type="image/x-icon" href="https://github.com/favicon.ico" />
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="lib/google-code-prettify/prettify.css" />
-	<link rel="stylesheet" href="css/style.css" />
+    <title>jQuery multiselect plugin with two sides</title>
+    
+    <link rel="icon" type="image/x-icon" href="https://github.com/favicon.ico" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="lib/google-code-prettify/prettify.css" />
+    <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-	<a href="https://github.com/crlcu/multiselect" class="github ribbon">
-		<img src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub">
-	</a>
-	
-	<div class="navbar navbar-inverse navbar-fixed-top">
-		<div class="navbar-inner">
-			<div class="container">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" href="#">Multiselect</a>
-				</div>
-				
-				<div class="collapse navbar-collapse">
-					<ul class="nav navbar-nav">
-						<li><a href="#home">Home</a></li>
-						<li><a href="#documentation">Documentation</a></li>
-						<li><a href="#browser-support">Browser Support</a></li>
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Demo <span  class="caret"></span ></a>
-							<ul class="dropdown-menu" role="menu">
-								<li><a href="#demo-zero-configuration">Zero configuration</a></li>
-								<li><a href="#with-data-options">With <code>data</code> options</a></li>
-								<li><a href="#with-javascript-options">With <code>javascript</code> options</a></li>
-								<li><a href="#demo-search">With search</a></li>
-								<li><a href="#demo-keep-rendering-sort">Keep rendering sort</a></li>
-								<li><a href="#demo-undo-redo">Undo / Redo</a></li>
-								<li><a href="#demo-multiple-destinations">Multiple destinations</a></li>
-							</ul>
-						</li>
-						<li><a href="#download">Download</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<div id="wrap">
-		<div id="home" class="container">
-			<div class="jumbotron">
-				<h1>Multiselect</h1>
-				<p>This is a small  <a href="http://jquery.com/" target="_blank">jQuery</a> plugin that helps you improve the
-					<strong>user experience</strong> regarding the use of multiple cross selects.
-				</p>
-				<p>It is very <strong>easy to install</strong> and can be <strong>easily customized</strong> because it has <strong>callbacks</strong> for many events, such as :
-					<div class="row">
-						<div  class="col-xs-6">
-							<ul>
-								<li><a href="#beforeMoveToRight">beforeMoveToRight</a></li>
-								<li><a href="#beforeMoveToLeft">beforeMoveToLeft</a></li>
-							</ul>
-						</div>
-						
-						<div  class="col-xs-6">
-							<ul>
-								<li><a href="#afterMoveToRight">afterMoveToRight</a></li>
-								<li><a href="#afterMoveToLeft">afterMoveToLeft</a></li>
-							</ul>
-						</div>
-					</div>
-				</p>
-				<p>It also has a <a href="#sort">sort</a> function that can be defined in order of your needs for each multiple select.</p>
-				<p>You can <strong>fully customize</strong> it via <strong>CSS</strong>, you can extend it and have as <strong>many multi selects</strong> as you want on the page.</p>
-	
-				<p><a href="#documentation" class="btn btn-primary btn-lg">Documentation</a></p>
-			</div>
-		</div>
-		
-		<div id="documentation" class="container">
-			<div class="page-header"><h3>Documentation</h3></div>
-			
-			<h4>Options:</h4>
-			
-			<table class="table table-bordered table-striped">
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>type</th>
-						<th>default</th>
-						<th>description</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>right</td>
-						<td><code>string</code> jQuery selector</td>
-						<td><code>multiselect_id</code>_to</td>
-						<td>The <code>select</code> where the options are moved to</td>
-					</tr>
-					<tr>
-						<td>rightSelected</td>
-						<td><code>string</code> jQuery selector</td>
-						<td><code>multiselect_id</code>_rightSelected</td>
-						<td>The <code>button</code> that moves selected options from left to right</td>
-					</tr>
-					<tr>
-						<td>rightAll</td>
-						<td><code>string</code> jQuery selector</td>
-						<td><code>multiselect_id</code>_rightAll</td>
-						<td>The <code>button</code> that moves all options from left to right</td>
-					</tr>
-					<tr>
-						<td>leftSelected</td>
-						<td><code>string</code> jQuery selector</td>
-						<td><code>multiselect_id</code>_leftSelected</td>
-						<td>The <code>button</code> that moves selected options from right to left</td>
-					</tr>
-					<tr>
-						<td>leftAll</td>
-						<td><code>string</code> jQuery selector</td>
-						<td><code>multiselect_id</code>_leftAll</td>
-						<td>The <code>button</code> that moves all options from right to left</td>
-					</tr>
-					<tr>
-						<td>startUp</td>
-						<td><code>function</code> or <code>false</code></td>
-						<td><code>remove</code> from left all options that are present in right</td>
-						<td>Whatever you want to do with <code>$left</code> and <code>$right</code> elements when the <code>multiselect</code> plugin is initialised</td>
-					</tr>
-					<tr id="sort">
-						<td>sort</td>
-						<td><code>function</code> or <code>false</code></td>
-						<td><code>sort</code> options alphabetically</td>
-						<td>Will sort options when an action happend into right or left elements.</td>
-					</tr>
-					<tr id="beforeMoveToRight">
-						<td>beforeMoveToRight</td>
-						<td><code>function</code></td>
-						<td>return true</td>
-						<td>
-							Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option[s]</code> elements before they are moved to right.
-							Keep in mind that this function must return a boolean value.<br/>
-							<code>true</code> will let the action to be performed.<br/>
-							<code>false</code> will stop the action
-						</td>
-					</tr>
-					<tr id="moveToRight">
-						<td>moveToRight</td>
-						<td><code>function</code></td>
-						<td>return self</td>
-						<td>
-							If you want to define your own <code>moveToRight</code> functionality you can do this by defining <code>moveToRight: function(Multiselect, options, event, silent, skipStack) { ... }</code>.<br/>
-							<ul>
-								<li><code>options</code> - HTML element containing all selected options</li>
-								<li><code>event</code> - the event that initialised the action</li>
-								<li><code>silent</code> - <code>boolean</code> that tells if you have to trigger <code>beforeMoveToRight</code> and <code>afterMoveToRight</code></li>
-								<li><code>skipStack</code> - <code>boolean</code> that tells if you have to handle <code>undo/redo</code> stack</li>
-							</ul>
-						</td>
-					</tr>
-					<tr id="afterMoveToRight">
-						<td>afterMoveToRight</td>
-						<td><code>function</code></td>
-						<td>no action</td>
-						<td>
-							Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option[s]</code> elements after they are moved to right.
-						</td>
-					</tr>
-					<tr id="beforeMoveToLeft">
-						<td>beforeMoveToLeft</td>
-						<td><code>function</code></td>
-						<td>return true</td>
-						<td>
-							Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option[s]</code> elements before they are moved to left.
-							Keep in mind that this function must return a boolean value.<br/>
-							<code>true</code> will let the action to be performed.<br/>
-							<code>false</code> will stop the action
-						</td>
-					</tr>
-					<tr id="moveToLeft">
-						<td>moveToLeft</td>
-						<td><code>function</code></td>
-						<td>return self</td>
-						<td>
-							If you want to define your own <code>moveToLeft</code> functionality you can do this by defining <code>moveToLeft: function(Multiselect, options, event, silent, skipStack) { ... }</code>..<br/>
-							<ul>
-								<li><code>options</code> - HTML element containing all selected options</li>
-								<li><code>event</code> - the event that initialised the action</li>
-								<li><code>silent</code> - <code>boolean</code> that tells if you have to trigger <code>beforeMoveToLeft</code> and <code>afterMoveToLeft</code></li>
-								<li><code>skipStack</code> - <code>boolean</code> that tells if you have to handle <code>undo/redo</code> stack</li>
-							</ul>
-						</td>
-					</tr>
-					<tr id="afterMoveToLeft">
-						<td>afterMoveToLeft</td>
-						<td><code>function</code></td>
-						<td>no action</td>
-						<td>
-							Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option[s]</code> elements after they are moved to left.
-						</td>
-					</tr>
-					<tr>
-						<td>keepRenderingSort</td>
-						<td><code>boolean</code></td>
-						<td><code>false</code></td>
-						<td>
-							When you want to keep options sorted as they was rendered, <code>keepRenderingSort</code> must be <code>true</code>.<br/>
-							When <code>keepRenderingSort</code> is <code>true</code>, <code>sort</code> function will be ignored.
-						</td>
-					</tr>
-					<tr>
-						<td>submitAllLeft</td>
-						<td><code>boolean</code></td>
-						<td><code>true</code></td>
-						<td>
-							When you don&rsquo;t want to send all options from the left side to server, <code>submitAllLeft</code> must be <code>false</code>.
-						</td>
-					</tr>
-					<tr>
-						<td>submitAllRight</td>
-						<td><code>boolean</code></td>
-						<td><code>true</code></td>
-						<td>
-							When you don&rsquo;t want to send all options from the right side to server, <code>submitAllRight</code> must be <code>false</code>.
-						</td>
-					</tr>
-					<tr>
-						<td>search</td>
-						<td><code>Object</code></td>
-						<td><code>null</code></td>
-						<td>
-							When you want to have search fields for <code>left</code> and <code>right</code> elements you can do this by providing following value:<br/>
-							<pre class="prettyprint linenums">
+    <a href="https://github.com/crlcu/multiselect" class="github ribbon">
+        <img src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub">
+    </a>
+    
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Multiselect</a>
+                </div>
+                
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#documentation">Documentation</a></li>
+                        <li><a href="#browser-support">Browser Support</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Demo <span  class="caret"></span ></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#demo-zero-configuration">Zero configuration</a></li>
+                                <li><a href="#with-data-options">With <code>data</code> options</a></li>
+                                <li><a href="#with-javascript-options">With <code>javascript</code> options</a></li>
+                                <li><a href="#demo-search">With search</a></li>
+                                <li><a href="#demo-keep-rendering-sort">Keep rendering sort</a></li>
+                                <li><a href="#demo-undo-redo">Undo / Redo</a></li>
+                                <li><a href="#demo-multiple-destinations">Multiple destinations</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#download">Download</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="wrap">
+        <div id="home" class="container">
+            <div class="jumbotron">
+                <h1>Multiselect</h1>
+                <p>This is a small  <a href="http://jquery.com/" target="_blank">jQuery</a> plugin that helps you improve the
+                    <strong>user experience</strong> regarding the use of multiple cross selects.
+                </p>
+                <p>It is very <strong>easy to install</strong> and can be <strong>easily customized</strong> because it has <strong>callbacks</strong> for many events, such as :
+                    <div class="row">
+                        <div  class="col-xs-6">
+                            <ul>
+                                <li><a href="#beforeMoveToRight">beforeMoveToRight</a></li>
+                                <li><a href="#beforeMoveToLeft">beforeMoveToLeft</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div  class="col-xs-6">
+                            <ul>
+                                <li><a href="#afterMoveToRight">afterMoveToRight</a></li>
+                                <li><a href="#afterMoveToLeft">afterMoveToLeft</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </p>
+                <p>It also has a <a href="#sort">sort</a> function that can be defined in order of your needs for each multiple select.</p>
+                <p>You can <strong>fully customize</strong> it via <strong>CSS</strong>, you can extend it and have as <strong>many multi selects</strong> as you want on the page.</p>
+    
+                <p><a href="#documentation" class="btn btn-primary btn-lg">Documentation</a></p>
+            </div>
+        </div>
+        
+        <div id="documentation" class="container">
+            <div class="page-header"><h3>Documentation</h3></div>
+            
+            <h4>Options:</h4>
+            
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>type</th>
+                        <th>default</th>
+                        <th>description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>right</td>
+                        <td><code>string</code> jQuery selector</td>
+                        <td><code>multiselect_id</code>_to</td>
+                        <td>The <code>select</code> where the options are moved to</td>
+                    </tr>
+                    <tr>
+                        <td>rightSelected</td>
+                        <td><code>string</code> jQuery selector</td>
+                        <td><code>multiselect_id</code>_rightSelected</td>
+                        <td>The <code>button</code> that moves selected options from left to right</td>
+                    </tr>
+                    <tr>
+                        <td>rightAll</td>
+                        <td><code>string</code> jQuery selector</td>
+                        <td><code>multiselect_id</code>_rightAll</td>
+                        <td>The <code>button</code> that moves all options from left to right</td>
+                    </tr>
+                    <tr>
+                        <td>leftSelected</td>
+                        <td><code>string</code> jQuery selector</td>
+                        <td><code>multiselect_id</code>_leftSelected</td>
+                        <td>The <code>button</code> that moves selected options from right to left</td>
+                    </tr>
+                    <tr>
+                        <td>leftAll</td>
+                        <td><code>string</code> jQuery selector</td>
+                        <td><code>multiselect_id</code>_leftAll</td>
+                        <td>The <code>button</code> that moves all options from right to left</td>
+                    </tr>
+                    <tr>
+                        <td>startUp</td>
+                        <td><code>function</code> or <code>false</code></td>
+                        <td><code>remove</code> from left all options that are present in right</td>
+                        <td>Whatever you want to do with <code>$left</code> and <code>$right</code> elements when the <code>multiselect</code> plugin is initialised</td>
+                    </tr>
+                    <tr id="sort">
+                        <td>sort</td>
+                        <td><code>function</code> or <code>false</code></td>
+                        <td><code>sort</code> options alphabetically</td>
+                        <td>Will sort options when an action happend into right or left elements.</td>
+                    </tr>
+                    <tr id="beforeMoveToRight">
+                        <td>beforeMoveToRight</td>
+                        <td><code>function</code></td>
+                        <td>return true</td>
+                        <td>
+                            Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option[s]</code> elements before they are moved to right.
+                            Keep in mind that this function must return a boolean value.<br/>
+                            <code>true</code> will let the action to be performed.<br/>
+                            <code>false</code> will stop the action
+                        </td>
+                    </tr>
+                    <tr id="moveToRight">
+                        <td>moveToRight</td>
+                        <td><code>function</code></td>
+                        <td>return self</td>
+                        <td>
+                            If you want to define your own <code>moveToRight</code> functionality you can do this by defining <code>moveToRight: function(Multiselect, options, event, silent, skipStack) { ... }</code>.<br/>
+                            <ul>
+                                <li><code>options</code> - HTML element containing all selected options</li>
+                                <li><code>event</code> - the event that initialised the action</li>
+                                <li><code>silent</code> - <code>boolean</code> that tells if you have to trigger <code>beforeMoveToRight</code> and <code>afterMoveToRight</code></li>
+                                <li><code>skipStack</code> - <code>boolean</code> that tells if you have to handle <code>undo/redo</code> stack</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr id="afterMoveToRight">
+                        <td>afterMoveToRight</td>
+                        <td><code>function</code></td>
+                        <td>no action</td>
+                        <td>
+                            Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option[s]</code> elements after they are moved to right.
+                        </td>
+                    </tr>
+                    <tr id="beforeMoveToLeft">
+                        <td>beforeMoveToLeft</td>
+                        <td><code>function</code></td>
+                        <td>return true</td>
+                        <td>
+                            Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option[s]</code> elements before they are moved to left.
+                            Keep in mind that this function must return a boolean value.<br/>
+                            <code>true</code> will let the action to be performed.<br/>
+                            <code>false</code> will stop the action
+                        </td>
+                    </tr>
+                    <tr id="moveToLeft">
+                        <td>moveToLeft</td>
+                        <td><code>function</code></td>
+                        <td>return self</td>
+                        <td>
+                            If you want to define your own <code>moveToLeft</code> functionality you can do this by defining <code>moveToLeft: function(Multiselect, options, event, silent, skipStack) { ... }</code>..<br/>
+                            <ul>
+                                <li><code>options</code> - HTML element containing all selected options</li>
+                                <li><code>event</code> - the event that initialised the action</li>
+                                <li><code>silent</code> - <code>boolean</code> that tells if you have to trigger <code>beforeMoveToLeft</code> and <code>afterMoveToLeft</code></li>
+                                <li><code>skipStack</code> - <code>boolean</code> that tells if you have to handle <code>undo/redo</code> stack</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr id="afterMoveToLeft">
+                        <td>afterMoveToLeft</td>
+                        <td><code>function</code></td>
+                        <td>no action</td>
+                        <td>
+                            Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option[s]</code> elements after they are moved to left.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>keepRenderingSort</td>
+                        <td><code>boolean</code></td>
+                        <td><code>false</code></td>
+                        <td>
+                            When you want to keep options sorted as they was rendered, <code>keepRenderingSort</code> must be <code>true</code>.<br/>
+                            When <code>keepRenderingSort</code> is <code>true</code>, <code>sort</code> function will be ignored.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>submitAllLeft</td>
+                        <td><code>boolean</code></td>
+                        <td><code>true</code></td>
+                        <td>
+                            When you don&rsquo;t want to send all options from the left side to server, <code>submitAllLeft</code> must be <code>false</code>.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>submitAllRight</td>
+                        <td><code>boolean</code></td>
+                        <td><code>true</code></td>
+                        <td>
+                            When you don&rsquo;t want to send all options from the right side to server, <code>submitAllRight</code> must be <code>false</code>.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>search</td>
+                        <td><code>Object</code></td>
+                        <td><code>null</code></td>
+                        <td>
+                            When you want to have search fields for <code>left</code> and <code>right</code> elements you can do this by providing following value:<br/>
+                            <pre class="prettyprint linenums">
 search: {
-	left: &#39;&lt;input type=&quot;text&quot; name=&quot;q&quot; class=&quot;form-control&quot; placeholder=&quot;Search...&quot; /&gt;&#39;,
-	right: &#39;&lt;input type=&quot;text&quot; name=&quot;q&quot; class=&quot;form-control&quot; placeholder=&quot;Search...&quot; /&gt;&#39;,
+    left: &#39;&lt;input type=&quot;text&quot; name=&quot;q&quot; class=&quot;form-control&quot; placeholder=&quot;Search...&quot; /&gt;&#39;,
+    right: &#39;&lt;input type=&quot;text&quot; name=&quot;q&quot; class=&quot;form-control&quot; placeholder=&quot;Search...&quot; /&gt;&#39;,
 }
 </pre>
-							When you want to have search field only for <code>left</code> element you can do this by providing following value:<br/>
-							<pre class="prettyprint linenums">
+                            When you want to have search field only for <code>left</code> element you can do this by providing following value:<br/>
+                            <pre class="prettyprint linenums">
 search: {
-	left: &#39;&lt;input type=&quot;text&quot; name=&quot;q&quot; class=&quot;form-control&quot; placeholder=&quot;Search...&quot; /&gt;&#39;,
+    left: &#39;&lt;input type=&quot;text&quot; name=&quot;q&quot; class=&quot;form-control&quot; placeholder=&quot;Search...&quot; /&gt;&#39;,
 }
 </pre>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		
-		<div id="browser-support" class="container">
-			<div class="page-header"><h3>Browser Support</h3></div>
-			
-			<h4>The following browsers are supported:</h4>
-			
-			<ul>
-				<li>Internet Explorer 7+</li>
-				<li>Google Chrome</li>
-				<li>Mozilla Firefox</li>
-				<li>Safari</li>
-				<li>Opera</li>
-			</ul>
-		</div>
-		
-		<div id="demo" class="container">
-			<div class="page-header"><h3>Demo</h3></div>
-			
-			<h4 id="demo-zero-configuration">Zero configuration</h4>
-			
-			<div class="row">
-				<div class="col-sm-5">
-					<select name="from[]" id="multiselect" class="form-control" size="8" multiple="multiple">
-						<option value="1" data-position="1">Item 1</option>
-						<option value="2" data-position="2">Item 5</option>
-						<option value="2" data-position="3">Item 2</option>
-						<option value="2" data-position="4">Item 4</option>
-						<option value="3" data-position="5">Item 3</option>
-					</select>
-				</div>
-				
-				<div class="col-sm-2">
-					<button type="button" id="multiselect_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
-					<button type="button" id="multiselect_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
-					<button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
-					<button type="button" id="multiselect_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
-				</div>
-				
-				<div class="col-sm-5">
-					<select name="to[]" id="multiselect_to" class="form-control" size="8" multiple="multiple"></select>
-				</div>
-			</div>
-			
-			<div class="row">
-				<div class="col-xs-12">
-					<h5>HTML</h5>
-<pre class="prettyprint linenums">
-&lt;div class=&quot;row&quot;&gt;
-	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;from[]&quot; id=&quot;multiselect&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
-			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
-			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
-			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
-			&lt;option value=&quot;2&quot;&gt;Item 4&lt;/option&gt;
-			&lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
-		&lt;/select&gt;
-	&lt;/div&gt;
-	
-	&lt;div class=&quot;col-xs-2&quot;&gt;
-		&lt;button type=&quot;button&quot; id=&quot;multiselect_rightAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;multiselect_rightSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;multiselect_leftSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;multiselect_leftAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-	&lt;/div&gt;
-	
-	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;to[]&quot; id=&quot;multiselect_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
-	&lt;/div&gt;
-&lt;/div&gt;
-</pre>
-			<h5>JavaScript</h5>
-<pre class="prettyprint linenums">
-&lt;script type=&quot;text/javascript&quot;&gt;
-jQuery(document).ready(function($) {
-	$(&#39;#multiselect&#39;).multiselect();
-});
-&lt;/script&gt;
-</pre>
-				</div>
-			</div>
-			
-			<h4 id="with-data-options">With <code>data</code> options</h4>
-			
-			<div class="row">
-				<div class="col-xs-5">
-					<select name="from[]" class="multiselect form-control" size="8" multiple="multiple" data-right="#multiselect_to_1" data-right-all="#right_All_1" data-right-selected="#right_Selected_1" data-left-all="#left_All_1" data-left-selected="#left_Selected_1">
-						<option value="1">Item 1</option>
-						<option value="2">Item 5</option>
-						<option value="2">Item 2</option>
-						<option value="2">Item 4</option>
-						<option value="3">Item 3</option>
-					</select>
-				</div>
-				
-				<div class="col-xs-2">
-					<button type="button" id="right_All_1" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
-					<button type="button" id="right_Selected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
-					<button type="button" id="left_Selected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
-					<button type="button" id="left_All_1" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
-				</div>
-				
-				<div class="col-xs-5">
-					<select name="to[]" id="multiselect_to_1" class="form-control" size="8" multiple="multiple"></select>
-				</div>
-			</div>
-			
-			<div class="row">
-				<div class="col-xs-12">
-					<h5>HTML</h5>
-<pre class="prettyprint linenums">
-&lt;div class=&quot;row&quot;&gt;
-	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;from[]&quot; class=&quot;multiselect form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot; data-right=&quot;#multiselect_to_1&quot; data-right-all=&quot;#right_All_1&quot; data-right-selected=&quot;#right_Selected_1&quot; data-left-all=&quot;#left_All_1&quot; data-left-selected=&quot;#left_Selected_1&quot;&gt;
-			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
-			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
-			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
-			&lt;option value=&quot;2&quot;&gt;Item 4&lt;/option&gt;
-			&lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
-		&lt;/select&gt;
-	&lt;/div&gt;
-	
-	&lt;div class=&quot;col-xs-2&quot;&gt;
-		&lt;button type=&quot;button&quot; id=&quot;right_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;right_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;left_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;left_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-	&lt;/div&gt;
-	
-	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;to[]&quot; id=&quot;multiselect_to_1&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
-	&lt;/div&gt;
-&lt;/div&gt;
-</pre>
-			<h5>JavaScript</h5>
-<pre class="prettyprint linenums">
-&lt;script type=&quot;text/javascript&quot;&gt;
-jQuery(document).ready(function($) {
-	$(&#39;.multiselect&#39;).multiselect();
-});
-&lt;/script&gt;
-</pre>
-				</div>
-			</div>
-			
-			<h4 id="with-javascript-options">With <code>javascript</code> options</h4>
-			
-			<div class="row">
-				<div class="col-xs-5">
-					<select name="from[]" class="js-multiselect form-control" size="8" multiple="multiple">
-						<option value="1">Item 1</option>
-						<option value="2">Item 5</option>
-						<option value="2">Item 2</option>
-						<option value="2">Item 4</option>
-						<option value="3">Item 3</option>
-					</select>
-				</div>
-				
-				<div class="col-xs-2">
-					<button type="button" id="js_right_All_1" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
-					<button type="button" id="js_right_Selected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
-					<button type="button" id="js_left_Selected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
-					<button type="button" id="js_left_All_1" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
-				</div>
-				
-				<div class="col-xs-5">
-					<select name="to[]" id="js_multiselect_to_1" class="form-control" size="8" multiple="multiple"></select>
-				</div>
-			</div>
-			
-			<div class="row">
-				<div class="col-xs-12">
-					<h5>HTML</h5>
-<pre class="prettyprint linenums">
-&lt;div class=&quot;row&quot;&gt;
-	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;from[]&quot; class=&quot;js-multiselect form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
-			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
-			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
-			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
-			&lt;option value=&quot;2&quot;&gt;Item 4&lt;/option&gt;
-			&lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
-		&lt;/select&gt;
-	&lt;/div&gt;
-	
-	&lt;div class=&quot;col-xs-2&quot;&gt;
-		&lt;button type=&quot;button&quot; id=&quot;js_right_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;js_right_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;js_left_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;js_left_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-	&lt;/div&gt;
-	
-	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;to[]&quot; id=&quot;js_multiselect_to_1&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
-	&lt;/div&gt;
-&lt;/div&gt;
-</pre>
-			<h5>JavaScript</h5>
-<pre class="prettyprint linenums">
-&lt;script type=&quot;text/javascript&quot;&gt;
-jQuery(document).ready(function($) {
-	$(&#39;.js-multiselect&#39;).multiselect({
-		right: &#39;#js_multiselect_to_1&#39;,
-		rightAll: &#39;#js_right_All_1&#39;,
-		rightSelected: &#39;#js_right_Selected_1&#39;,
-		leftSelected: &#39;#js_left_Selected_1&#39;,
-		leftAll: &#39;#js_left_All_1&#39;
-	});
-});
-&lt;/script&gt;
-</pre>
-				</div>
-			</div>
-
-			<h4 id="demo-search">With search</h4>
-			
-			<div class="row">
-				<div class="col-sm-5">
-					<select name="from[]" id="search" class="form-control" size="8" multiple="multiple">
-						<option value="1" data-position="1">Item 1</option>
-						<option value="2" data-position="2">Item 5</option>
-						<option value="2" data-position="3">Item 2</option>
-						<option value="2" data-position="4">Item 4</option>
-						<option value="3" data-position="5">Item 3</option>
-					</select>
-				</div>
-				
-				<div class="col-sm-2">
-					<button type="button" id="search_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
-					<button type="button" id="search_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
-					<button type="button" id="search_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
-					<button type="button" id="search_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
-				</div>
-				
-				<div class="col-sm-5">
-					<select name="to[]" id="search_to" class="form-control" size="8" multiple="multiple"></select>
-				</div>
-			</div>
-			
-			<div class="row">
-				<div class="col-xs-12">
-					<h5>HTML</h5>
-<pre class="prettyprint linenums">
-&lt;div class=&quot;row&quot;&gt;
-	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;from[]&quot; id=&quot;search&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
-			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
-			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
-			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
-			&lt;option value=&quot;2&quot;&gt;Item 4&lt;/option&gt;
-			&lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
-		&lt;/select&gt;
-	&lt;/div&gt;
-	
-	&lt;div class=&quot;col-xs-2&quot;&gt;
-		&lt;button type=&quot;button&quot; id=&quot;search_rightAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;search_rightSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;search_leftSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;search_leftAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-	&lt;/div&gt;
-	
-	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;to[]&quot; id=&quot;search_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
-	&lt;/div&gt;
-&lt;/div&gt;
-</pre>
-			<h5>JavaScript</h5>
-<pre class="prettyprint linenums">
-&lt;script type=&quot;text/javascript&quot;&gt;
-jQuery(document).ready(function($) {
-	$(&#39;#search&#39;).multiselect({
-		search: {
-			left: &#39;&lt;input type=&quot;text&quot; name=&quot;q&quot; class=&quot;form-control&quot; placeholder=&quot;Search...&quot; /&gt;&#39;,
-			right: &#39;&lt;input type=&quot;text&quot; name=&quot;q&quot; class=&quot;form-control&quot; placeholder=&quot;Search...&quot; /&gt;&#39;,
-		}
-	});
-});
-&lt;/script&gt;
-</pre>
-				</div>
-			</div>
-
-			<h4 id="demo-keep-rendering-sort">Keep rendering sort</h4>
-			
-			<div class="row">
-				<div class="col-xs-5">
-					<select name="from[]" id="keepRenderingSort" class="form-control" size="8" multiple="multiple">
-						<option value="1" data-position="1">Item 1</option>
-						<option value="2" data-position="2">Item 5</option>
-						<option value="2" data-position="3">Item 2</option>
-						<option value="2" data-position="4">Item 4</option>
-						<option value="3" data-position="5">Item 3</option>
-					</select>
-				</div>
-				
-				<div class="col-xs-2">
-					<button type="button" id="keepRenderingSort_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
-					<button type="button" id="keepRenderingSort_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
-					<button type="button" id="keepRenderingSort_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
-					<button type="button" id="keepRenderingSort_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
-				</div>
-				
-				<div class="col-xs-5">
-					<select name="to[]" id="keepRenderingSort_to" class="form-control" size="8" multiple="multiple"></select>
-				</div>
-			</div>
-			
-			<div class="row">
-				<div class="col-xs-12">
-					<h5>HTML</h5>
-<pre class="prettyprint linenums">
-&lt;div class=&quot;row&quot;&gt;
-	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;from[]&quot; id=&quot;keepRenderingSort&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
-			&lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
-			&lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
-			&lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
-			&lt;option value=&quot;2&quot;&gt;Item 4&lt;/option&gt;
-			&lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
-		&lt;/select&gt;
-	&lt;/div&gt;
-	
-	&lt;div class=&quot;col-xs-2&quot;&gt;
-		&lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_rightAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_rightSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_leftSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_leftAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-	&lt;/div&gt;
-	
-	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;to[]&quot; id=&quot;keepRenderingSort_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
-	&lt;/div&gt;
-&lt;/div&gt;
-</pre>
-			<h5>JavaScript</h5>
-<pre class="prettyprint linenums">
-&lt;script type=&quot;text/javascript&quot;&gt;
-jQuery(document).ready(function($) {
-	$(&#39;#multiselect&#39;).multiselect({
-		keepRenderingSort: true
-	});
-});
-&lt;/script&gt;
-</pre>
-				</div>
-			</div>
-
-			<h4 id="demo-undo-redo">Undo / Redo</h4>
-			
-			<div class="row">
-				<div class="col-xs-5">
-					<select name="from[]" id="undo_redo" class="form-control" size="13" multiple="multiple">
-						<option value="1">C++</option>
-						<option value="2">C#</option>
-						<option value="3">Haskell</option>
-						<option value="4">Java</option>
-						<option value="5">JavaScript</option>
-						<option value="6">Lisp</option>
-						<option value="7">Lua</option>
-						<option value="8">MATLAB</option>
-						<option value="9">NewLISP</option>
-						<option value="10">PHP</option>
-						<option value="11">Perl</option>
-						<option value="12">SQL</option>
-						<option value="13">Unix shell</option>
-					</select>
-				</div>
-				
-				<div class="col-xs-2">
-					<button type="button" id="undo_redo_undo" class="btn btn-primary btn-block">undo</button>
-					<button type="button" id="undo_redo_rightAll" class="btn btn-default btn-block"><i class="glyphicon glyphicon-forward"></i></button>
-					<button type="button" id="undo_redo_rightSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
-					<button type="button" id="undo_redo_leftSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
-					<button type="button" id="undo_redo_leftAll" class="btn btn-default btn-block"><i class="glyphicon glyphicon-backward"></i></button>
-					<button type="button" id="undo_redo_redo" class="btn btn-warning btn-block">redo</button>
-				</div>
-				
-				<div class="col-xs-5">
-					<select name="to[]" id="undo_redo_to" class="form-control" size="13" multiple="multiple"></select>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-xs-12">
-					<h5>HTML</h5>
-<pre class="prettyprint linenums">
-&lt;div class=&quot;row&quot;&gt;
-	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;from[]&quot; id=&quot;undo_redo&quot; class=&quot;form-control&quot; size=&quot;13&quot; multiple=&quot;multiple&quot;&gt;
-			&lt;option value=&quot;1&quot;&gt;C++&lt;/option&gt;
-			&lt;option value=&quot;2&quot;&gt;C#&lt;/option&gt;
-			&lt;option value=&quot;3&quot;&gt;Haskell&lt;/option&gt;
-			&lt;option value=&quot;4&quot;&gt;Java&lt;/option&gt;
-			&lt;option value=&quot;5&quot;&gt;JavaScript&lt;/option&gt;
-			&lt;option value=&quot;6&quot;&gt;Lisp&lt;/option&gt;
-			&lt;option value=&quot;7&quot;&gt;Lua&lt;/option&gt;
-			&lt;option value=&quot;8&quot;&gt;MATLAB&lt;/option&gt;
-			&lt;option value=&quot;9&quot;&gt;NewLISP&lt;/option&gt;
-			&lt;option value=&quot;10&quot;&gt;PHP&lt;/option&gt;
-			&lt;option value=&quot;11&quot;&gt;Perl&lt;/option&gt;
-			&lt;option value=&quot;12&quot;&gt;SQL&lt;/option&gt;
-			&lt;option value=&quot;13&quot;&gt;Unix shell&lt;/option&gt;
-		&lt;/select&gt;
-	&lt;/div&gt;
-	
-	&lt;div class=&quot;col-xs-2&quot;&gt;
-		&lt;button type=&quot;button&quot; id=&quot;undo_redo_undo&quot; class=&quot;btn btn-primary btn-block&quot;&gt;undo&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;undo_redo_rightAll&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;undo_redo_rightSelected&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;undo_redo_leftSelected&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;undo_redo_leftAll&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;undo_redo_redo&quot; class=&quot;btn btn-warning btn-block&quot;&gt;redo&lt;/button&gt;
-	&lt;/div&gt;
-	
-	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;to[]&quot; id=&quot;undo_redo_to&quot; class=&quot;form-control&quot; size=&quot;13&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
-	&lt;/div&gt;
-&lt;/div&gt;
-</pre>
-			<h5>JavaScript</h5>
-<pre class="prettyprint linenums">
-&lt;script type=&quot;text/javascript&quot;&gt;
-jQuery(document).ready(function($) {
-	$(&#39;#undo_redo&#39;).multiselect();
-});
-&lt;/script&gt;
-</pre>
-				</div>
-			</div>
-
-			<h4 id="demo-multiple-destinations">Multiple destinations</h4>
-			
-			<div class="row">
-				<div class="col-xs-5">
-					<select name="from[]" id="multi_d" class="form-control" size="26" multiple="multiple">
-						<option value="1">C++</option>
-						<option value="2">C#</option>
-						<option value="3">Haskell</option>
-						<option value="4">Java</option>
-						<option value="5">JavaScript</option>
-						<option value="6">Lisp</option>
-						<option value="7">Lua</option>
-						<option value="8">MATLAB</option>
-						<option value="9">NewLISP</option>
-						<option value="10">PHP</option>
-						<option value="11">Perl</option>
-						<option value="12">SQL</option>
-						<option value="13">Unix shell</option>
-					</select>
-				</div>
-				
-				<div class="col-xs-2">
-					<button type="button" id="multi_d_rightAll" class="btn btn-default btn-block" style="margin-top: 20px;"><i class="glyphicon glyphicon-forward"></i></button>
-					<button type="button" id="multi_d_rightSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
-					<button type="button" id="multi_d_leftSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
-					<button type="button" id="multi_d_leftAll" class="btn btn-default btn-block"><i class="glyphicon glyphicon-backward"></i></button>
-
-					<hr style="margin: 40px 0 60px;" />
-
-					<button type="button" id="multi_d_rightAll_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-forward"></i></button>
-					<button type="button" id="multi_d_rightSelected_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
-					<button type="button" id="multi_d_leftSelected_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
-					<button type="button" id="multi_d_leftAll_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-backward"></i></button>
-				</div>
-				
-				<div class="col-xs-5">
-					<b>Known languages</b>
-					<select name="to[]" id="multi_d_to" class="form-control" size="8" multiple="multiple">
-						<option value="1">C++</option>
-						<option value="2">C#</option>
-					</select>
-
-					<br/><hr/><br/>
-
-					<b>I want to learn</b>
-					<select name="to_2[]" id="multi_d_to_2" class="form-control" size="8" multiple="multiple">
-						<option value="12">SQL</option>
-						<option value="13">Unix shell</option>
-					</select>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-xs-12">
-					<h5>HTML</h5>
-<pre class="prettyprint linenums">
-&lt;div class=&quot;row&quot;&gt;
-	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;select name=&quot;from[]&quot; id=&quot;multi_d&quot; class=&quot;form-control&quot; size=&quot;26&quot; multiple=&quot;multiple&quot;&gt;
-			&lt;option value=&quot;1&quot;&gt;C++&lt;/option&gt;
-			&lt;option value=&quot;2&quot;&gt;C#&lt;/option&gt;
-			&lt;option value=&quot;3&quot;&gt;Haskell&lt;/option&gt;
-			&lt;option value=&quot;4&quot;&gt;Java&lt;/option&gt;
-			&lt;option value=&quot;5&quot;&gt;JavaScript&lt;/option&gt;
-			&lt;option value=&quot;6&quot;&gt;Lisp&lt;/option&gt;
-			&lt;option value=&quot;7&quot;&gt;Lua&lt;/option&gt;
-			&lt;option value=&quot;8&quot;&gt;MATLAB&lt;/option&gt;
-			&lt;option value=&quot;9&quot;&gt;NewLISP&lt;/option&gt;
-			&lt;option value=&quot;10&quot;&gt;PHP&lt;/option&gt;
-			&lt;option value=&quot;11&quot;&gt;Perl&lt;/option&gt;
-			&lt;option value=&quot;12&quot;&gt;SQL&lt;/option&gt;
-			&lt;option value=&quot;13&quot;&gt;Unix shell&lt;/option&gt;
-		&lt;/select&gt;
-	&lt;/div&gt;
-    
-	&lt;div class=&quot;col-xs-2&quot;&gt;
-		&lt;button type=&quot;button&quot; id=&quot;multi_d_rightAll&quot; class=&quot;btn btn-default btn-block&quot; style=&quot;margin-top: 20px;&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;multi_d_rightSelected&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;multi_d_leftSelected&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;multi_d_leftAll&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         
-		&lt;hr style=&quot;margin: 40px 0 60px;&quot; /&gt;
-        
-		&lt;button type=&quot;button&quot; id=&quot;multi_d_rightAll_2&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;multi_d_rightSelected_2&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;multi_d_leftSelected_2&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-		&lt;button type=&quot;button&quot; id=&quot;multi_d_leftAll_2&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-	&lt;/div&gt;
-    
-	&lt;div class=&quot;col-xs-5&quot;&gt;
-		&lt;b&gt;Known languages&lt;/b&gt;
-		&lt;select name=&quot;to[]&quot; id=&quot;multi_d_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
-        
-		&lt;br/&gt;&lt;hr/&gt;&lt;br/&gt;
-        
-		&lt;b&gt;I want to learn&lt;/b&gt;
-		&lt;select name=&quot;to_2[]&quot; id=&quot;multi_d_to_2&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
-	&lt;/div&gt;
-&lt;/div&gt;
-</pre>
-			<h5>JavaScript</h5>
-<pre class="prettyprint linenums">
-&lt;script type=&quot;text/javascript&quot;&gt;
-jQuery(document).ready(function($) {
-	$(&#39;#multi_d&#39;).multiselect({
-		right: &#39;#multi_d_to, #multi_d_to_2&#39;,
-		rightSelected: &#39;#multi_d_rightSelected, #multi_d_rightSelected_2&#39;,
-		leftSelected: &#39;#multi_d_leftSelected, #multi_d_leftSelected_2&#39;,
-		rightAll: &#39;#multi_d_rightAll, #multi_d_rightAll_2&#39;,
-		leftAll: &#39;#multi_d_leftAll, #multi_d_leftAll_2&#39;,
-        
-		moveToRight: function(Multiselect, options, event, silent, skipStack) {
-			var button = $(event.currentTarget).attr(&#39;id&#39;);
+        <div id="browser-support" class="container">
+            <div class="page-header"><h3>Browser Support</h3></div>
             
-			if (button == &#39;multi_d_rightSelected&#39;) {
-				var left_options = Multiselect.left.find(&#39;option:selected&#39;);
-				Multiselect.right.eq(0).append(left_options);
-                
-				if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-					Multiselect.right.eq(0).find(&#39;option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(0));
-				}
-			} else if (button == &#39;multi_d_rightAll&#39;) {
-				var left_options = Multiselect.left.find(&#39;option&#39;);
-				Multiselect.right.eq(0).append(left_options);
-                
-				if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-					Multiselect.right.eq(0).find(&#39;option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(0));
-				}
-			} else if (button == &#39;multi_d_rightSelected_2&#39;) {
-				var left_options = Multiselect.left.find(&#39;option:selected&#39;);
-				Multiselect.right.eq(1).append(left_options);
-                
-				if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-					Multiselect.right.eq(1).find(&#39;option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(1));
-				}
-			} else if (button == &#39;multi_d_rightAll_2&#39;) {
-				var left_options = Multiselect.left.find(&#39;option&#39;);
-				Multiselect.right.eq(1).append(left_options);
-                
-				if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-					Multiselect.right.eq(1).eq(1).find(&#39;option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(1));
-				}
-			}
-		},
-        
-		moveToLeft: function(Multiselect, options, event, silent, skipStack) {
-			var button = $(event.currentTarget).attr(&#39;id&#39;);
+            <h4>The following browsers are supported:</h4>
             
-			if (button == &#39;multi_d_leftSelected&#39;) {
-				var right_options = Multiselect.right.eq(0).find(&#39;option:selected&#39;);
-				Multiselect.left.append(right_options);
+            <ul>
+                <li>Internet Explorer 7+</li>
+                <li>Google Chrome</li>
+                <li>Mozilla Firefox</li>
+                <li>Safari</li>
+                <li>Opera</li>
+            </ul>
+        </div>
+        
+        <div id="demo" class="container">
+            <div class="page-header"><h3>Demo</h3></div>
+            
+            <h4 id="demo-zero-configuration">Zero configuration</h4>
+            
+            <div class="row">
+                <div class="col-sm-5">
+                    <select name="from[]" id="multiselect" class="form-control" size="8" multiple="multiple">
+                        <option value="1" data-position="1">Item 1</option>
+                        <option value="2" data-position="2">Item 5</option>
+                        <option value="2" data-position="3">Item 2</option>
+                        <option value="2" data-position="4">Item 4</option>
+                        <option value="3" data-position="5">Item 3</option>
+                    </select>
+                </div>
                 
-				if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-					Multiselect.left.find(&#39;option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
-				}
-			} else if (button == &#39;multi_d_leftAll&#39;) {
-				var right_options = Multiselect.right.eq(0).find(&#39;option&#39;);
-				Multiselect.left.append(right_options);
+                <div class="col-sm-2">
+                    <button type="button" id="multiselect_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                    <button type="button" id="multiselect_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                    <button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                    <button type="button" id="multiselect_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+                </div>
                 
-				if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-					Multiselect.left.find(&#39;option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
-				}
-			} else if (button == &#39;multi_d_leftSelected_2&#39;) {
-				var right_options = Multiselect.right.eq(1).find(&#39;option:selected&#39;);
-				Multiselect.left.append(right_options);
-                
-				if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-					Multiselect.left.find(&#39;option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
-				}
-			} else if (button == &#39;multi_d_leftAll_2&#39;) {
-				var right_options = Multiselect.right.eq(1).find(&#39;option&#39;);
-				Multiselect.left.append(right_options);
-                
-				if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-					Multiselect.left.find(&#39;option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
-				}
-			}
-		}
-	});
+                <div class="col-sm-5">
+                    <select name="to[]" id="multiselect_to" class="form-control" size="8" multiple="multiple"></select>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-xs-12">
+                    <h5>HTML</h5>
+<pre class="prettyprint linenums">
+&lt;div class=&quot;row&quot;&gt;
+    &lt;div class=&quot;col-xs-5&quot;&gt;
+        &lt;select name=&quot;from[]&quot; id=&quot;multiselect&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+            &lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;Item 4&lt;/option&gt;
+            &lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
+        &lt;/select&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;col-xs-2&quot;&gt;
+        &lt;button type=&quot;button&quot; id=&quot;multiselect_rightAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;multiselect_rightSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;multiselect_leftSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;multiselect_leftAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;col-xs-5&quot;&gt;
+        &lt;select name=&quot;to[]&quot; id=&quot;multiselect_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+            <h5>JavaScript</h5>
+<pre class="prettyprint linenums">
+&lt;script type=&quot;text/javascript&quot;&gt;
+jQuery(document).ready(function($) {
+    $(&#39;#multiselect&#39;).multiselect();
 });
 &lt;/script&gt;
 </pre>
-				</div>
-		</div>
-		
-		<div id="download" class="container">
-			<div class="page-header"><h3>Download</h3></div>
-			
-			<div class="row">
-				<div class="col-xs-4">				
-					<p><a class="btn btn-lg btn-primary" href="https://raw.github.com/crlcu/multiselect/master/js/multiselect.js">Download multiselect.js</a></p>
-				</div>
-				
-				<div class="col-xs-4">				
-					<p><a class="btn btn-lg btn-success" href="https://raw.github.com/crlcu/multiselect/master/js/multiselect.min.js">Download multiselect.min.js</a></p>
-				</div>
-				
-				<div class="col-xs-4">				
-					<p><a class="btn btn-lg btn-info" href="https://github.com/crlcu/multiselect/archive/master.zip">Download multiselect.zip</a></p>
-				</div>
-			</div>	
-		</div>
-	</div>
-	
-	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-	<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
-	<script type="text/javascript" src="js/multiselect.min.js"></script>
-	
-	<script>
-		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-		
-		ga('create', 'UA-39934286-1', 'github.com');
-		ga('send', 'pageview');
-	</script>
+                </div>
+            </div>
+            
+            <h4 id="with-data-options">With <code>data</code> options</h4>
+            
+            <div class="row">
+                <div class="col-xs-5">
+                    <select name="from[]" class="multiselect form-control" size="8" multiple="multiple" data-right="#multiselect_to_1" data-right-all="#right_All_1" data-right-selected="#right_Selected_1" data-left-all="#left_All_1" data-left-selected="#left_Selected_1">
+                        <option value="1">Item 1</option>
+                        <option value="2">Item 5</option>
+                        <option value="2">Item 2</option>
+                        <option value="2">Item 4</option>
+                        <option value="3">Item 3</option>
+                    </select>
+                </div>
+                
+                <div class="col-xs-2">
+                    <button type="button" id="right_All_1" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                    <button type="button" id="right_Selected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                    <button type="button" id="left_Selected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                    <button type="button" id="left_All_1" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+                </div>
+                
+                <div class="col-xs-5">
+                    <select name="to[]" id="multiselect_to_1" class="form-control" size="8" multiple="multiple"></select>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-xs-12">
+                    <h5>HTML</h5>
+<pre class="prettyprint linenums">
+&lt;div class=&quot;row&quot;&gt;
+    &lt;div class=&quot;col-xs-5&quot;&gt;
+        &lt;select name=&quot;from[]&quot; class=&quot;multiselect form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot; data-right=&quot;#multiselect_to_1&quot; data-right-all=&quot;#right_All_1&quot; data-right-selected=&quot;#right_Selected_1&quot; data-left-all=&quot;#left_All_1&quot; data-left-selected=&quot;#left_Selected_1&quot;&gt;
+            &lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;Item 4&lt;/option&gt;
+            &lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
+        &lt;/select&gt;
+    &lt;/div&gt;
     
-	<script type="text/javascript">
-	$(document).ready(function() {
-		// make code pretty
-		window.prettyPrint && prettyPrint();
-		
-		if ( window.location.hash ) {
-			scrollTo(window.location.hash);
-		}
-		
-		$('.nav').on('click', 'a', function(e) {
-			scrollTo($(this).attr('href'));
-		});
+    &lt;div class=&quot;col-xs-2&quot;&gt;
+        &lt;button type=&quot;button&quot; id=&quot;right_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;right_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;left_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;left_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;col-xs-5&quot;&gt;
+        &lt;select name=&quot;to[]&quot; id=&quot;multiselect_to_1&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+            <h5>JavaScript</h5>
+<pre class="prettyprint linenums">
+&lt;script type=&quot;text/javascript&quot;&gt;
+jQuery(document).ready(function($) {
+    $(&#39;.multiselect&#39;).multiselect();
+});
+&lt;/script&gt;
+</pre>
+                </div>
+            </div>
+            
+            <h4 id="with-javascript-options">With <code>javascript</code> options</h4>
+            
+            <div class="row">
+                <div class="col-xs-5">
+                    <select name="from[]" class="js-multiselect form-control" size="8" multiple="multiple">
+                        <option value="1">Item 1</option>
+                        <option value="2">Item 5</option>
+                        <option value="2">Item 2</option>
+                        <option value="2">Item 4</option>
+                        <option value="3">Item 3</option>
+                    </select>
+                </div>
+                
+                <div class="col-xs-2">
+                    <button type="button" id="js_right_All_1" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                    <button type="button" id="js_right_Selected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                    <button type="button" id="js_left_Selected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                    <button type="button" id="js_left_All_1" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+                </div>
+                
+                <div class="col-xs-5">
+                    <select name="to[]" id="js_multiselect_to_1" class="form-control" size="8" multiple="multiple"></select>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-xs-12">
+                    <h5>HTML</h5>
+<pre class="prettyprint linenums">
+&lt;div class=&quot;row&quot;&gt;
+    &lt;div class=&quot;col-xs-5&quot;&gt;
+        &lt;select name=&quot;from[]&quot; class=&quot;js-multiselect form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+            &lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;Item 4&lt;/option&gt;
+            &lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
+        &lt;/select&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;col-xs-2&quot;&gt;
+        &lt;button type=&quot;button&quot; id=&quot;js_right_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;js_right_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;js_left_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;js_left_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;col-xs-5&quot;&gt;
+        &lt;select name=&quot;to[]&quot; id=&quot;js_multiselect_to_1&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+            <h5>JavaScript</h5>
+<pre class="prettyprint linenums">
+&lt;script type=&quot;text/javascript&quot;&gt;
+jQuery(document).ready(function($) {
+    $(&#39;.js-multiselect&#39;).multiselect({
+        right: &#39;#js_multiselect_to_1&#39;,
+        rightAll: &#39;#js_right_All_1&#39;,
+        rightSelected: &#39;#js_right_Selected_1&#39;,
+        leftSelected: &#39;#js_left_Selected_1&#39;,
+        leftAll: &#39;#js_left_All_1&#39;
+    });
+});
+&lt;/script&gt;
+</pre>
+                </div>
+            </div>
 
-		$('#multiselect').multiselect();
+            <h4 id="demo-search">With search</h4>
+            
+            <div class="row">
+                <div class="col-sm-5">
+                    <select name="from[]" id="search" class="form-control" size="8" multiple="multiple">
+                        <option value="1" data-position="1">Item 1</option>
+                        <option value="2" data-position="2">Item 5</option>
+                        <option value="2" data-position="3">Item 2</option>
+                        <option value="2" data-position="4">Item 4</option>
+                        <option value="3" data-position="5">Item 3</option>
+                    </select>
+                </div>
+                
+                <div class="col-sm-2">
+                    <button type="button" id="search_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                    <button type="button" id="search_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                    <button type="button" id="search_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                    <button type="button" id="search_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+                </div>
+                
+                <div class="col-sm-5">
+                    <select name="to[]" id="search_to" class="form-control" size="8" multiple="multiple"></select>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-xs-12">
+                    <h5>HTML</h5>
+<pre class="prettyprint linenums">
+&lt;div class=&quot;row&quot;&gt;
+    &lt;div class=&quot;col-xs-5&quot;&gt;
+        &lt;select name=&quot;from[]&quot; id=&quot;search&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+            &lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;Item 4&lt;/option&gt;
+            &lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
+        &lt;/select&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;col-xs-2&quot;&gt;
+        &lt;button type=&quot;button&quot; id=&quot;search_rightAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;search_rightSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;search_leftSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;search_leftAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;col-xs-5&quot;&gt;
+        &lt;select name=&quot;to[]&quot; id=&quot;search_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+            <h5>JavaScript</h5>
+<pre class="prettyprint linenums">
+&lt;script type=&quot;text/javascript&quot;&gt;
+jQuery(document).ready(function($) {
+    $(&#39;#search&#39;).multiselect({
+        search: {
+            left: &#39;&lt;input type=&quot;text&quot; name=&quot;q&quot; class=&quot;form-control&quot; placeholder=&quot;Search...&quot; /&gt;&#39;,
+            right: &#39;&lt;input type=&quot;text&quot; name=&quot;q&quot; class=&quot;form-control&quot; placeholder=&quot;Search...&quot; /&gt;&#39;,
+        }
+    });
+});
+&lt;/script&gt;
+</pre>
+                </div>
+            </div>
 
-		$('[name="q"]').on('keyup', function(e) {
-			var search = this.value;
-			var $options = $(this).next('select').find('option');
+            <h4 id="demo-keep-rendering-sort">Keep rendering sort</h4>
+            
+            <div class="row">
+                <div class="col-xs-5">
+                    <select name="from[]" id="keepRenderingSort" class="form-control" size="8" multiple="multiple">
+                        <option value="1" data-position="1">Item 1</option>
+                        <option value="2" data-position="2">Item 5</option>
+                        <option value="2" data-position="3">Item 2</option>
+                        <option value="2" data-position="4">Item 4</option>
+                        <option value="3" data-position="5">Item 3</option>
+                    </select>
+                </div>
+                
+                <div class="col-xs-2">
+                    <button type="button" id="keepRenderingSort_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                    <button type="button" id="keepRenderingSort_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                    <button type="button" id="keepRenderingSort_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                    <button type="button" id="keepRenderingSort_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+                </div>
+                
+                <div class="col-xs-5">
+                    <select name="to[]" id="keepRenderingSort_to" class="form-control" size="8" multiple="multiple"></select>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-xs-12">
+                    <h5>HTML</h5>
+<pre class="prettyprint linenums">
+&lt;div class=&quot;row&quot;&gt;
+    &lt;div class=&quot;col-xs-5&quot;&gt;
+        &lt;select name=&quot;from[]&quot; id=&quot;keepRenderingSort&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+            &lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;Item 4&lt;/option&gt;
+            &lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
+        &lt;/select&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;col-xs-2&quot;&gt;
+        &lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_rightAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_rightSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_leftSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;keepRenderingSort_leftAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;col-xs-5&quot;&gt;
+        &lt;select name=&quot;to[]&quot; id=&quot;keepRenderingSort_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+            <h5>JavaScript</h5>
+<pre class="prettyprint linenums">
+&lt;script type=&quot;text/javascript&quot;&gt;
+jQuery(document).ready(function($) {
+    $(&#39;#multiselect&#39;).multiselect({
+        keepRenderingSort: true
+    });
+});
+&lt;/script&gt;
+</pre>
+                </div>
+            </div>
 
-			$options.each(function(i, option) {
-				if (option.text.indexOf(search) > -1) {
-					$(option).show();
-				} else {
-					$(option).hide();
-				}
-			});
-		});
+            <h4 id="demo-undo-redo">Undo / Redo</h4>
+            
+            <div class="row">
+                <div class="col-xs-5">
+                    <select name="from[]" id="undo_redo" class="form-control" size="13" multiple="multiple">
+                        <option value="1">C++</option>
+                        <option value="2">C#</option>
+                        <option value="3">Haskell</option>
+                        <option value="4">Java</option>
+                        <option value="5">JavaScript</option>
+                        <option value="6">Lisp</option>
+                        <option value="7">Lua</option>
+                        <option value="8">MATLAB</option>
+                        <option value="9">NewLISP</option>
+                        <option value="10">PHP</option>
+                        <option value="11">Perl</option>
+                        <option value="12">SQL</option>
+                        <option value="13">Unix shell</option>
+                    </select>
+                </div>
+                
+                <div class="col-xs-2">
+                    <button type="button" id="undo_redo_undo" class="btn btn-primary btn-block">undo</button>
+                    <button type="button" id="undo_redo_rightAll" class="btn btn-default btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                    <button type="button" id="undo_redo_rightSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                    <button type="button" id="undo_redo_leftSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                    <button type="button" id="undo_redo_leftAll" class="btn btn-default btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+                    <button type="button" id="undo_redo_redo" class="btn btn-warning btn-block">redo</button>
+                </div>
+                
+                <div class="col-xs-5">
+                    <select name="to[]" id="undo_redo_to" class="form-control" size="13" multiple="multiple"></select>
+                </div>
+            </div>
 
-		$('#search').multiselect({
-			search: {
-				left: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
-				right: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
-			}
-		});
+            <div class="row">
+                <div class="col-xs-12">
+                    <h5>HTML</h5>
+<pre class="prettyprint linenums">
+&lt;div class=&quot;row&quot;&gt;
+    &lt;div class=&quot;col-xs-5&quot;&gt;
+        &lt;select name=&quot;from[]&quot; id=&quot;undo_redo&quot; class=&quot;form-control&quot; size=&quot;13&quot; multiple=&quot;multiple&quot;&gt;
+            &lt;option value=&quot;1&quot;&gt;C++&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;C#&lt;/option&gt;
+            &lt;option value=&quot;3&quot;&gt;Haskell&lt;/option&gt;
+            &lt;option value=&quot;4&quot;&gt;Java&lt;/option&gt;
+            &lt;option value=&quot;5&quot;&gt;JavaScript&lt;/option&gt;
+            &lt;option value=&quot;6&quot;&gt;Lisp&lt;/option&gt;
+            &lt;option value=&quot;7&quot;&gt;Lua&lt;/option&gt;
+            &lt;option value=&quot;8&quot;&gt;MATLAB&lt;/option&gt;
+            &lt;option value=&quot;9&quot;&gt;NewLISP&lt;/option&gt;
+            &lt;option value=&quot;10&quot;&gt;PHP&lt;/option&gt;
+            &lt;option value=&quot;11&quot;&gt;Perl&lt;/option&gt;
+            &lt;option value=&quot;12&quot;&gt;SQL&lt;/option&gt;
+            &lt;option value=&quot;13&quot;&gt;Unix shell&lt;/option&gt;
+        &lt;/select&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;col-xs-2&quot;&gt;
+        &lt;button type=&quot;button&quot; id=&quot;undo_redo_undo&quot; class=&quot;btn btn-primary btn-block&quot;&gt;undo&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;undo_redo_rightAll&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;undo_redo_rightSelected&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;undo_redo_leftSelected&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;undo_redo_leftAll&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;undo_redo_redo&quot; class=&quot;btn btn-warning btn-block&quot;&gt;redo&lt;/button&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;col-xs-5&quot;&gt;
+        &lt;select name=&quot;to[]&quot; id=&quot;undo_redo_to&quot; class=&quot;form-control&quot; size=&quot;13&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+            <h5>JavaScript</h5>
+<pre class="prettyprint linenums">
+&lt;script type=&quot;text/javascript&quot;&gt;
+jQuery(document).ready(function($) {
+    $(&#39;#undo_redo&#39;).multiselect();
+});
+&lt;/script&gt;
+</pre>
+                </div>
+            </div>
 
-		$('.multiselect').multiselect();
-		$('.js-multiselect').multiselect({
-			right: '#js_multiselect_to_1',
-			rightAll: '#js_right_All_1',
-			rightSelected: '#js_right_Selected_1',
-			leftSelected: '#js_left_Selected_1',
-			leftAll: '#js_left_All_1'
-		});
+            <h4 id="demo-multiple-destinations">Multiple destinations</h4>
+            
+            <div class="row">
+                <div class="col-xs-5">
+                    <select name="from[]" id="multi_d" class="form-control" size="26" multiple="multiple">
+                        <option value="1">C++</option>
+                        <option value="2">C#</option>
+                        <option value="3">Haskell</option>
+                        <option value="4">Java</option>
+                        <option value="5">JavaScript</option>
+                        <option value="6">Lisp</option>
+                        <option value="7">Lua</option>
+                        <option value="8">MATLAB</option>
+                        <option value="9">NewLISP</option>
+                        <option value="10">PHP</option>
+                        <option value="11">Perl</option>
+                        <option value="12">SQL</option>
+                        <option value="13">Unix shell</option>
+                    </select>
+                </div>
+                
+                <div class="col-xs-2">
+                    <button type="button" id="multi_d_rightAll" class="btn btn-default btn-block" style="margin-top: 20px;"><i class="glyphicon glyphicon-forward"></i></button>
+                    <button type="button" id="multi_d_rightSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                    <button type="button" id="multi_d_leftSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                    <button type="button" id="multi_d_leftAll" class="btn btn-default btn-block"><i class="glyphicon glyphicon-backward"></i></button>
 
-		$('#keepRenderingSort').multiselect({
-			keepRenderingSort: true
-		});
+                    <hr style="margin: 40px 0 60px;" />
 
-		$('#undo_redo').multiselect();
+                    <button type="button" id="multi_d_rightAll_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                    <button type="button" id="multi_d_rightSelected_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                    <button type="button" id="multi_d_leftSelected_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                    <button type="button" id="multi_d_leftAll_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+                </div>
+                
+                <div class="col-xs-5">
+                    <b>Known languages</b>
+                    <select name="to[]" id="multi_d_to" class="form-control" size="8" multiple="multiple">
+                        <option value="1">C++</option>
+                        <option value="2">C#</option>
+                    </select>
 
-		$('#multi_d').multiselect({
-			right: '#multi_d_to, #multi_d_to_2',
-			rightSelected: '#multi_d_rightSelected, #multi_d_rightSelected_2',
-			leftSelected: '#multi_d_leftSelected, #multi_d_leftSelected_2',
-			rightAll: '#multi_d_rightAll, #multi_d_rightAll_2',
-			leftAll: '#multi_d_leftAll, #multi_d_leftAll_2',
+                    <br/><hr/><br/>
 
-			moveToRight: function(Multiselect, options, event, silent, skipStack) {
-				var button = $(event.currentTarget).attr('id');
+                    <b>I want to learn</b>
+                    <select name="to_2[]" id="multi_d_to_2" class="form-control" size="8" multiple="multiple">
+                        <option value="12">SQL</option>
+                        <option value="13">Unix shell</option>
+                    </select>
+                </div>
+            </div>
 
-				if (button == 'multi_d_rightSelected') {
-					var left_options = Multiselect.left.find('option:selected');
-					Multiselect.right.eq(0).append(left_options);
+            <div class="row">
+                <div class="col-xs-12">
+                    <h5>HTML</h5>
+<pre class="prettyprint linenums">
+&lt;div class=&quot;row&quot;&gt;
+    &lt;div class=&quot;col-xs-5&quot;&gt;
+        &lt;select name=&quot;from[]&quot; id=&quot;multi_d&quot; class=&quot;form-control&quot; size=&quot;26&quot; multiple=&quot;multiple&quot;&gt;
+            &lt;option value=&quot;1&quot;&gt;C++&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;C#&lt;/option&gt;
+            &lt;option value=&quot;3&quot;&gt;Haskell&lt;/option&gt;
+            &lt;option value=&quot;4&quot;&gt;Java&lt;/option&gt;
+            &lt;option value=&quot;5&quot;&gt;JavaScript&lt;/option&gt;
+            &lt;option value=&quot;6&quot;&gt;Lisp&lt;/option&gt;
+            &lt;option value=&quot;7&quot;&gt;Lua&lt;/option&gt;
+            &lt;option value=&quot;8&quot;&gt;MATLAB&lt;/option&gt;
+            &lt;option value=&quot;9&quot;&gt;NewLISP&lt;/option&gt;
+            &lt;option value=&quot;10&quot;&gt;PHP&lt;/option&gt;
+            &lt;option value=&quot;11&quot;&gt;Perl&lt;/option&gt;
+            &lt;option value=&quot;12&quot;&gt;SQL&lt;/option&gt;
+            &lt;option value=&quot;13&quot;&gt;Unix shell&lt;/option&gt;
+        &lt;/select&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;col-xs-2&quot;&gt;
+        &lt;button type=&quot;button&quot; id=&quot;multi_d_rightAll&quot; class=&quot;btn btn-default btn-block&quot; style=&quot;margin-top: 20px;&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;multi_d_rightSelected&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;multi_d_leftSelected&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;multi_d_leftAll&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        
+        &lt;hr style=&quot;margin: 40px 0 60px;&quot; /&gt;
+        
+        &lt;button type=&quot;button&quot; id=&quot;multi_d_rightAll_2&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;multi_d_rightSelected_2&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;multi_d_leftSelected_2&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;multi_d_leftAll_2&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;col-xs-5&quot;&gt;
+        &lt;b&gt;Known languages&lt;/b&gt;
+        &lt;select name=&quot;to[]&quot; id=&quot;multi_d_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+        
+        &lt;br/&gt;&lt;hr/&gt;&lt;br/&gt;
+        
+        &lt;b&gt;I want to learn&lt;/b&gt;
+        &lt;select name=&quot;to_2[]&quot; id=&quot;multi_d_to_2&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+            <h5>JavaScript</h5>
+<pre class="prettyprint linenums">
+&lt;script type=&quot;text/javascript&quot;&gt;
+jQuery(document).ready(function($) {
+    $(&#39;#multi_d&#39;).multiselect({
+        right: &#39;#multi_d_to, #multi_d_to_2&#39;,
+        rightSelected: &#39;#multi_d_rightSelected, #multi_d_rightSelected_2&#39;,
+        leftSelected: &#39;#multi_d_leftSelected, #multi_d_leftSelected_2&#39;,
+        rightAll: &#39;#multi_d_rightAll, #multi_d_rightAll_2&#39;,
+        leftAll: &#39;#multi_d_leftAll, #multi_d_leftAll_2&#39;,
 
-					if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-						Multiselect.right.eq(0).find('option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(0));
-					}
-				} else if (button == 'multi_d_rightAll') {
-					var left_options = Multiselect.left.find('option');
-					Multiselect.right.eq(0).append(left_options);
+        moveToRight: function(Multiselect, options, event, silent, skipStack) {
+            var button = $(event.currentTarget).attr(&#39;id&#39;);
 
-					if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-						Multiselect.right.eq(0).find('option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(0));
-					}
-				} else if (button == 'multi_d_rightSelected_2') {
-					var left_options = Multiselect.left.find('option:selected');
-					Multiselect.right.eq(1).append(left_options);
+            if (button == &#39;multi_d_rightSelected&#39;) {
+                var left_options = Multiselect.left.find(&#39;&gt; option:selected&#39;);
+                Multiselect.right.eq(0).append(left_options);
 
-					if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-						Multiselect.right.eq(1).find('option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(1));
-					}
-				} else if (button == 'multi_d_rightAll_2') {
-					var left_options = Multiselect.left.find('option');
-					Multiselect.right.eq(1).append(left_options);
+                if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
+                    Multiselect.right.eq(0).find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(0));
+                }
+            } else if (button == &#39;multi_d_rightAll&#39;) {
+                var left_options = Multiselect.left.find(&#39;&gt; option&#39;);
+                Multiselect.right.eq(0).append(left_options);
 
-					if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-						Multiselect.right.eq(1).eq(1).find('option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(1));
-					}
-				}
-			},
+                if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
+                    Multiselect.right.eq(0).find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(0));
+                }
+            } else if (button == &#39;multi_d_rightSelected_2&#39;) {
+                var left_options = Multiselect.left.find(&#39;&gt; option:selected&#39;);
+                Multiselect.right.eq(1).append(left_options);
 
-			moveToLeft: function(Multiselect, options, event, silent, skipStack) {
-				var button = $(event.currentTarget).attr('id');
+                if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
+                    Multiselect.right.eq(1).find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(1));
+                }
+            } else if (button == &#39;multi_d_rightAll_2&#39;) {
+                var left_options = Multiselect.left.find(&#39;&gt; option&#39;);
+                Multiselect.right.eq(1).append(left_options);
 
-				if (button == 'multi_d_leftSelected') {
-					var right_options = Multiselect.right.eq(0).find('option:selected');
-					Multiselect.left.append(right_options);
+                if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
+                    Multiselect.right.eq(1).eq(1).find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(1));
+                }
+            }
+        },
 
-					if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-						Multiselect.left.find('option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
-					}
-				} else if (button == 'multi_d_leftAll') {
-					var right_options = Multiselect.right.eq(0).find('option');
-					Multiselect.left.append(right_options);
+        moveToLeft: function(Multiselect, options, event, silent, skipStack) {
+            var button = $(event.currentTarget).attr(&#39;id&#39;);
 
-					if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-						Multiselect.left.find('option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
-					}
-				} else if (button == 'multi_d_leftSelected_2') {
-					var right_options = Multiselect.right.eq(1).find('option:selected');
-					Multiselect.left.append(right_options);
+            if (button == &#39;multi_d_leftSelected&#39;) {
+                var right_options = Multiselect.right.eq(0).find(&#39;&gt; option:selected&#39;);
+                Multiselect.left.append(right_options);
 
-					if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-						Multiselect.left.find('option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
-					}
-				} else if (button == 'multi_d_leftAll_2') {
-					var right_options = Multiselect.right.eq(1).find('option');
-					Multiselect.left.append(right_options);
+                if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
+                    Multiselect.left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                }
+            } else if (button == &#39;multi_d_leftAll&#39;) {
+                var right_options = Multiselect.right.eq(0).find(&#39;&gt; option&#39;);
+                Multiselect.left.append(right_options);
 
-					if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-						Multiselect.left.find('option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
-					}
-				}
-			}
-		});
-	});
-	
-	function scrollTo( id ) {
-		if ( $(id).length ) {
-			$('html,body').animate({scrollTop: $(id).offset().top - 40},'slow');
-		}
-	}
-	</script>
+                if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
+                    Multiselect.left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                }
+            } else if (button == &#39;multi_d_leftSelected_2&#39;) {
+                var right_options = Multiselect.right.eq(1).find(&#39;&gt; option:selected&#39;);
+                Multiselect.left.append(right_options);
+
+                if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
+                    Multiselect.left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                }
+            } else if (button == &#39;multi_d_leftAll_2&#39;) {
+                var right_options = Multiselect.right.eq(1).find(&#39;&gt; option&#39;);
+                Multiselect.left.append(right_options);
+
+                if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
+                    Multiselect.left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                }
+            }
+        }
+    });
+});
+&lt;/script&gt;
+</pre>
+                </div>
+        </div>
+        
+        <div id="download" class="container">
+            <div class="page-header"><h3>Download</h3></div>
+            
+            <div class="row">
+                <div class="col-xs-4">              
+                    <p><a class="btn btn-lg btn-primary" href="https://raw.github.com/crlcu/multiselect/master/js/multiselect.js">Download multiselect.js</a></p>
+                </div>
+                
+                <div class="col-xs-4">              
+                    <p><a class="btn btn-lg btn-success" href="https://raw.github.com/crlcu/multiselect/master/js/multiselect.min.js">Download multiselect.min.js</a></p>
+                </div>
+                
+                <div class="col-xs-4">              
+                    <p><a class="btn btn-lg btn-info" href="https://github.com/crlcu/multiselect/archive/master.zip">Download multiselect.zip</a></p>
+                </div>
+            </div>  
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript" src="js/multiselect.min.js"></script>
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        
+        ga('create', 'UA-39934286-1', 'github.com');
+        ga('send', 'pageview');
+    </script>
+    
+    <script type="text/javascript">
+    $(document).ready(function() {
+        // make code pretty
+        window.prettyPrint && prettyPrint();
+        
+        if ( window.location.hash ) {
+            scrollTo(window.location.hash);
+        }
+        
+        $('.nav').on('click', 'a', function(e) {
+            scrollTo($(this).attr('href'));
+        });
+
+        $('#multiselect').multiselect();
+
+        $('[name="q"]').on('keyup', function(e) {
+            var search = this.value;
+            var $options = $(this).next('select').find('option');
+
+            $options.each(function(i, option) {
+                if (option.text.indexOf(search) > -1) {
+                    $(option).show();
+                } else {
+                    $(option).hide();
+                }
+            });
+        });
+
+        $('#search').multiselect({
+            search: {
+                left: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
+                right: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
+            }
+        });
+
+        $('.multiselect').multiselect();
+        $('.js-multiselect').multiselect({
+            right: '#js_multiselect_to_1',
+            rightAll: '#js_right_All_1',
+            rightSelected: '#js_right_Selected_1',
+            leftSelected: '#js_left_Selected_1',
+            leftAll: '#js_left_All_1'
+        });
+
+        $('#keepRenderingSort').multiselect({
+            keepRenderingSort: true
+        });
+
+        $('#undo_redo').multiselect();
+
+        $('#multi_d').multiselect({
+            right: '#multi_d_to, #multi_d_to_2',
+            rightSelected: '#multi_d_rightSelected, #multi_d_rightSelected_2',
+            leftSelected: '#multi_d_leftSelected, #multi_d_leftSelected_2',
+            rightAll: '#multi_d_rightAll, #multi_d_rightAll_2',
+            leftAll: '#multi_d_leftAll, #multi_d_leftAll_2',
+
+            search: {
+             left: '<input type="text" name="q" class="form-control" placeholder="Search..." />'
+           },
+
+            moveToRight: function(Multiselect, options, event, silent, skipStack) {
+                var button = $(event.currentTarget).attr('id');
+
+                if (button == 'multi_d_rightSelected') {
+                    var left_options = Multiselect.left.find('> option:selected');
+                    Multiselect.right.eq(0).append(left_options);
+
+                    if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
+                        Multiselect.right.eq(0).find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(0));
+                    }
+                } else if (button == 'multi_d_rightAll') {
+                    var left_options = Multiselect.left.find('> option');
+                    Multiselect.right.eq(0).append(left_options);
+
+                    if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
+                        Multiselect.right.eq(0).find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(0));
+                    }
+                } else if (button == 'multi_d_rightSelected_2') {
+                    var left_options = Multiselect.left.find('> option:selected');
+                    Multiselect.right.eq(1).append(left_options);
+
+                    if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
+                        Multiselect.right.eq(1).find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(1));
+                    }
+                } else if (button == 'multi_d_rightAll_2') {
+                    var left_options = Multiselect.left.find('> option');
+                    Multiselect.right.eq(1).append(left_options);
+
+                    if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
+                        Multiselect.right.eq(1).eq(1).find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(1));
+                    }
+                }
+            },
+
+            moveToLeft: function(Multiselect, options, event, silent, skipStack) {
+                var button = $(event.currentTarget).attr('id');
+
+                if (button == 'multi_d_leftSelected') {
+                    var right_options = Multiselect.right.eq(0).find('> option:selected');
+                    Multiselect.left.append(right_options);
+
+                    if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
+                        Multiselect.left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                    }
+                } else if (button == 'multi_d_leftAll') {
+                    var right_options = Multiselect.right.eq(0).find('> option');
+                    Multiselect.left.append(right_options);
+
+                    if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
+                        Multiselect.left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                    }
+                } else if (button == 'multi_d_leftSelected_2') {
+                    var right_options = Multiselect.right.eq(1).find('> option:selected');
+                    Multiselect.left.append(right_options);
+
+                    if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
+                        Multiselect.left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                    }
+                } else if (button == 'multi_d_leftAll_2') {
+                    var right_options = Multiselect.right.eq(1).find('> option');
+                    Multiselect.left.append(right_options);
+
+                    if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
+                        Multiselect.left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                    }
+                }
+            }
+        });
+    });
+    
+    function scrollTo( id ) {
+        if ( $(id).length ) {
+            $('html,body').animate({scrollTop: $(id).offset().top - 40},'slow');
+        }
+    }
+    </script>
 
 </body>
 </html>

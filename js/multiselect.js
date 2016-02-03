@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.1.7
+ * Multiselect v2.1.8
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2015 Adrian Crisan
@@ -144,7 +144,7 @@ if (typeof jQuery === 'undefined') {
                 // append left filter
                 if (self.options.search && self.options.search.left) {
                     self.options.search.left.on('keyup', function(e) {
-                        var regex = new RegExp(this.value,"ig");
+                        var regex = new RegExp(this.value, "ig");
 
                         self.left.find('option').each(function(i, option) {
                             if (option.text.search(regex) >= 0) {
@@ -156,7 +156,9 @@ if (typeof jQuery === 'undefined') {
                                 $(option).show();
                             } else {
                                 // Wrap with <span> to make it compatible with IE
-                                $(option).wrap('<span>').hide();
+                                if(!$(option).parent().is('span')) {
+                                    $(option).wrap('<span>').hide();
+                                }
                             }
                         });
                     });
@@ -165,7 +167,7 @@ if (typeof jQuery === 'undefined') {
                 // append right filter
                 if (self.options.search && self.options.search.right) {
                     self.options.search.right.on('keyup', function(e) {
-                        var regex = new RegExp(this.value,"ig");
+                        var regex = new RegExp(this.value, "ig");
 
                         self.right.find('option').each(function(i, option) {
                             if (option.text.search(regex) >= 0) {
@@ -177,7 +179,9 @@ if (typeof jQuery === 'undefined') {
                                 $(option).show();
                             } else {
                                 // Wrap with <span> to make it compatible with IE
-                                $(option).wrap('<span>').hide();
+                                if(!$(option).parent().is('span')) {
+                                    $(option).wrap('<span>').hide();
+                                }
                             }
                         });
                     });
