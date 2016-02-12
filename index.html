@@ -147,10 +147,21 @@
                         <td><code>function</code></td>
                         <td>return true</td>
                         <td>
-                            Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option[s]</code> elements before they are moved to right.
+                            Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>$options</code> elements before they are moved to right.<br/><br/>
+
+                            <code>beforeMoveToRight: function($left, $right, $options) { ...; return Boolean; }</code>.<br/><br/>
+                            
+                            <ul>
+                                <li><code>$left</code> - jQuery element pointing to left side <code>select</code> element</li>
+                                <li><code>$right</code> - jQuery element pointing to right side <code>select</code> element</li>
+                                <li><code>$options</code> - jQuery element containing all selected options</li>
+                            </ul>
+
                             Keep in mind that this function must return a boolean value.<br/>
-                            <code>true</code> will let the action to be performed.<br/>
-                            <code>false</code> will stop the action
+                            <ul>
+                                <li><code>true</code> will let the action to be performed</li>
+                                <li><code>false</code> will stop the action</li>
+                            </ul>
                         </td>
                     </tr>
                     <tr id="moveToRight">
@@ -158,9 +169,13 @@
                         <td><code>function</code></td>
                         <td>return self</td>
                         <td>
-                            If you want to define your own <code>moveToRight</code> functionality you can do this by defining <code>moveToRight: function(Multiselect, options, event, silent, skipStack) { ... }</code>.<br/>
+                            If you want to define your own <code>moveToRight</code> functionality you can do this by defining<br/><br/>
+
+                            <code>moveToRight: function(Multiselect, $options, event, silent, skipStack) { ... }</code><br/><br/>
+                            
                             <ul>
-                                <li><code>options</code> - HTML element containing all selected options</li>
+                                <li><code>Multiselect</code> - current instance of multiselect</li>
+                                <li><code>$options</code> - jQuery element containing all selected options</li>
                                 <li><code>event</code> - the event that initialised the action</li>
                                 <li><code>silent</code> - <code>boolean</code> that tells if you have to trigger <code>beforeMoveToRight</code> and <code>afterMoveToRight</code></li>
                                 <li><code>skipStack</code> - <code>boolean</code> that tells if you have to handle <code>undo/redo</code> stack</li>
@@ -172,7 +187,15 @@
                         <td><code>function</code></td>
                         <td>no action</td>
                         <td>
-                            Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option[s]</code> elements after they are moved to right.
+                            Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>$options</code> elements after they are moved to right.<br/><br/>
+
+                            <code>afterMoveToRight: function($left, $right, $options) { ...; }</code><br/><br/>
+
+                            <ul>
+                                <li><code>$left</code> - jQuery element pointing to left side <code>select</code> element</li>
+                                <li><code>$right</code> - jQuery element pointing to right side <code>select</code> element</li>
+                                <li><code>$options</code> - jQuery element containing all selected options</li>
+                            </ul>
                         </td>
                     </tr>
                     <tr id="beforeMoveToLeft">
@@ -180,10 +203,21 @@
                         <td><code>function</code></td>
                         <td>return true</td>
                         <td>
-                            Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option[s]</code> elements before they are moved to left.
+                            Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>$options</code> elements before they are moved to left.<br/><br/>
+
+                            <code>beforeMoveToLeft: function($left, $right, $options) { ...; return Boolean; }</code>.<br/><br/>
+                            
+                            <ul>
+                                <li><code>$left</code> - jQuery element pointing to left side <code>select</code> element</li>
+                                <li><code>$right</code> - jQuery element pointing to right side <code>select</code> element</li>
+                                <li><code>$options</code> - jQuery element containing all selected options</li>
+                            </ul>
+
                             Keep in mind that this function must return a boolean value.<br/>
-                            <code>true</code> will let the action to be performed.<br/>
-                            <code>false</code> will stop the action
+                            <ul>
+                                <li><code>true</code> will let the action to be performed</li>
+                                <li><code>false</code> will stop the action</li>
+                            </ul>
                         </td>
                     </tr>
                     <tr id="moveToLeft">
@@ -191,11 +225,15 @@
                         <td><code>function</code></td>
                         <td>return self</td>
                         <td>
-                            If you want to define your own <code>moveToLeft</code> functionality you can do this by defining <code>moveToLeft: function(Multiselect, options, event, silent, skipStack) { ... }</code>..<br/>
+                            If you want to define your own <code>moveToLeft</code> functionality you can do this by defining<br/><br/>
+
+                            <code>moveToLeft: function(Multiselect, $options, event, silent, skipStack) { ... }</code><br/><br/>
+                            
                             <ul>
-                                <li><code>options</code> - HTML element containing all selected options</li>
+                                <li><code>Multiselect</code> - current instance of multiselect</li>
+                                <li><code>$options</code> - jQuery element containing all selected options</li>
                                 <li><code>event</code> - the event that initialised the action</li>
-                                <li><code>silent</code> - <code>boolean</code> that tells if you have to trigger <code>beforeMoveToLeft</code> and <code>afterMoveToLeft</code></li>
+                                <li><code>silent</code> - <code>boolean</code> that tells if you have to trigger <code>beforeMoveToRight</code> and <code>afterMoveToRight</code></li>
                                 <li><code>skipStack</code> - <code>boolean</code> that tells if you have to handle <code>undo/redo</code> stack</li>
                             </ul>
                         </td>
@@ -205,7 +243,15 @@
                         <td><code>function</code></td>
                         <td>no action</td>
                         <td>
-                            Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>option[s]</code> elements after they are moved to left.
+                            Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>$options</code> elements after they are moved to right.<br/><br/>
+
+                            <code>afterMoveToLeft: function($left, $right, $options) { ...; }</code><br/><br/>
+
+                            <ul>
+                                <li><code>$left</code> - jQuery element pointing to left side <code>select</code> element</li>
+                                <li><code>$right</code> - jQuery element pointing to right side <code>select</code> element</li>
+                                <li><code>$options</code> - jQuery element containing all selected options</li>
+                            </ul>
                         </td>
                     </tr>
                     <tr>
