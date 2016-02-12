@@ -44,6 +44,7 @@
                                 <li><a href="#demo-keep-rendering-sort">Keep rendering sort</a></li>
                                 <li><a href="#demo-undo-redo">Undo / Redo</a></li>
                                 <li><a href="#demo-multiple-destinations">Multiple destinations</a></li>
+                                <li><a href="#demo-optgroup">With <code>optgroup</code></a></li>
                             </ul>
                         </li>
                         <li><a href="#download">Download</a></li>
@@ -795,74 +796,153 @@ jQuery(document).ready(function($) {
         rightAll: &#39;#multi_d_rightAll, #multi_d_rightAll_2&#39;,
         leftAll: &#39;#multi_d_leftAll, #multi_d_leftAll_2&#39;,
 
-        moveToRight: function(Multiselect, options, event, silent, skipStack) {
+        search: {
+            left: &#39;&lt;input type=&quot;text&quot; name=&quot;q&quot; class=&quot;form-control&quot; placeholder=&quot;Search...&quot; /&gt;&#39;
+        },
+
+        moveToRight: function(Multiselect, $options, event, silent, skipStack) {
             var button = $(event.currentTarget).attr(&#39;id&#39;);
 
             if (button == &#39;multi_d_rightSelected&#39;) {
-                var left_options = Multiselect.left.find(&#39;&gt; option:selected&#39;);
-                Multiselect.right.eq(0).append(left_options);
+                var $left_options = Multiselect.$left.find(&#39;&gt; option:selected&#39;);
+                Multiselect.$right.eq(0).append($left_options);
 
                 if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-                    Multiselect.right.eq(0).find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(0));
+                    Multiselect.$right.eq(0).find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.$right.eq(0));
                 }
             } else if (button == &#39;multi_d_rightAll&#39;) {
-                var left_options = Multiselect.left.find(&#39;&gt; option&#39;);
-                Multiselect.right.eq(0).append(left_options);
+                var $left_options = Multiselect.$left.children(&#39;:visible&#39;);
+                Multiselect.$right.eq(0).append($left_options);
 
                 if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-                    Multiselect.right.eq(0).find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(0));
+                    Multiselect.$right.eq(0).find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.$right.eq(0));
                 }
             } else if (button == &#39;multi_d_rightSelected_2&#39;) {
-                var left_options = Multiselect.left.find(&#39;&gt; option:selected&#39;);
-                Multiselect.right.eq(1).append(left_options);
+                var $left_options = Multiselect.$left.find(&#39;&gt; option:selected&#39;);
+                Multiselect.$right.eq(1).append($left_options);
 
                 if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-                    Multiselect.right.eq(1).find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(1));
+                    Multiselect.$right.eq(1).find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.$right.eq(1));
                 }
             } else if (button == &#39;multi_d_rightAll_2&#39;) {
-                var left_options = Multiselect.left.find(&#39;&gt; option&#39;);
-                Multiselect.right.eq(1).append(left_options);
+                var $left_options = Multiselect.$left.children(&#39;:visible&#39;);
+                Multiselect.$right.eq(1).append($left_options);
 
                 if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-                    Multiselect.right.eq(1).eq(1).find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(1));
+                    Multiselect.$right.eq(1).eq(1).find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.$right.eq(1));
                 }
             }
         },
 
-        moveToLeft: function(Multiselect, options, event, silent, skipStack) {
+        moveToLeft: function(Multiselect, $options, event, silent, skipStack) {
             var button = $(event.currentTarget).attr(&#39;id&#39;);
 
             if (button == &#39;multi_d_leftSelected&#39;) {
-                var right_options = Multiselect.right.eq(0).find(&#39;&gt; option:selected&#39;);
-                Multiselect.left.append(right_options);
+                var $right_options = Multiselect.$right.eq(0).find(&#39;&gt; option:selected&#39;);
+                Multiselect.$left.append($right_options);
 
                 if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-                    Multiselect.left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                    Multiselect.$left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
                 }
             } else if (button == &#39;multi_d_leftAll&#39;) {
-                var right_options = Multiselect.right.eq(0).find(&#39;&gt; option&#39;);
-                Multiselect.left.append(right_options);
+                var $right_options = Multiselect.$right.eq(0).children(&#39;:visible&#39;);
+                Multiselect.$left.append($right_options);
 
                 if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-                    Multiselect.left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                    Multiselect.$left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
                 }
             } else if (button == &#39;multi_d_leftSelected_2&#39;) {
-                var right_options = Multiselect.right.eq(1).find(&#39;&gt; option:selected&#39;);
-                Multiselect.left.append(right_options);
+                var $right_options = Multiselect.$right.eq(1).find(&#39;&gt; option:selected&#39;);
+                Multiselect.$left.append($right_options);
 
                 if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-                    Multiselect.left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                    Multiselect.$left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
                 }
             } else if (button == &#39;multi_d_leftAll_2&#39;) {
-                var right_options = Multiselect.right.eq(1).find(&#39;&gt; option&#39;);
-                Multiselect.left.append(right_options);
+                var $right_options = Multiselect.$right.eq(1).children(&#39;:visible&#39;);
+                Multiselect.$left.append($right_options);
 
                 if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-                    Multiselect.left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                    Multiselect.$left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
                 }
             }
         }
     });
+});
+&lt;/script&gt;
+</pre>
+                </div>
+        </div>
+
+        <h4 id="demo-optgroup">With optgroup</h4>
+            
+        <div class="row">
+            <div class="col-sm-5">
+                <select name="from" id="optgroup" class="form-control" size="8" multiple="multiple">
+                    <optgroup label="Swedish Cars">
+                        <option value="volvo">Volvo</option>
+                        <option value="saab">Saab</option>
+                    </optgroup>
+                    <optgroup label="German Cars">
+                        <option value="mercedes">Mercedes</option>
+                        <option value="audi">Audi</option>
+                    </optgroup>
+                    <option value="1">C++</option>
+                </select>
+            </div>
+            
+            <div class="col-sm-2">
+                <button type="button" id="optgroup_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                <button type="button" id="optgroup_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                <button type="button" id="optgroup_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                <button type="button" id="optgroup_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+            </div>
+            
+            <div class="col-sm-5">
+                <select name="to" id="optgroup_to" class="form-control" size="8" multiple="multiple">
+                    <option value="1">C++</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+                <div class="col-xs-12">
+                    <h5>HTML</h5>
+<pre class="prettyprint linenums">
+&lt;div class=&quot;row&quot;&gt;
+    &lt;div class=&quot;col-sm-5&quot;&gt;
+        &lt;select name=&quot;from&quot; id=&quot;optgroup&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+            &lt;optgroup label=&quot;Swedish Cars&quot;&gt;
+                &lt;option value=&quot;volvo&quot;&gt;Volvo&lt;/option&gt;
+                &lt;option value=&quot;saab&quot;&gt;Saab&lt;/option&gt;
+            &lt;/optgroup&gt;
+            &lt;optgroup label=&quot;German Cars&quot;&gt;
+                &lt;option value=&quot;mercedes&quot;&gt;Mercedes&lt;/option&gt;
+                &lt;option value=&quot;audi&quot;&gt;Audi&lt;/option&gt;
+            &lt;/optgroup&gt;
+            &lt;option value=&quot;1&quot;&gt;C++&lt;/option&gt;
+        &lt;/select&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;col-sm-2&quot;&gt;
+        &lt;button type=&quot;button&quot; id=&quot;optgroup_rightAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;optgroup_rightSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;optgroup_leftSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;optgroup_leftAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;col-sm-5&quot;&gt;
+        &lt;select name=&quot;to&quot; id=&quot;optgroup_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+            &lt;option value=&quot;1&quot;&gt;C++&lt;/option&gt;
+        &lt;/select&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+            <h5>JavaScript</h5>
+<pre class="prettyprint linenums">
+&lt;script type=&quot;text/javascript&quot;&gt;
+jQuery(document).ready(function($) {
+    $(&quot;#optgroup&quot;).multiselect();
 });
 &lt;/script&gt;
 </pre>
@@ -918,19 +998,6 @@ jQuery(document).ready(function($) {
 
         $('#multiselect').multiselect();
 
-        $('[name="q"]').on('keyup', function(e) {
-            var search = this.value;
-            var $options = $(this).next('select').find('option');
-
-            $options.each(function(i, option) {
-                if (option.text.indexOf(search) > -1) {
-                    $(option).show();
-                } else {
-                    $(option).hide();
-                }
-            });
-        });
-
         $('#search').multiselect({
             search: {
                 left: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
@@ -961,85 +1028,86 @@ jQuery(document).ready(function($) {
             leftAll: '#multi_d_leftAll, #multi_d_leftAll_2',
 
             search: {
-             left: '<input type="text" name="q" class="form-control" placeholder="Search..." />'
-           },
+                left: '<input type="text" name="q" class="form-control" placeholder="Search..." />'
+            },
 
-            moveToRight: function(Multiselect, options, event, silent, skipStack) {
+            moveToRight: function(Multiselect, $options, event, silent, skipStack) {
                 var button = $(event.currentTarget).attr('id');
 
                 if (button == 'multi_d_rightSelected') {
-                    var left_options = Multiselect.left.find('> option:selected');
-                    Multiselect.right.eq(0).append(left_options);
+                    var $left_options = Multiselect.$left.find('> option:selected');
+                    Multiselect.$right.eq(0).append($left_options);
 
                     if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-                        Multiselect.right.eq(0).find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(0));
+                        Multiselect.$right.eq(0).find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.$right.eq(0));
                     }
                 } else if (button == 'multi_d_rightAll') {
-                    var left_options = Multiselect.left.find('> option');
-                    Multiselect.right.eq(0).append(left_options);
+                    var $left_options = Multiselect.$left.children(':visible');
+                    Multiselect.$right.eq(0).append($left_options);
 
                     if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-                        Multiselect.right.eq(0).find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(0));
+                        Multiselect.$right.eq(0).find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.$right.eq(0));
                     }
                 } else if (button == 'multi_d_rightSelected_2') {
-                    var left_options = Multiselect.left.find('> option:selected');
-                    Multiselect.right.eq(1).append(left_options);
+                    var $left_options = Multiselect.$left.find('> option:selected');
+                    Multiselect.$right.eq(1).append($left_options);
 
                     if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-                        Multiselect.right.eq(1).find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(1));
+                        Multiselect.$right.eq(1).find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.$right.eq(1));
                     }
                 } else if (button == 'multi_d_rightAll_2') {
-                    var left_options = Multiselect.left.find('> option');
-                    Multiselect.right.eq(1).append(left_options);
+                    var $left_options = Multiselect.$left.children(':visible');
+                    Multiselect.$right.eq(1).append($left_options);
 
                     if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-                        Multiselect.right.eq(1).eq(1).find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.right.eq(1));
+                        Multiselect.$right.eq(1).eq(1).find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.$right.eq(1));
                     }
                 }
             },
 
-            moveToLeft: function(Multiselect, options, event, silent, skipStack) {
+            moveToLeft: function(Multiselect, $options, event, silent, skipStack) {
                 var button = $(event.currentTarget).attr('id');
 
                 if (button == 'multi_d_leftSelected') {
-                    var right_options = Multiselect.right.eq(0).find('> option:selected');
-                    Multiselect.left.append(right_options);
+                    var $right_options = Multiselect.$right.eq(0).find('> option:selected');
+                    Multiselect.$left.append($right_options);
 
                     if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-                        Multiselect.left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                        Multiselect.$left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
                     }
                 } else if (button == 'multi_d_leftAll') {
-                    var right_options = Multiselect.right.eq(0).find('> option');
-                    Multiselect.left.append(right_options);
+                    var $right_options = Multiselect.$right.eq(0).children(':visible');
+                    Multiselect.$left.append($right_options);
 
                     if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-                        Multiselect.left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                        Multiselect.$left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
                     }
                 } else if (button == 'multi_d_leftSelected_2') {
-                    var right_options = Multiselect.right.eq(1).find('> option:selected');
-                    Multiselect.left.append(right_options);
+                    var $right_options = Multiselect.$right.eq(1).find('> option:selected');
+                    Multiselect.$left.append($right_options);
 
                     if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-                        Multiselect.left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                        Multiselect.$left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
                     }
                 } else if (button == 'multi_d_leftAll_2') {
-                    var right_options = Multiselect.right.eq(1).find('> option');
-                    Multiselect.left.append(right_options);
+                    var $right_options = Multiselect.$right.eq(1).children(':visible');
+                    Multiselect.$left.append($right_options);
 
                     if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-                        Multiselect.left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                        Multiselect.$left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
                     }
                 }
             }
         });
+
+        $("#optgroup").multiselect();
     });
     
     function scrollTo( id ) {
         if ( $(id).length ) {
-            $('html,body').animate({scrollTop: $(id).offset().top - 40},'slow');
+            $('html,body').animate({scrollTop: $(id).offset().top - 60},'slow');
         }
     }
     </script>
-
 </body>
 </html>
