@@ -888,28 +888,28 @@ jQuery(document).ready(function($) {
                 Multiselect.$left.append($right_options);
 
                 if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-                    Multiselect.$left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                    Multiselect.$left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.$left);
                 }
             } else if (button == &#39;multi_d_leftAll&#39;) {
                 var $right_options = Multiselect.$right.eq(0).children(&#39;:visible&#39;);
                 Multiselect.$left.append($right_options);
 
                 if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-                    Multiselect.$left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                    Multiselect.$left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.$left);
                 }
             } else if (button == &#39;multi_d_leftSelected_2&#39;) {
                 var $right_options = Multiselect.$right.eq(1).find(&#39;&gt; option:selected&#39;);
                 Multiselect.$left.append($right_options);
 
                 if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-                    Multiselect.$left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                    Multiselect.$left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.$left);
                 }
             } else if (button == &#39;multi_d_leftAll_2&#39;) {
                 var $right_options = Multiselect.$right.eq(1).children(&#39;:visible&#39;);
                 Multiselect.$left.append($right_options);
 
                 if ( typeof Multiselect.callbacks.sort == &#39;function&#39; &amp;&amp; !silent ) {
-                    Multiselect.$left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                    Multiselect.$left.find(&#39;&gt; option&#39;).sort(Multiselect.callbacks.sort).appendTo(Multiselect.$left);
                 }
             }
         }
@@ -1119,28 +1119,28 @@ jQuery(document).ready(function($) {
                     Multiselect.$left.append($right_options);
 
                     if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-                        Multiselect.$left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                        Multiselect.$left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.$left);
                     }
                 } else if (button == 'multi_d_leftAll') {
                     var $right_options = Multiselect.$right.eq(0).children(':visible');
                     Multiselect.$left.append($right_options);
 
                     if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-                        Multiselect.$left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                        Multiselect.$left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.$left);
                     }
                 } else if (button == 'multi_d_leftSelected_2') {
                     var $right_options = Multiselect.$right.eq(1).find('> option:selected');
                     Multiselect.$left.append($right_options);
 
                     if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-                        Multiselect.$left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                        Multiselect.$left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.$left);
                     }
                 } else if (button == 'multi_d_leftAll_2') {
                     var $right_options = Multiselect.$right.eq(1).children(':visible');
                     Multiselect.$left.append($right_options);
 
                     if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
-                        Multiselect.$left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.left);
+                        Multiselect.$left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.$left);
                     }
                 }
             }
