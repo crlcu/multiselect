@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.2.0
+ * Multiselect v2.2.1
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2015 Adrian Crisan
@@ -109,10 +109,10 @@ if (typeof jQuery === 'undefined') {
                 }
                 
                 if ( !self.skipInitSort && typeof self.callbacks.sort == 'function' ) {
-                    self.$left._sort(self.callbacks.sort);
+                    self.$left.mSort(self.callbacks.sort);
                     
                     self.$right.each(function(i, select) {
-                        $(select)._sort(self.callbacks.sort);
+                        $(select).mSort(self.callbacks.sort);
                     });
                 }
 
@@ -138,46 +138,24 @@ if (typeof jQuery === 'undefined') {
                 // Attach event to left filter
                 if (self.options.search && self.options.search.$left) {
                     self.options.search.$left.on('keyup', function(e) {
-                        var regex = new RegExp(this.value, "ig");
-
-                        self.$left.find('option').each(function(i, option) {
-                            if (option.text.search(regex) >= 0) {
-                                // Remove <span> to make it compatible with IE
-                                if($(option).parent().is('span')) {
-                                    $(option).parent().replaceWith(option);
-                                }
-
-                                $(option).show();
-                            } else {
-                                // Wrap with <span> to make it compatible with IE
-                                if(!$(option).parent().is('span')) {
-                                    $(option).wrap('<span>').hide();
-                                }
-                            }
-                        });
+                        if (this.value) {
+                            var $toShow = self.$left.find('option:contains("' + this.value + '")').mShow();
+                            var $toHide = self.$left.find('option:not(:contains("' + this.value + '"))').mHide();
+                        } else {
+                            self.$left.find('option').mShow();
+                        }
                     });
                 }
 
                 // Attach event to right filter
                 if (self.options.search && self.options.search.$right) {
                     self.options.search.$right.on('keyup', function(e) {
-                        var regex = new RegExp(this.value, "ig");
-
-                        self.$right.find('option').each(function(i, option) {
-                            if (option.text.search(regex) >= 0) {
-                                // Remove <span> to make it compatible with IE
-                                if($(option).parent().is('span')) {
-                                    $(option).parent().replaceWith(option);
-                                }
-
-                                $(option).show();
-                            } else {
-                                // Wrap with <span> to make it compatible with IE
-                                if(!$(option).parent().is('span')) {
-                                    $(option).wrap('<span>').hide();
-                                }
-                            }
-                        });
+                        if (this.value) {
+                            var $toShow = self.$right.find('option:contains("' + this.value + '")').mShow();
+                            var $toHide = self.$right.find('option:not(:contains("' + this.value + '"))').mHide();
+                        } else {
+                            self.$right.find('option').mShow();
+                        }
                     });
                 }
 
@@ -319,7 +297,7 @@ if (typeof jQuery === 'undefined') {
                     }
                     
                     if ( typeof self.callbacks.sort == 'function' && !silent ) {
-                        self.$right._sort(self.callbacks.sort);
+                        self.$right.mSort(self.callbacks.sort);
                     }
                     
                     if ( typeof self.callbacks.afterMoveToRight == 'function' && !silent ) {
@@ -368,7 +346,7 @@ if (typeof jQuery === 'undefined') {
                     }
                     
                     if ( typeof self.callbacks.sort == 'function' && !silent ) {
-                        self.$left._sort(self.callbacks.sort);
+                        self.$left.mSort(self.callbacks.sort);
                     }
                     
                     if ( typeof self.callbacks.afterMoveToLeft == 'function' && !silent ) {
@@ -539,8 +517,32 @@ if (typeof jQuery === 'undefined') {
         return this;
     };
 
+    $.fn.mShow = function() {
+        this.each(function(index, option) {
+            // Remove <span> to make it compatible with IE
+            if($(option).parent().is('span')) {
+                $(option).parent().replaceWith(option);
+            }
+
+            $(option).show();
+        });
+
+        return this;
+    };
+
+    $.fn.mHide = function() {
+        this.each(function(index, option) {
+            // Wrap with <span> to make it compatible with IE
+            if(!$(option).parent().is('span')) {
+                $(option).wrap('<span>').hide();
+            }
+        });
+
+        return this;
+    };
+
     // sort options then reappend them to the select
-    $.fn._sort = function(callback) {
+    $.fn.mSort = function(callback) {
         this
             .find('option')
             .sort(callback)
