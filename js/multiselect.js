@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.2.1
+ * Multiselect v2.2.2
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2015 Adrian Crisan
@@ -62,7 +62,7 @@ if (typeof jQuery === 'undefined') {
             this.options = {
                 keepRenderingSort:  settings.keepRenderingSort,
                 submitAllLeft:      settings.submitAllLeft !== undefined ? settings.submitAllLeft : true,
-                submitAllRight:     settings.submitAllRight !== undefined ? settings.submitAllLeft : true,
+                submitAllRight:     settings.submitAllRight !== undefined ? settings.submitAllRight : true,
                 search:             settings.search,
             };
 
