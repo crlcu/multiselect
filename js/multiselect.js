@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.2.2
+ * Multiselect v2.2.3
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2015 Adrian Crisan
@@ -139,8 +139,8 @@ if (typeof jQuery === 'undefined') {
                 if (self.options.search && self.options.search.$left) {
                     self.options.search.$left.on('keyup', function(e) {
                         if (this.value) {
-                            var $toShow = self.$left.find('option:contains("' + this.value + '")').mShow();
-                            var $toHide = self.$left.find('option:not(:contains("' + this.value + '"))').mHide();
+                            var $toShow = self.$left.find('option:search("' + this.value + '")').mShow();
+                            var $toHide = self.$left.find('option:not(:search("' + this.value + '"))').mHide();
                         } else {
                             self.$left.find('option').mShow();
                         }
@@ -151,8 +151,8 @@ if (typeof jQuery === 'undefined') {
                 if (self.options.search && self.options.search.$right) {
                     self.options.search.$right.on('keyup', function(e) {
                         if (this.value) {
-                            var $toShow = self.$right.find('option:contains("' + this.value + '")').mShow();
-                            var $toHide = self.$right.find('option:not(:contains("' + this.value + '"))').mHide();
+                            var $toShow = self.$right.find('option:search("' + this.value + '")').mShow();
+                            var $toHide = self.$right.find('option:not(:search("' + this.value + '"))').mHide();
                         } else {
                             self.$right.find('option').mShow();
                         }
@@ -550,4 +550,10 @@ if (typeof jQuery === 'undefined') {
 
         return this;
     };
+
+    $.expr[":"].search = $.expr.createPseudo(function(arg) {
+        return function( elem ) {
+            return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+        };
+    });
 }));
