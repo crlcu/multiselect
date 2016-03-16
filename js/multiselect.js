@@ -63,7 +63,7 @@ if (typeof jQuery === 'undefined') {
                 keepRenderingSort:  settings.keepRenderingSort,
                 submitAllLeft:      settings.submitAllLeft !== undefined ? settings.submitAllLeft : true,
                 submitAllRight:     settings.submitAllRight !== undefined ? settings.submitAllRight : true,
-                search:             settings.search,
+                search:             settings.search
             };
 
             delete settings.keepRenderingSort, settings.submitAllLeft, settings.submitAllRight, settings.search;
@@ -483,7 +483,7 @@ if (typeof jQuery === 'undefined') {
                 }
                 
                 return (a.innerHTML > b.innerHTML) ? 1 : -1;
-            },
+            }
         }
     };
 
