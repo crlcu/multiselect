@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.2.5
+ * Multiselect v2.2.4
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2015 Adrian Crisan
