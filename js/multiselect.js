@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.2.4
+ * Multiselect v2.2.5
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2015 Adrian Crisan
@@ -161,8 +161,8 @@ if (typeof jQuery === 'undefined') {
 
                 // Select all the options from left and right side when submiting the parent form
                 self.$right.closest('form').on('submit', function(e) {
-                    self.$left.children().prop('selected', self.options.submitAllLeft);
-                    self.$right.children().prop('selected', self.options.submitAllRight);
+                    self.$left.find('option').prop('selected', self.options.submitAllLeft);
+                    self.$right.find('option').prop('selected', self.options.submitAllRight);
                 });
 
                 // Attach event for double clicking on options from left side
