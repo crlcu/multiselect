@@ -225,7 +225,7 @@ if (typeof jQuery === 'undefined') {
                 self.actions.$rightAll.on('click', function(e) {
                     e.preventDefault();
 
-                    var $options = self.$left.children(':visible');
+                    var $options = self.$left.children();
 
                     if ( $options.length ) {
                         self.moveToRight($options, e);
@@ -237,7 +237,7 @@ if (typeof jQuery === 'undefined') {
                 self.actions.$leftAll.on('click', function(e) {
                     e.preventDefault();
                     
-                    var $options = self.$right.children(':visible');
+                    var $options = self.$right.children();
                     
                     if ( $options.length ) {
                         self.moveToLeft($options, e);
