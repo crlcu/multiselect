@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.2.4
+ * Multiselect v2.2.5
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2015 Adrian Crisan
@@ -225,7 +225,7 @@ if (typeof jQuery === 'undefined') {
                 self.actions.$rightAll.on('click', function(e) {
                     e.preventDefault();
 
-                    var $options = self.$left.children(':visible');
+                    var $options = self.$left.children(':not(span)');
 
                     if ( $options.length ) {
                         self.moveToRight($options, e);
@@ -237,7 +237,7 @@ if (typeof jQuery === 'undefined') {
                 self.actions.$leftAll.on('click', function(e) {
                     e.preventDefault();
                     
-                    var $options = self.$right.children(':visible');
+                    var $options = self.$right.children(':not(span)');
                     
                     if ( $options.length ) {
                         self.moveToLeft($options, e);
