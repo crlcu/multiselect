@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.2.5
+ * Multiselect v2.2.6
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2015 Adrian Crisan
@@ -225,7 +225,7 @@ if (typeof jQuery === 'undefined') {
                 self.actions.$rightAll.on('click', function(e) {
                     e.preventDefault();
 
-                    var $options = self.$left.children(':not(span)');
+                    var $options = self.$left.children(':not(span):not(.hidden)');
 
                     if ( $options.length ) {
                         self.moveToRight($options, e);
@@ -237,7 +237,7 @@ if (typeof jQuery === 'undefined') {
                 self.actions.$leftAll.on('click', function(e) {
                     e.preventDefault();
                     
-                    var $options = self.$right.children(':not(span)');
+                    var $options = self.$right.children(':not(span):not(.hidden)');
                     
                     if ( $options.length ) {
                         self.moveToLeft($options, e);
@@ -487,6 +487,9 @@ if (typeof jQuery === 'undefined') {
         }
     };
 
+    var ua = window.navigator.userAgent;
+    var isIE = (ua.indexOf("MSIE ") + ua.indexOf("Trident/") + ua.indexOf("Edge/")) > -3;
+
     $.fn.multiselect = function( options ) {
         return this.each(function() {
             var $this = $(this),
@@ -518,25 +521,33 @@ if (typeof jQuery === 'undefined') {
     };
 
     $.fn.mShow = function() {
-        this.each(function(index, option) {
-            // Remove <span> to make it compatible with IE
-            if($(option).parent().is('span')) {
-                $(option).parent().replaceWith(option);
-            }
+        this.removeClass('hidden').show();
 
-            $(option).show();
-        });
+        if ( isIE ) {
+            this.each(function(index, option) {
+                // Remove <span> to make it compatible with IE
+                if($(option).parent().is('span')) {
+                    $(option).parent().replaceWith(option);
+                }
+
+                $(option).show();
+            });
+        }
 
         return this;
     };
 
     $.fn.mHide = function() {
-        this.each(function(index, option) {
-            // Wrap with <span> to make it compatible with IE
-            if(!$(option).parent().is('span')) {
-                $(option).wrap('<span>').hide();
-            }
-        });
+        this.addClass('hidden').hide();
+
+        if ( isIE ) {
+            this.each(function(index, option) {
+                // Wrap with <span> to make it compatible with IE
+                if(!$(option).parent().is('span')) {
+                    $(option).wrap('<span>').hide();
+                }
+            });
+        }
 
         return this;
     };
