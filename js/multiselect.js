@@ -63,10 +63,11 @@ if (typeof jQuery === 'undefined') {
                 keepRenderingSort:  settings.keepRenderingSort,
                 submitAllLeft:      settings.submitAllLeft !== undefined ? settings.submitAllLeft : true,
                 submitAllRight:     settings.submitAllRight !== undefined ? settings.submitAllRight : true,
-                search:             settings.search
+                search:             settings.search,
+                ignoreDisabled:     settings.ignoreDisabled !== undefined ? settings.ignoreDisabled : false
             };
 
-            delete settings.keepRenderingSort, settings.submitAllLeft, settings.submitAllRight, settings.search;
+            delete settings.keepRenderingSort, settings.submitAllLeft, settings.submitAllRight, settings.search, settings.ignoreDisabled;
 
             this.callbacks = settings;
             
@@ -273,6 +274,10 @@ if (typeof jQuery === 'undefined') {
 
                     $options.each(function(index, option) {
                         var $option = $(option);
+
+                        if (self.options.ignoreDisabled && $option.is(':disabled')) {
+                            return true;
+                        }
 
                         if ($option.parent().is('optgroup')) {
                             var $leftGroup = $option.parent();
