@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.2.6
+ * Multiselect v2.2.7
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2015 Adrian Crisan
@@ -92,9 +92,11 @@ if (typeof jQuery === 'undefined') {
                 if (self.options.keepRenderingSort) {
                     self.skipInitSort = true;
 
-                    self.callbacks.sort = function(a, b) {
-                        return $(a).data('position') > $(b).data('position') ? 1 : -1;
-                    };
+                    if (self.callbacks.sort !== false) {
+                        self.callbacks.sort = function(a, b) {
+                            return $(a).data('position') > $(b).data('position') ? 1 : -1;
+                        };
+                    }
 
                     self.$left.find('option').each(function(index, option) {
                         $(option).data('position', index);
