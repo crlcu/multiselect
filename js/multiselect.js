@@ -16,7 +16,7 @@ if (typeof jQuery === 'undefined') {
     'use strict';
 
     var version = $.fn.jquery.split(' ')[0].split('.');
-    
+
     if (version[0] < 2 && version[1] < 7) {
         throw new Error('multiselect requires jQuery version 1.7 or higher');
     }
@@ -52,7 +52,7 @@ if (typeof jQuery === 'undefined') {
                 $undo:           $( settings.undo ).length ? $( settings.undo ) : $('#' + id + '_undo'),
                 $redo:           $( settings.redo ).length ? $( settings.redo ) : $('#' + id + '_redo')
             };
-            
+
             delete settings.leftAll;
             delete settings.leftSelected;
             delete settings.right;
@@ -70,7 +70,7 @@ if (typeof jQuery === 'undefined') {
             delete settings.keepRenderingSort, settings.submitAllLeft, settings.submitAllRight, settings.search, settings.ignoreDisabled;
 
             this.callbacks = settings;
-            
+
             this.init();
         }
         
@@ -110,10 +110,10 @@ if (typeof jQuery === 'undefined') {
                 if ( typeof self.callbacks.startUp == 'function' ) {
                     self.callbacks.startUp( self.$left, self.$right );
                 }
-                
+
                 if ( !self.skipInitSort && typeof self.callbacks.sort == 'function' ) {
                     self.$left.mSort(self.callbacks.sort);
-                    
+
                     self.$right.each(function(i, select) {
                         $(select).mSort(self.callbacks.sort);
                     });
@@ -130,11 +130,11 @@ if (typeof jQuery === 'undefined') {
                     self.options.search.$right = $(self.options.search.right);
                     self.$right.before($(self.options.search.$right));
                 }
-                
+
                 // Initialize events
                 self.events();
             },
-            
+
             events: function() {
                 var self = this;
 
@@ -171,20 +171,20 @@ if (typeof jQuery === 'undefined') {
                 // Attach event for double clicking on options from left side
                 self.$left.on('dblclick', 'option', function(e) {
                     e.preventDefault();
-                    
+
                     var $options = self.$left.find('option:selected');
-                    
+
                     if ( $options.length ) {
                         self.moveToRight($options, e);
                     }
                 });
-                
+
                 // Attach event for double clicking on options from right side
                 self.$right.on('dblclick', 'option', function(e) {
                     e.preventDefault();
 
                     var $options = self.$right.find('option:selected');
-                    
+
                     if ( $options.length ) {
                         self.moveToLeft($options, e);
                     }
@@ -195,24 +195,24 @@ if (typeof jQuery === 'undefined') {
                     self.$left.dblclick(function(e) {
                         self.actions.$rightSelected.trigger('click');
                     });
-                    
+
                     self.$right.dblclick(function(e) {
                         self.actions.$leftSelected.trigger('click');
                     });
                 }
-                
+
                 self.actions.$rightSelected.on('click', function(e) {
                     e.preventDefault();
 
                     var $options = self.$left.find('option:selected');
-                    
+
                     if ( $options.length ) {
                         self.moveToRight($options, e);
                     }
 
                     $(this).blur();
                 });
-                
+
                 self.actions.$leftSelected.on('click', function(e) {
                     e.preventDefault();
 
@@ -224,7 +224,7 @@ if (typeof jQuery === 'undefined') {
 
                     $(this).blur();
                 });
-                
+
                 self.actions.$rightAll.on('click', function(e) {
                     e.preventDefault();
 
@@ -236,12 +236,12 @@ if (typeof jQuery === 'undefined') {
 
                     $(this).blur();
                 });
-                
+
                 self.actions.$leftAll.on('click', function(e) {
                     e.preventDefault();
-                    
+
                     var $options = self.$right.children(':not(span):not(.hidden)');
-                    
+
                     if ( $options.length ) {
                         self.moveToLeft($options, e);
                     }
@@ -261,7 +261,7 @@ if (typeof jQuery === 'undefined') {
                     self.redo(e);
                 });
             },
-            
+
             moveToRight: function( $options, event, silent, skipStack ) {
                 var self = this;
 
@@ -302,22 +302,22 @@ if (typeof jQuery === 'undefined') {
                         self.undoStack.push(['right', $options ]);
                         self.redoStack = [];
                     }
-                    
+
                     if ( typeof self.callbacks.sort == 'function' && !silent ) {
                         self.$right.mSort(self.callbacks.sort);
                     }
-                    
+
                     if ( typeof self.callbacks.afterMoveToRight == 'function' && !silent ) {
                         self.callbacks.afterMoveToRight( self.$left, self.$right, $options );
                     }
-                    
+
                     return self;
                 }
             },
-            
+
             moveToLeft: function( $options, event, silent, skipStack ) {
                 var self = this;
-                
+
                 if ( typeof self.callbacks.moveToLeft == 'function' ) {
                     return self.callbacks.moveToLeft( self, $options, event, silent, skipStack );
                 } else {
@@ -346,20 +346,20 @@ if (typeof jQuery === 'undefined') {
 
                         self.$left.move($option);
                     });
-                    
+
                     if ( !skipStack ) {
                         self.undoStack.push(['left', $options ]);
                         self.redoStack = [];
                     }
-                    
+
                     if ( typeof self.callbacks.sort == 'function' && !silent ) {
                         self.$left.mSort(self.callbacks.sort);
                     }
-                    
+
                     if ( typeof self.callbacks.afterMoveToLeft == 'function' && !silent ) {
                         self.callbacks.afterMoveToLeft( self.$left, self.$right, $options );
                     }
-                    
+
                     return self;
                 }
             },
@@ -381,6 +381,7 @@ if (typeof jQuery === 'undefined') {
                     }
                 }
             },
+
             redo: function(event) {
                 var self = this;
                 var last = self.redoStack.pop();
@@ -399,10 +400,10 @@ if (typeof jQuery === 'undefined') {
                 }
             }
         }
-        
+
         return Multiselect;
     })($);
-    
+
     $.multiselect = {
         defaults: {
             /** will be executed once - remove from $left all options that are already in $right
@@ -425,23 +426,23 @@ if (typeof jQuery === 'undefined') {
             },
 
             /** will be executed each time before moving option[s] to right
-             *  
+             *
              *  IMPORTANT : this method must return boolean value
              *      true    : continue to moveToRight method
              *      false   : stop
-             * 
+             *
              *  @method beforeMoveToRight
              *  @attribute $left jQuery object
              *  @attribute $right jQuery object
              *  @attribute $options HTML object (the option[s] which was selected to be moved)
-             *  
+             *
              *  @default true
              *  @return {boolean}
             **/
             beforeMoveToRight: function($left, $right, $options) { return true; },
 
             /*  will be executed each time after moving option[s] to right
-             * 
+             *
              *  @method afterMoveToRight
              *  @attribute $left jQuery object
              *  @attribute $right jQuery object
@@ -450,23 +451,23 @@ if (typeof jQuery === 'undefined') {
             afterMoveToRight: function($left, $right, $options) {},
 
             /** will be executed each time before moving option[s] to left
-             *  
+             *
              *  IMPORTANT : this method must return boolean value
              *      true    : continue to moveToRight method
              *      false   : stop
-             * 
+             *
              *  @method beforeMoveToLeft
              *  @attribute $left jQuery object
              *  @attribute $right jQuery object
              *  @attribute $options HTML object (the option[s] which was selected to be moved)
-             *  
+             *
              *  @default true
              *  @return {boolean}
             **/
             beforeMoveToLeft: function($left, $right, $options) { return true; },
 
             /*  will be executed each time after moving option[s] to left
-             * 
+             *
              *  @method afterMoveToLeft
              *  @attribute $left jQuery object
              *  @attribute $right jQuery object
@@ -475,7 +476,7 @@ if (typeof jQuery === 'undefined') {
             afterMoveToLeft: function($left, $right, $options) {},
 
             /** sort options by option text
-             * 
+             *
              *  @method sort
              *  @attribute a HTML option
              *  @attribute b HTML option
@@ -484,11 +485,11 @@ if (typeof jQuery === 'undefined') {
             **/
             sort: function(a, b) {
                 if (a.innerHTML == 'NA') {
-                    return 1;   
+                    return 1;
                 } else if (b.innerHTML == 'NA') {
-                    return -1;   
+                    return -1;
                 }
-                
+
                 return (a.innerHTML > b.innerHTML) ? 1 : -1;
             }
         }
