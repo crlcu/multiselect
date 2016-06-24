@@ -73,15 +73,12 @@ if (typeof jQuery === 'undefined') {
 
             this.init();
         }
-        
-        Multiselect.prototype = {
-            // Vars
-            undoStack: [],
-            redoStack: [],
 
-            // Functions
+        Multiselect.prototype = {
             init: function() {
                 var self = this;
+                self.undoStack = [];
+                self.redoStack = [];
 
                 // For the moment disable sort and search if there is a optgroup element
                 if (self.$left.find('optgroup').length || self.$right.find('optgroup').length) {
@@ -500,12 +497,13 @@ if (typeof jQuery === 'undefined') {
 
     $.fn.multiselect = function( options ) {
         return this.each(function() {
-            var $this = $(this),
-                data = $this.data();
-            
-            var settings = $.extend({}, $.multiselect.defaults, data, options);
-            
-            return new Multiselect($this, settings);
+            var $this    = $(this),
+                data     = $this.data('crlcu.multiselect'),
+                settings = $.extend({}, $.multiselect.defaults, $this.data(), (typeof options === 'object' && options));
+
+            if (!data) {
+                $this.data('crlcu.multiselect', (data = new Multiselect($this, settings)));
+            }
         });
     };
 
