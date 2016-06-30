@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.2.8
+ * Multiselect v2.2.9
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2016 Adrian Crisan
@@ -178,7 +178,7 @@ if (typeof jQuery === 'undefined') {
                 
                 // Attach event for pushing ENTER on options from left side
                 self.$left.keypress(function(e) {
-                    if(e.keyCode ===13){
+                    if(e.keyCode === 13){
                         e.preventDefault();
                          var $options = self.$left.find('option:selected');
 
@@ -196,6 +196,18 @@ if (typeof jQuery === 'undefined') {
 
                     if ( $options.length ) {
                         self.moveToLeft($options, e);
+                    }
+                });
+
+                // Attach event for pushing BACKSPACE or DEL on options from right side
+                self.$right.keydown(function(e) {
+                    if(e.keyCode === 8 || e.keyCode === 46) {
+                        e.preventDefault();
+                         var $options = self.$right.find('option:selected');
+
+                    	if ( $options.length ) {
+                        	self.moveToLeft($options, e);
+                    	}
                     }
                 });
 
