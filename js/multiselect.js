@@ -171,11 +171,14 @@ if (typeof jQuery === 'undefined') {
                 // Attach event for double clicking on options from left side
                 self.$left.on('dblclick', 'option', function(e) {
                     e.preventDefault();
-                    
-                    var $options = self.$left.find('option:selected');
-                    
-                    if ( $options.length ) {
-                        self.moveToRight($options, e);
+                    self.moveSelectedOptionToRight(e);
+                });
+
+                 // Attach event for pushing ENTER on options from left side
+                self.$left.keypress(function(e) {
+                    if(e.keyCode ===13){
+                        e.preventDefault();
+                        self.moveSelectedOptionToRight(e);
                     }
                 });
                 
@@ -260,6 +263,14 @@ if (typeof jQuery === 'undefined') {
 
                     self.redo(e);
                 });
+            },
+
+            moveSelectedOptionToRight : function (event) {
+                var $options = this.$left.find('option:selected');
+                    
+                if ( $options.length ) {
+                    this.moveToRight($options, event);
+                }
             },
             
             moveToRight: function( $options, event, silent, skipStack ) {
