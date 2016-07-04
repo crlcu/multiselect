@@ -177,14 +177,15 @@ if (typeof jQuery === 'undefined') {
                 });
                 
                 // Attach event for pushing ENTER on options from left side
-                self.$left.keypress(function(e) {
-                    if(e.keyCode === 13){
+                self.$left.on('keypress', function(e) {
+                    if (e.keyCode === 13) {
                         e.preventDefault();
-                         var $options = self.$left.find('option:selected');
+                        
+                        var $options = self.$left.find('option:selected');
 
-                    	if ( $options.length ) {
-                        	self.moveToRight($options, e);
-                    	}
+                        if ( $options.length ) {
+                            self.moveToRight($options, e);
+                        }
                     }
                 });
 
@@ -200,14 +201,15 @@ if (typeof jQuery === 'undefined') {
                 });
 
                 // Attach event for pushing BACKSPACE or DEL on options from right side
-                self.$right.keydown(function(e) {
-                    if(e.keyCode === 8 || e.keyCode === 46) {
+                self.$right.on('keydown', function(e) {
+                    if (e.keyCode === 8 || e.keyCode === 46) {
                         e.preventDefault();
-                         var $options = self.$right.find('option:selected');
 
-                    	if ( $options.length ) {
-                        	self.moveToLeft($options, e);
-                    	}
+                        var $options = self.$right.find('option:selected');
+
+                        if ( $options.length ) {
+                            self.moveToLeft($options, e);
+                        }
                     }
                 });
 
