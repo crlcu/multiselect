@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.2.9
+ * Multiselect v2.2.10
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2016 Adrian Crisan
@@ -594,9 +594,7 @@ if (typeof jQuery === 'undefined') {
         return this;
     };
 
-    $.expr[":"].search = $.expr.createPseudo(function(arg) {
-        return function( elem ) {
-            return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
-        };
-    });
+    $.expr[":"].search = function(elem, index, meta) {
+        return $(elem).text().toUpperCase().indexOf(meta[3].toUpperCase()) >= 0;
+    }
 }));
