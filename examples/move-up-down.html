@@ -56,55 +56,73 @@
     </div>
     
     <div id="wrap" class="container">            
-        <h4 id="with-javascript-options">With <code>javascript</code> options</h4>
-            
-            <div class="row">
-                <div class="col-xs-5">
-                    <select name="from[]" class="js-multiselect form-control" size="8" multiple="multiple">
-                        <option value="1">Item 1</option>
-                        <option value="2">Item 5</option>
-                        <option value="2">Item 2</option>
-                        <option value="2">Item 4</option>
-                        <option value="3">Item 3</option>
-                    </select>
-                </div>
-                
-                <div class="col-xs-2">
-                    <button type="button" id="js_right_All_1" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
-                    <button type="button" id="js_right_Selected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
-                    <button type="button" id="js_left_Selected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
-                    <button type="button" id="js_left_All_1" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
-                </div>
-                
-                <div class="col-xs-5">
-                    <select name="to[]" id="js_multiselect_to_1" class="form-control" size="8" multiple="multiple"></select>
-                </div>
+        <h4 id="demo-zero-configuration">With move up/down buttons</h4>
+        
+        <div class="row">
+            <div class="col-sm-5">
+                <select name="from[]" id="multiselect" class="form-control" size="8" multiple="multiple">
+                    <option value="1">Item 1</option>
+                    <option value="2">Item 2</option>
+                    <option value="3">Item 3</option>
+                    <option value="4">Item 4</option>
+                    <option value="5">Item 5</option>
+                </select>
             </div>
             
-            <div class="row">
-                <div class="col-xs-12">
-                    <h5>HTML</h5>
+            <div class="col-sm-2">
+                <button type="button" id="multiselect_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                <button type="button" id="multiselect_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                <button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                <button type="button" id="multiselect_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+            </div>
+            
+            <div class="col-sm-5">
+                <select name="to[]" id="multiselect_to" class="form-control" size="8" multiple="multiple"></select>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <button type="button" id="multiselect_move_up" class="btn btn-block"><i class="glyphicon glyphicon-arrow-up"></i></button>
+                    </div>
+                    <div class="col-sm-6">
+                        <button type="button" id="multiselect_move_down" class="btn btn-block col-sm-6"><i class="glyphicon glyphicon-arrow-down"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-xs-12">
+                <h5>HTML</h5>
 <pre class="prettyprint linenums">
 &lt;div class=&quot;row&quot;&gt;
-    &lt;div class=&quot;col-xs-5&quot;&gt;
-        &lt;select name=&quot;from[]&quot; class=&quot;js-multiselect form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+    &lt;div class=&quot;col-sm-5&quot;&gt;
+        &lt;select name=&quot;from[]&quot; id=&quot;multiselect&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
             &lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
-            &lt;option value=&quot;2&quot;&gt;Item 5&lt;/option&gt;
             &lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
-            &lt;option value=&quot;2&quot;&gt;Item 4&lt;/option&gt;
             &lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
+            &lt;option value=&quot;4&quot;&gt;Item 4&lt;/option&gt;
+            &lt;option value=&quot;5&quot;&gt;Item 5&lt;/option&gt;
         &lt;/select&gt;
     &lt;/div&gt;
     
-    &lt;div class=&quot;col-xs-2&quot;&gt;
-        &lt;button type=&quot;button&quot; id=&quot;js_right_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-        &lt;button type=&quot;button&quot; id=&quot;js_right_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-        &lt;button type=&quot;button&quot; id=&quot;js_left_Selected_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-        &lt;button type=&quot;button&quot; id=&quot;js_left_All_1&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+    &lt;div class=&quot;col-sm-2&quot;&gt;
+        &lt;button type=&quot;button&quot; id=&quot;multiselect_rightAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;multiselect_rightSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;multiselect_leftSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;multiselect_leftAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
     &lt;/div&gt;
     
-    &lt;div class=&quot;col-xs-5&quot;&gt;
-        &lt;select name=&quot;to[]&quot; id=&quot;js_multiselect_to_1&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+    &lt;div class=&quot;col-sm-5&quot;&gt;
+        &lt;select name=&quot;to[]&quot; id=&quot;multiselect_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+
+        &lt;div class=&quot;row&quot;&gt;
+            &lt;div class=&quot;col-sm-6&quot;&gt;
+                &lt;button type=&quot;button&quot; id=&quot;multiselect_move_up&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-arrow-up&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;col-sm-6&quot;&gt;
+                &lt;button type=&quot;button&quot; id=&quot;multiselect_move_down&quot; class=&quot;btn btn-block col-sm-6&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-arrow-down&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
     &lt;/div&gt;
 &lt;/div&gt;
 </pre>
@@ -112,13 +130,7 @@
 <pre class="prettyprint linenums">
 &lt;script type=&quot;text/javascript&quot;&gt;
 jQuery(document).ready(function($) {
-    $(&#39;.js-multiselect&#39;).multiselect({
-        right: &#39;#js_multiselect_to_1&#39;,
-        rightAll: &#39;#js_right_All_1&#39;,
-        rightSelected: &#39;#js_right_Selected_1&#39;,
-        leftSelected: &#39;#js_left_Selected_1&#39;,
-        leftAll: &#39;#js_left_All_1&#39;
-    });
+    $(&#39;#multiselect&#39;).multiselect();
 });
 &lt;/script&gt;
 </pre>
@@ -146,13 +158,7 @@ $(document).ready(function() {
     // make code pretty
     window.prettyPrint && prettyPrint();
 
-    $('.js-multiselect').multiselect({
-        right: '#js_multiselect_to_1',
-        rightAll: '#js_right_All_1',
-        rightSelected: '#js_right_Selected_1',
-        leftSelected: '#js_left_Selected_1',
-        leftAll: '#js_left_All_1'
-    });
+    $('#multiselect').multiselect();
 });
 </script>
 </body>

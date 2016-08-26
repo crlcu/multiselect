@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.2.10
+ * Multiselect v2.3.0
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2016 Adrian Crisan
@@ -44,13 +44,16 @@ if (typeof jQuery === 'undefined') {
             this.$left = $select;
             this.$right = $( settings.right ).length ? $( settings.right ) : $('#' + id + '_to');
             this.actions = {
-                $leftAll:        $( settings.leftAll ).length ? $( settings.leftAll ) : $('#' + id + '_leftAll'),
-                $rightAll:       $( settings.rightAll ).length ? $( settings.rightAll ) : $('#' + id + '_rightAll'),
-                $leftSelected:   $( settings.leftSelected ).length ? $( settings.leftSelected ) : $('#' + id + '_leftSelected'),
-                $rightSelected:  $( settings.rightSelected ).length ? $( settings.rightSelected ) : $('#' + id + '_rightSelected'),
+                $leftAll:       $( settings.leftAll ).length ? $( settings.leftAll ) : $('#' + id + '_leftAll'),
+                $rightAll:      $( settings.rightAll ).length ? $( settings.rightAll ) : $('#' + id + '_rightAll'),
+                $leftSelected:  $( settings.leftSelected ).length ? $( settings.leftSelected ) : $('#' + id + '_leftSelected'),
+                $rightSelected: $( settings.rightSelected ).length ? $( settings.rightSelected ) : $('#' + id + '_rightSelected'),
 
-                $undo:           $( settings.undo ).length ? $( settings.undo ) : $('#' + id + '_undo'),
-                $redo:           $( settings.redo ).length ? $( settings.redo ) : $('#' + id + '_redo')
+                $undo:          $( settings.undo ).length ? $( settings.undo ) : $('#' + id + '_undo'),
+                $redo:          $( settings.redo ).length ? $( settings.redo ) : $('#' + id + '_redo'),
+
+                $moveUp:        $( settings.moveUp ).length ? $( settings.moveUp ) : $('#' + id + '_move_up'),
+                $moveDown:      $( settings.moveDown ).length ? $( settings.moveDown ) : $('#' + id + '_move_down')
             };
 
             delete settings.leftAll;
@@ -58,6 +61,10 @@ if (typeof jQuery === 'undefined') {
             delete settings.right;
             delete settings.rightAll;
             delete settings.rightSelected;
+            delete settings.undo;
+            delete settings.redo;
+            delete settings.moveUp;
+            delete settings.moveDown;
 
             this.options = {
                 keepRenderingSort:  settings.keepRenderingSort,
@@ -283,6 +290,30 @@ if (typeof jQuery === 'undefined') {
 
                     self.redo(e);
                 });
+
+                self.actions.$moveUp.on('click', function(e) {
+                    e.preventDefault();
+
+                    self.doNotSortRight = true;
+                    
+                    var $options = self.$right.children(':selected:not(span):not(.hidden)');
+
+                    $options.first().prev().before($options);
+
+                    $(this).blur();
+                });
+
+                self.actions.$moveDown.on('click', function(e) {                    
+                    e.preventDefault();
+
+                    self.doNotSortRight = true;
+
+                    var $options = self.$right.children(':selected:not(span):not(.hidden)');
+                    
+                    $options.last().next().after($options);
+
+                    $(this).blur();
+                });
             },
 
             moveToRight: function( $options, event, silent, skipStack ) {
@@ -326,7 +357,7 @@ if (typeof jQuery === 'undefined') {
                         self.redoStack = [];
                     }
 
-                    if ( typeof self.callbacks.sort == 'function' && !silent ) {
+                    if ( typeof self.callbacks.sort == 'function' && !silent && !self.doNotSortRight ) {
                         self.$right.mSort(self.callbacks.sort);
                     }
 
