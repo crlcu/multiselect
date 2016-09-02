@@ -87,10 +87,9 @@ if (typeof jQuery === 'undefined') {
                 self.undoStack = [];
                 self.redoStack = [];
 
-                // For the moment disable sort and search if there is a optgroup element
+                // For the moment disable sort if there is a optgroup element
                 if (self.$left.find('optgroup').length || self.$right.find('optgroup').length) {
                     self.callbacks.sort = false;
-                    self.options.search = false;
                 }
 
                 if (self.options.keepRenderingSort) {
