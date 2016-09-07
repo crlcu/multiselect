@@ -296,7 +296,7 @@ if (typeof jQuery === 'undefined') {
 
                     self.doNotSortRight = true;
                     
-                    var $options = self.$right.children(':selected:not(span):not(.hidden)');
+                    var $options = self.$right.find(':selected:not(span):not(.hidden)');
 
                     $options.first().prev().before($options);
 
@@ -308,7 +308,7 @@ if (typeof jQuery === 'undefined') {
 
                     self.doNotSortRight = true;
 
-                    var $options = self.$right.children(':selected:not(span):not(.hidden)');
+                    var $options = self.$right.find(':selected:not(span):not(.hidden)');
                     
                     $options.last().next().after($options);
 
