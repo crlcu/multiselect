@@ -87,10 +87,9 @@ if (typeof jQuery === 'undefined') {
                 self.undoStack = [];
                 self.redoStack = [];
 
-                // For the moment disable sort and search if there is a optgroup element
+                // For the moment disable sort if there is a optgroup element
                 if (self.$left.find('optgroup').length || self.$right.find('optgroup').length) {
                     self.callbacks.sort = false;
-                    self.options.search = false;
                 }
 
                 if (self.options.keepRenderingSort) {
@@ -148,8 +147,10 @@ if (typeof jQuery === 'undefined') {
                         if (this.value) {
                             var $toShow = self.$left.find('option:search("' + this.value + '")').mShow();
                             var $toHide = self.$left.find('option:not(:search("' + this.value + '"))').mHide();
+                            var $grpHide= self.$left.find('option.hidden').parent('optgroup').not($(":visible").parent()).mHide();
+                            var $grpShow= self.$left.find('option:not(.hidden)').parent('optgroup').mShow();
                         } else {
-                            self.$left.find('option').mShow();
+                            self.$left.find('option, optgroup').mShow();
                         }
                     });
                 }
@@ -160,8 +161,10 @@ if (typeof jQuery === 'undefined') {
                         if (this.value) {
                             var $toShow = self.$right.find('option:search("' + this.value + '")').mShow();
                             var $toHide = self.$right.find('option:not(:search("' + this.value + '"))').mHide();
+                            var $grpHide= self.$right.find('option.hidden').parent('optgroup').not($(":visible").parent()).mHide();
+                            var $grpShow= self.$right.find('option:not(.hidden)').parent('optgroup').mShow();
                         } else {
-                            self.$right.find('option').mShow();
+                            self.$right.find('option, optgroup').mShow();
                         }
                     });
                 }
