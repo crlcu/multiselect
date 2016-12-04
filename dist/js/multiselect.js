@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.3.1
+ * Multiselect v2.3.2
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2016 Adrian Crisan
@@ -471,16 +471,16 @@ if (typeof jQuery === 'undefined') {
             **/
             startUp: function( $left, $right ) {
                 $right.find('option').each(function(index, rightOption) {
-                   if ($(rightOption).parent().prop('tagName') == 'OPTGROUP') {
-                       var optgroupSelector = 'optgroup[label="' + $(rightOption).parent().attr('label') + '"]';
-                       $left.find(optgroupSelector + ' option[value="' + rightOption.value + '"]').each(function(index, leftOption){
+                    if ($(rightOption).parent().prop('tagName') == 'OPTGROUP') {
+                        var optgroupSelector = 'optgroup[label="' + $(rightOption).parent().attr('label') + '"]';
+                        $left.find(optgroupSelector + ' option[value="' + rightOption.value + '"]').each(function(index, leftOption) {
                             leftOption.remove();
-                       });
-                       $left.find(optgroupSelector).removeIfEmpty();
-                   } else {
-                       var $option = $left.find('option[value="' + rightOption.value + '"]');
-                       $option.remove();
-                   }
+                        });
+                        $left.find(optgroupSelector).removeIfEmpty();
+                    } else {
+                        var $option = $left.find('option[value="' + rightOption.value + '"]');
+                        $option.remove();
+                    }
                 });
             },
 

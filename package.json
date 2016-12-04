@@ -18,5 +18,11 @@
   "bugs": {
     "url": "https://github.com/crlcu/multiselect/issues"
   },
-  "homepage": "https://github.com/crlcu/multiselect#readme"
+  "homepage": "https://github.com/crlcu/multiselect#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-strip-debug": "^1.1.0",
+    "gulp-uglify": "^2.0.0"
+  }
 }
