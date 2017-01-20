@@ -144,7 +144,7 @@ if (typeof jQuery === 'undefined') {
                 // Attach event to left filter
                 if (self.options.search && self.options.search.$left) {
                     self.options.search.$left.on('keyup', function(e) {
-                        if (this.value) {
+                        if (self.callbacks.fireSearch(this.value)) {
                             var $toShow = self.$left.find('option:search("' + this.value + '")').mShow();
                             var $toHide = self.$left.find('option:not(:search("' + this.value + '"))').mHide();
                             var $grpHide= self.$left.find('option.hidden').parent('optgroup').not($(":visible").parent()).mHide();
@@ -158,7 +158,7 @@ if (typeof jQuery === 'undefined') {
                 // Attach event to right filter
                 if (self.options.search && self.options.search.$right) {
                     self.options.search.$right.on('keyup', function(e) {
-                        if (this.value) {
+                        if (self.callbacks.fireSearch(this.value)) {
                             var $toShow = self.$right.find('option:search("' + this.value + '")').mShow();
                             var $toHide = self.$right.find('option:not(:search("' + this.value + '"))').mHide();
                             var $grpHide= self.$right.find('option.hidden').parent('optgroup').not($(":visible").parent()).mHide();
@@ -321,6 +321,8 @@ if (typeof jQuery === 'undefined') {
 
             moveToRight: function( $options, event, silent, skipStack ) {
                 var self = this;
+
+                console.log(self);
 
                 if ( typeof self.callbacks.moveToRight == 'function' ) {
                     return self.callbacks.moveToRight( self, $options, event, silent, skipStack );
@@ -550,6 +552,17 @@ if (typeof jQuery === 'undefined') {
                 }
 
                 return (a.innerHTML > b.innerHTML) ? 1 : -1;
+            },
+
+            /*  will tell if the search can start
+             *
+             *  @method fireSearch
+             *  @attribute value String
+             *
+             *  @return {boolean}
+            **/
+            fireSearch: function(value) {
+                return value.length > 1;
             }
         }
     };

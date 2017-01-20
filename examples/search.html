@@ -118,6 +118,9 @@ jQuery(document).ready(function($) {
         search: {
             left: &#39;&lt;input type=&quot;text&quot; name=&quot;q&quot; class=&quot;form-control&quot; placeholder=&quot;Search...&quot; /&gt;&#39;,
             right: &#39;&lt;input type=&quot;text&quot; name=&quot;q&quot; class=&quot;form-control&quot; placeholder=&quot;Search...&quot; /&gt;&#39;,
+        },
+        fireSearch: function(value) {
+            return value.length &gt; 3;
         }
     });
 });
@@ -151,6 +154,9 @@ $(document).ready(function() {
         search: {
             left: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
             right: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
+        },
+        fireSearch: function(value) {
+            return value.length > 3;
         }
     });
 });
