@@ -172,7 +172,7 @@
                     <tr id="beforeMoveToRight">
                         <td>beforeMoveToRight</td>
                         <td><code>function</code></td>
-                        <td>return true</td>
+                        <td>return <code>true</code></td>
                         <td>
                             Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>$options</code> elements before they are moved to right.<br/><br/>
 
@@ -194,7 +194,7 @@
                     <tr id="moveToRight">
                         <td>moveToRight</td>
                         <td><code>function</code></td>
-                        <td>return self</td>
+                        <td>return <code>this</code></td>
                         <td>
                             If you want to define your own <code>moveToRight</code> functionality you can do this by defining<br/><br/>
 
@@ -228,7 +228,7 @@
                     <tr id="beforeMoveToLeft">
                         <td>beforeMoveToLeft</td>
                         <td><code>function</code></td>
-                        <td>return true</td>
+                        <td>return <code>true</code></td>
                         <td>
                             Whatever you want to do with <code>$left</code>, <code>$right</code> and <code>$options</code> elements before they are moved to left.<br/><br/>
 
@@ -250,7 +250,7 @@
                     <tr id="moveToLeft">
                         <td>moveToLeft</td>
                         <td><code>function</code></td>
-                        <td>return self</td>
+                        <td>return <code>this</code></td>
                         <td>
                             If you want to define your own <code>moveToLeft</code> functionality you can do this by defining<br/><br/>
 
@@ -329,7 +329,7 @@ search: {
                     <tr id="fireSearch">
                         <td>fireSearch</td>
                         <td><code>function</code></td>
-                        <td>return true search length is great than 1</td>
+                        <td>return <code>true</code> if search length is great than 1</td>
                         <td>
                             Tell to multiselect when to start applying the search.<br/><br/>
                             <code>fireSearch: function(value) { ...; return Boolean; }</code><br/><br/>
