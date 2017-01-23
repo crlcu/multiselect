@@ -71,10 +71,11 @@ if (typeof jQuery === 'undefined') {
                 submitAllLeft:      settings.submitAllLeft !== undefined ? settings.submitAllLeft : true,
                 submitAllRight:     settings.submitAllRight !== undefined ? settings.submitAllRight : true,
                 search:             settings.search,
-                ignoreDisabled:     settings.ignoreDisabled !== undefined ? settings.ignoreDisabled : false
+                ignoreDisabled:     settings.ignoreDisabled !== undefined ? settings.ignoreDisabled : false,
+                matchOptgroupBy:    settings.matchOptgroupBy !== undefined ? settings.matchOptgroupBy : 'label'
             };
 
-            delete settings.keepRenderingSort, settings.submitAllLeft, settings.submitAllRight, settings.search, settings.ignoreDisabled;
+            delete settings.keepRenderingSort, settings.submitAllLeft, settings.submitAllRight, settings.search, settings.ignoreDisabled, settings.matchOptgroupBy;
 
             this.callbacks = settings;
 
@@ -342,7 +343,8 @@ if (typeof jQuery === 'undefined') {
 
                         if ($option.parent().is('optgroup')) {
                             var $leftGroup = $option.parent();
-                            var $rightGroup = self.$right.find('optgroup[label="' + $leftGroup.prop('label') + '"]');
+                            var optgroupSelector = 'optgroup[' + self.options.matchOptgroupBy + '="' + $leftGroup.prop(self.options.matchOptgroupBy) + '"]';
+                            var $rightGroup = self.$right.find(optgroupSelector);
 
                             if (!$rightGroup.length) {
                                 $rightGroup = $leftGroup.clone();
@@ -391,7 +393,8 @@ if (typeof jQuery === 'undefined') {
 
                         if ($option.is('optgroup') || $option.parent().is('optgroup')) {
                             var $rightGroup = $option.is('optgroup') ? $option : $option.parent();
-                            var $leftGroup = self.$left.find('optgroup[label="' + $rightGroup.prop('label') + '"]');
+                            var optgroupSelector = 'optgroup[' + self.options.matchOptgroupBy + '="' + $rightGroup.prop(self.options.matchOptgroupBy) + '"]';
+                            var $leftGroup = self.$left.find(optgroupSelector);
 
                             if (!$leftGroup.length) {
                                 $leftGroup = $rightGroup.clone();
@@ -647,3 +650,4 @@ if (typeof jQuery === 'undefined') {
         return $(elem).text().toUpperCase().indexOf(meta[3].toUpperCase()) >= 0;
     }
 }));
+
