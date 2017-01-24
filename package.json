@@ -1,6 +1,6 @@
 {
-  "name": "twosidemultiselect",
-  "version": "2.3.1",
+  "name": "multiselect-two-sides",
+  "version": "2.3.4",
   "description": "jQuery multiselect plugin with two sides",
   "main": "src/multiselect.min.js",
   "scripts": {
