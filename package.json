@@ -24,5 +24,8 @@
     "gulp-rename": "^1.2.2",
     "gulp-strip-debug": "^1.1.0",
     "gulp-uglify": "^2.0.0"
+  },
+  "dependencies": {
+    "jQuery": "^1.7"
   }
 }
