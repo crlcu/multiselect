@@ -391,6 +391,10 @@ if (typeof jQuery === 'undefined') {
                     $options.each(function(index, option) {
                         var $option = $(option);
 
+                       if (self.options.ignoreDisabled && $option.is(':disabled')) {
+                            return true;
+                        }
+                        
                         if ($option.is('optgroup') || $option.parent().is('optgroup')) {
                             var $rightGroup = $option.is('optgroup') ? $option : $option.parent();
                             var optgroupSelector = 'optgroup[' + self.options.matchOptgroupBy + '="' + $rightGroup.prop(self.options.matchOptgroupBy) + '"]';
