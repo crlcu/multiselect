@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.3.3
+ * Multiselect v2.3.6
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2016 Adrian Crisan
@@ -71,10 +71,11 @@ if (typeof jQuery === 'undefined') {
                 submitAllLeft:      settings.submitAllLeft !== undefined ? settings.submitAllLeft : true,
                 submitAllRight:     settings.submitAllRight !== undefined ? settings.submitAllRight : true,
                 search:             settings.search,
-                ignoreDisabled:     settings.ignoreDisabled !== undefined ? settings.ignoreDisabled : false
+                ignoreDisabled:     settings.ignoreDisabled !== undefined ? settings.ignoreDisabled : false,
+                matchOptgroupBy:    settings.matchOptgroupBy !== undefined ? settings.matchOptgroupBy : 'label'
             };
 
-            delete settings.keepRenderingSort, settings.submitAllLeft, settings.submitAllRight, settings.search, settings.ignoreDisabled;
+            delete settings.keepRenderingSort, settings.submitAllLeft, settings.submitAllRight, settings.search, settings.ignoreDisabled, settings.matchOptgroupBy;
 
             this.callbacks = settings;
 
@@ -322,8 +323,6 @@ if (typeof jQuery === 'undefined') {
             moveToRight: function( $options, event, silent, skipStack ) {
                 var self = this;
 
-                console.log(self);
-
                 if ( typeof self.callbacks.moveToRight == 'function' ) {
                     return self.callbacks.moveToRight( self, $options, event, silent, skipStack );
                 } else {
@@ -333,29 +332,7 @@ if (typeof jQuery === 'undefined') {
                         }
                     }
 
-                    $options.each(function(index, option) {
-                        var $option = $(option);
-
-                        if (self.options.ignoreDisabled && $option.is(':disabled')) {
-                            return true;
-                        }
-
-                        if ($option.parent().is('optgroup')) {
-                            var $leftGroup = $option.parent();
-                            var $rightGroup = self.$right.find('optgroup[label="' + $leftGroup.prop('label') + '"]');
-
-                            if (!$rightGroup.length) {
-                                $rightGroup = $leftGroup.clone();
-                                $rightGroup.children().remove();
-                            }
-
-                            $option = $rightGroup.append($option);
-
-                            $leftGroup.removeIfEmpty();
-                        }
-
-                        self.$right.move($option);
-                    });
+                    self.moveFromAtoB(self.$left, self.$right, $options, event, silent, skipStack);
 
                     if ( !skipStack ) {
                         self.undoStack.push(['right', $options ]);
@@ -386,25 +363,7 @@ if (typeof jQuery === 'undefined') {
                         }
                     }
 
-                    $options.each(function(index, option) {
-                        var $option = $(option);
-
-                        if ($option.is('optgroup') || $option.parent().is('optgroup')) {
-                            var $rightGroup = $option.is('optgroup') ? $option : $option.parent();
-                            var $leftGroup = self.$left.find('optgroup[label="' + $rightGroup.prop('label') + '"]');
-
-                            if (!$leftGroup.length) {
-                                $leftGroup = $rightGroup.clone();
-                                $leftGroup.children().remove();
-                            }
-
-                            $option = $leftGroup.append($option.is('optgroup') ? $option.children() : $option );
-
-                            $rightGroup.removeIfEmpty();
-                        }
-
-                        self.$left.move($option);
-                    });
+                    self.moveFromAtoB(self.$right, self.$left, $options, event, silent, skipStack);
 
                     if ( !skipStack ) {
                         self.undoStack.push(['left', $options ]);
@@ -421,6 +380,45 @@ if (typeof jQuery === 'undefined') {
 
                     return self;
                 }
+            },
+
+            moveFromAtoB: function( $source, $destination, $options, event, silent, skipStack ) {
+                var self = this;
+
+                $options.each(function(index, option) {
+                    var $option = $(option);
+
+                    if (self.options.ignoreDisabled && $option.is(':disabled')) {
+                        return true;
+                    }
+
+                    var shouldMove = true;
+
+                    if ($option.is('optgroup') || $option.parent().is('optgroup')) {
+                        var $sourceGroup = $option.is('optgroup') ? $option : $option.parent();
+                        var optgroupSelector = 'optgroup[' + self.options.matchOptgroupBy + '="' + $sourceGroup.prop(self.options.matchOptgroupBy) + '"]';
+                        var $destinationGroup = $destination.find(optgroupSelector);
+
+                        shouldMove = false;
+
+                        if (!$destinationGroup.length) {
+                            shouldMove = true;
+
+                            $destinationGroup = $sourceGroup.clone();
+                            $destinationGroup.children().remove();
+                        }
+
+                        $option = $destinationGroup.append($option);
+
+                        $sourceGroup.removeIfEmpty();
+                    }
+
+                    if (shouldMove) {
+                        $destination.move($option);
+                    }
+                });
+
+                return self;
             },
 
             undo: function(event) {
@@ -647,3 +645,4 @@ if (typeof jQuery === 'undefined') {
         return $(elem).text().toUpperCase().indexOf(meta[3].toUpperCase()) >= 0;
     }
 }));
+
