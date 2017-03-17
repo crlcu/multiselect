@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.3.5
+ * Multiselect v2.3.6
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2016 Adrian Crisan
@@ -323,8 +323,6 @@ if (typeof jQuery === 'undefined') {
             moveToRight: function( $options, event, silent, skipStack ) {
                 var self = this;
 
-                console.log(self);
-
                 if ( typeof self.callbacks.moveToRight == 'function' ) {
                     return self.callbacks.moveToRight( self, $options, event, silent, skipStack );
                 } else {
@@ -334,30 +332,7 @@ if (typeof jQuery === 'undefined') {
                         }
                     }
 
-                    $options.each(function(index, option) {
-                        var $option = $(option);
-
-                        if (self.options.ignoreDisabled && $option.is(':disabled')) {
-                            return true;
-                        }
-
-                        if ($option.parent().is('optgroup')) {
-                            var $leftGroup = $option.parent();
-                            var optgroupSelector = 'optgroup[' + self.options.matchOptgroupBy + '="' + $leftGroup.prop(self.options.matchOptgroupBy) + '"]';
-                            var $rightGroup = self.$right.find(optgroupSelector);
-
-                            if (!$rightGroup.length) {
-                                $rightGroup = $leftGroup.clone();
-                                $rightGroup.children().remove();
-                            }
-
-                            $option = $rightGroup.append($option);
-
-                            $leftGroup.removeIfEmpty();
-                        }
-
-                        self.$right.move($option);
-                    });
+                    self.moveFromAtoB(self.$left, self.$right, $options, event, silent, skipStack);
 
                     if ( !skipStack ) {
                         self.undoStack.push(['right', $options ]);
@@ -388,26 +363,7 @@ if (typeof jQuery === 'undefined') {
                         }
                     }
 
-                    $options.each(function(index, option) {
-                        var $option = $(option);
-
-                        if ($option.is('optgroup') || $option.parent().is('optgroup')) {
-                            var $rightGroup = $option.is('optgroup') ? $option : $option.parent();
-                            var optgroupSelector = 'optgroup[' + self.options.matchOptgroupBy + '="' + $rightGroup.prop(self.options.matchOptgroupBy) + '"]';
-                            var $leftGroup = self.$left.find(optgroupSelector);
-
-                            if (!$leftGroup.length) {
-                                $leftGroup = $rightGroup.clone();
-                                $leftGroup.children().remove();
-                            }
-
-                            $option = $leftGroup.append($option.is('optgroup') ? $option.children() : $option );
-
-                            $rightGroup.removeIfEmpty();
-                        }
-
-                        self.$left.move($option);
-                    });
+                    self.moveFromAtoB(self.$right, self.$left, $options, event, silent, skipStack);
 
                     if ( !skipStack ) {
                         self.undoStack.push(['left', $options ]);
@@ -424,6 +380,45 @@ if (typeof jQuery === 'undefined') {
 
                     return self;
                 }
+            },
+
+            moveFromAtoB: function( $source, $destination, $options, event, silent, skipStack ) {
+                var self = this;
+
+                $options.each(function(index, option) {
+                    var $option = $(option);
+
+                    if (self.options.ignoreDisabled && $option.is(':disabled')) {
+                        return true;
+                    }
+
+                    var shouldMove = true;
+
+                    if ($option.is('optgroup') || $option.parent().is('optgroup')) {
+                        var $sourceGroup = $option.is('optgroup') ? $option : $option.parent();
+                        var optgroupSelector = 'optgroup[' + self.options.matchOptgroupBy + '="' + $sourceGroup.prop(self.options.matchOptgroupBy) + '"]';
+                        var $destinationGroup = $destination.find(optgroupSelector);
+
+                        shouldMove = false;
+
+                        if (!$destinationGroup.length) {
+                            shouldMove = true;
+
+                            $destinationGroup = $sourceGroup.clone();
+                            $destinationGroup.children().remove();
+                        }
+
+                        $option = $destinationGroup.append($option);
+
+                        $sourceGroup.removeIfEmpty();
+                    }
+
+                    if (shouldMove) {
+                        $destination.move($option);
+                    }
+                });
+
+                return self;
             },
 
             undo: function(event) {
