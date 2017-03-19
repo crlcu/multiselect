@@ -392,28 +392,26 @@ if (typeof jQuery === 'undefined') {
                         return true;
                     }
 
-                    var shouldMove = true;
-
                     if ($option.is('optgroup') || $option.parent().is('optgroup')) {
                         var $sourceGroup = $option.is('optgroup') ? $option : $option.parent();
                         var optgroupSelector = 'optgroup[' + self.options.matchOptgroupBy + '="' + $sourceGroup.prop(self.options.matchOptgroupBy) + '"]';
                         var $destinationGroup = $destination.find(optgroupSelector);
 
-                        shouldMove = false;
-
                         if (!$destinationGroup.length) {
-                            shouldMove = true;
-
-                            $destinationGroup = $sourceGroup.clone();
-                            $destinationGroup.children().remove();
+                            $destinationGroup = $sourceGroup.clone(true);
+                            $destinationGroup.empty();
+                            
+                            $destination.move($destinationGroup);
                         }
 
-                        $option = $destinationGroup.append($option);
+                        if ($option.is('optgroup')) {
+                            $destinationGroup.move($option.find('option'));
+                        } else {
+                            $destinationGroup.move($option);
+                        }
 
                         $sourceGroup.removeIfEmpty();
-                    }
-
-                    if (shouldMove) {
+                    } else {
                         $destination.move($option);
                     }
                 });
