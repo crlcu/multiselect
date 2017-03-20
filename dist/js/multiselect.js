@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.3.6
+ * Multiselect v2.3.7
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2016 Adrian Crisan
@@ -88,11 +88,6 @@ if (typeof jQuery === 'undefined') {
                 self.undoStack = [];
                 self.redoStack = [];
 
-                // For the moment disable sort if there is a optgroup element
-                if (self.$left.find('optgroup').length || self.$right.find('optgroup').length) {
-                    self.callbacks.sort = false;
-                }
-
                 if (self.options.keepRenderingSort) {
                     self.skipInitSort = true;
 
@@ -102,12 +97,10 @@ if (typeof jQuery === 'undefined') {
                         };
                     }
 
-                    self.$left.find('option').each(function(index, option) {
-                        $(option).data('position', index);
-                    });
+                    self.$left.attachIndex();
 
-                    self.$right.find('option').each(function(index, option) {
-                        $(option).data('position', index);
+                    self.$right.each(function(i, select) {
+                        $(select).attachIndex();
                     });
                 }
 
@@ -632,15 +625,40 @@ if (typeof jQuery === 'undefined') {
     // sort options then reappend them to the select
     $.fn.mSort = function(callback) {
         this
-            .find('option')
+            .children()
             .sort(callback)
             .appendTo(this);
+
+        this
+            .find('optgroup')
+            .each(function(i, group) {
+                $(group).children()
+                    .sort(callback)
+                    .appendTo(group);
+            })
 
         return this;
     };
 
+    // attach index to children
+    $.fn.attachIndex = function() {
+        this.children().each(function(index, option) {
+            var $option = $(option);
+
+            if ($option.is('optgroup')) {
+                $option.children().each(function(i, children) {
+                    $(children).data('position', i);
+                });
+            }
+
+            $option.data('position', index);
+        });
+    };
+
     $.expr[":"].search = function(elem, index, meta) {
-        return $(elem).text().toUpperCase().indexOf(meta[3].toUpperCase()) >= 0;
+        var regex = new RegExp(meta[3], "i");
+
+        return $(elem).text().match(regex);
     }
 }));
 
