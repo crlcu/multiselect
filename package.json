@@ -23,7 +23,8 @@
     "gulp": "^3.9.1",
     "gulp-rename": "^1.2.2",
     "gulp-strip-debug": "^1.1.0",
-    "gulp-uglify": "^2.0.0"
+    "gulp-uglify": "^2.0.0",
+    "jasmine": "^2.5.3"
   },
   "dependencies": {
     "jQuery": "^1.7"
