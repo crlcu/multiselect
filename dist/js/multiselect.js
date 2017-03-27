@@ -255,7 +255,7 @@ if (typeof jQuery === 'undefined') {
                 self.actions.$rightAll.on('click', function(e) {
                     e.preventDefault();
 
-                    var $options = self.$left.children(':not(span):not(.hidden)');
+                    var $options = self.$left.find('option:not(span):not(.hidden)');
 
                     if ( $options.length ) {
                         self.moveToRight($options, e);
@@ -267,7 +267,7 @@ if (typeof jQuery === 'undefined') {
                 self.actions.$leftAll.on('click', function(e) {
                     e.preventDefault();
 
-                    var $options = self.$right.children(':not(span):not(.hidden)');
+                    var $options = self.$right.find('option:not(span):not(.hidden)');
 
                     if ( $options.length ) {
                         self.moveToLeft($options, e);
