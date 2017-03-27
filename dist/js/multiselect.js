@@ -385,8 +385,8 @@ if (typeof jQuery === 'undefined') {
                         return true;
                     }
 
-                    if ($option.is('optgroup') || $option.parent().is('optgroup')) {
-                        var $sourceGroup = $option.is('optgroup') ? $option : $option.parent();
+                    if ($option.parent().is('optgroup')) {
+                        var $sourceGroup = $option.parent();
                         var optgroupSelector = 'optgroup[' + self.options.matchOptgroupBy + '="' + $sourceGroup.prop(self.options.matchOptgroupBy) + '"]';
                         var $destinationGroup = $destination.find(optgroupSelector);
 
@@ -396,12 +396,7 @@ if (typeof jQuery === 'undefined') {
                             
                             $destination.move($destinationGroup);
                         }
-
-                        if ($option.is('optgroup')) {
-                            $destinationGroup.move($option.find('option'));
-                        } else {
-                            $destinationGroup.move($option);
-                        }
+                        $destinationGroup.move($option);
 
                         $sourceGroup.removeIfEmpty();
                     } else {
