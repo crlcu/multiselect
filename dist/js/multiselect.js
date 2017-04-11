@@ -558,6 +558,7 @@ if (typeof jQuery === 'undefined') {
 
     var ua = window.navigator.userAgent;
     var isIE = (ua.indexOf("MSIE ") + ua.indexOf("Trident/") + ua.indexOf("Edge/")) > -3;
+    var isSafari = ua.toLowerCase().indexOf("safari") > -1;
 
     $.fn.multiselect = function( options ) {
         return this.each(function() {
@@ -593,7 +594,7 @@ if (typeof jQuery === 'undefined') {
     $.fn.mShow = function() {
         this.removeClass('hidden').show();
 
-        if ( isIE ) {
+        if (isIE || isSafari) {
             this.each(function(index, option) {
                 // Remove <span> to make it compatible with IE
                 if($(option).parent().is('span')) {
@@ -610,7 +611,7 @@ if (typeof jQuery === 'undefined') {
     $.fn.mHide = function() {
         this.addClass('hidden').hide();
 
-        if ( isIE ) {
+        if (isIE || isSafari) {
             this.each(function(index, option) {
                 // Wrap with <span> to make it compatible with IE
                 if(!$(option).parent().is('span')) {
