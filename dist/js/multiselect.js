@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.3.8
+ * Multiselect v2.3.9
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2016 Adrian Crisan
@@ -165,6 +165,10 @@ if (typeof jQuery === 'undefined') {
 
                 // Select all the options from left and right side when submiting the parent form
                 self.$right.closest('form').on('submit', function(e) {
+                    // Clear search inputs
+                    self.options.search.$left.val('').trigger('keyup');
+                    self.options.search.$right.val('').trigger('keyup');
+
                     self.$left.find('option').prop('selected', self.options.submitAllLeft);
                     self.$right.find('option').prop('selected', self.options.submitAllRight);
                 });
@@ -291,23 +295,23 @@ if (typeof jQuery === 'undefined') {
                 self.actions.$moveUp.on('click', function(e) {
                     e.preventDefault();
 
-                    self.doNotSortRight = true;
-                    
                     var $options = self.$right.find(':selected:not(span):not(.hidden)');
 
-                    $options.first().prev().before($options);
+                    if ( $options.length ) {
+                        self.moveUp($options, e);
+                    }
 
                     $(this).blur();
                 });
 
-                self.actions.$moveDown.on('click', function(e) {                    
+                self.actions.$moveDown.on('click', function(e) {
                     e.preventDefault();
 
-                    self.doNotSortRight = true;
-
                     var $options = self.$right.find(':selected:not(span):not(.hidden)');
-                    
-                    $options.last().next().after($options);
+
+                    if ( $options.length ) {
+                        self.moveDown($options, e);
+                    }
 
                     $(this).blur();
                 });
@@ -410,6 +414,38 @@ if (typeof jQuery === 'undefined') {
                 });
 
                 return self;
+            },
+
+            moveUp: function($options) {
+                var self = this;
+
+                if ( typeof self.callbacks.beforeMoveUp == 'function' ) {
+                    if ( !self.callbacks.beforeMoveUp( $options ) ) {
+                        return false;
+                    }
+                }
+
+                $options.first().prev().before($options);
+
+                if ( typeof self.callbacks.afterMoveUp == 'function' ) {
+                    self.callbacks.afterMoveUp( $options );
+                }
+            },
+
+            moveDown: function($options) {
+                var self = this;
+
+                if ( typeof self.callbacks.beforeMoveDown == 'function' ) {
+                    if ( !self.callbacks.beforeMoveDown( $options ) ) {
+                        return false;
+                    }
+                }
+
+                $options.last().next().after($options);
+
+                if ( typeof self.callbacks.moveDown == 'function' ) {
+                    self.callbacks.afterMoveUp( $options );
+                }
             },
 
             undo: function(event) {
@@ -524,6 +560,52 @@ if (typeof jQuery === 'undefined') {
              *  @attribute $options HTML object (the option[s] which was selected to be moved)
             **/
             afterMoveToLeft: function($left, $right, $options) {},
+
+            /** will be executed each time before moving option[s] up
+             *
+             *  IMPORTANT : this method must return boolean value
+             *      true    : continue to moveUp method
+             *      false   : stop
+             *
+             *  @method beforeMoveUp
+             *  @attribute $options HTML object (the option[s] which was selected to be moved)
+             *
+             *  @default true
+             *  @return {boolean}
+            **/
+            beforeMoveUp: function($options) { return true; },
+
+            /*  will be executed each time after moving option[s] up
+             *
+             *  @method afterMoveUp
+             *  @attribute $left jQuery object
+             *  @attribute $right jQuery object
+             *  @attribute $options HTML object (the option[s] which was selected to be moved)
+            **/
+            afterMoveUp: function($options) {},
+
+            /** will be executed each time before moving option[s] down
+             *
+             *  IMPORTANT : this method must return boolean value
+             *      true    : continue to moveUp method
+             *      false   : stop
+             *
+             *  @method beforeMoveDown
+             *  @attribute $options HTML object (the option[s] which was selected to be moved)
+             *
+             *  @default true
+             *  @return {boolean}
+            **/
+            beforeMoveDown: function($options) { return true; },
+
+            /*  will be executed each time after moving option[s] down
+             *
+             *  @method afterMoveUp
+             *  @attribute $left jQuery object
+             *  @attribute $right jQuery object
+             *  @attribute $options HTML object (the option[s] which was selected to be moved)
+            **/
+            afterMoveDown: function($options) {},
 
             /** sort options by option text
              *
