@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.3.10
+ * Multiselect v2.3.11
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2016 Adrian Crisan
@@ -165,9 +165,17 @@ if (typeof jQuery === 'undefined') {
 
                 // Select all the options from left and right side when submiting the parent form
                 self.$right.closest('form').on('submit', function(e) {
-                    // Clear search inputs
-                    self.options.search.$left.val('').trigger('keyup');
-                    self.options.search.$right.val('').trigger('keyup');
+                    if (self.options.search) {
+                        // Clear left search input
+                        if (self.options.search.$left) {
+                            self.options.search.$left.val('').trigger('keyup');
+                        }
+
+                        // Clear right search input
+                        if (self.options.search.$right) {
+                            self.options.search.$right.val('').trigger('keyup');
+                        }
+                    }
 
                     self.$left.find('option').prop('selected', self.options.submitAllLeft);
                     self.$right.find('option').prop('selected', self.options.submitAllRight);
