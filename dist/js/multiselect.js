@@ -443,8 +443,8 @@ if (typeof jQuery === 'undefined') {
 
                 $options.last().next().after($options);
 
-                if ( typeof self.callbacks.moveDown == 'function' ) {
-                    self.callbacks.afterMoveUp( $options );
+                if ( typeof self.callbacks.afterMoveDown == 'function' ) {
+                    self.callbacks.afterMoveDown( $options );
                 }
             },
 
