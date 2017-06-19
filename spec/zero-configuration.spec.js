@@ -1,3 +1,13 @@
+if (typeof window === 'undefined') {
+    var jsdom = require("jsdom");
+    global.document = jsdom.jsdom();
+    global.window = global.document.defaultView;
+    var navigator = {userAgent: "node-js", platform: "Linux i686"};
+    global.window.navigator = global.navigator = navigator;
+    navigator.platform = "Linux i686";
+    global.jQuery = global.$ = require("jquery");
+}
+
 describe("zero configuration", function() {
     var $multiselect,
         $multiselect_to;

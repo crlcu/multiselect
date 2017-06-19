@@ -281,6 +281,74 @@
                             </ul>
                         </td>
                     </tr>
+                    <tr id="beforeMoveUp">
+                        <td>beforeMoveUp</td>
+                        <td><code>function</code></td>
+                        <td>return <code>true</code></td>
+                        <td>
+                            Whatever you want to do with <code>$options</code> elements before they are moved up.<br/><br/>
+
+                            <code>beforeMoveUp: function( $options) { ...; return Boolean; }</code>.<br/><br/>
+                            
+                            <ul>
+                                <li><code>$options</code> - jQuery element containing all selected options</li>
+                            </ul>
+
+                            Keep in mind that this function must return a boolean value.<br/>
+                            <ul>
+                                <li><code>true</code> will let the action to be performed</li>
+                                <li><code>false</code> will stop the action</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr id="afterMoveUp">
+                        <td>afterMoveUp</td>
+                        <td><code>function</code></td>
+                        <td>no action</td>
+                        <td>
+                            Whatever you want to do with <code>$options</code> elements after they are moved up.<br/><br/>
+
+                            <code>afterMoveUp: function($options) { ...; }</code><br/><br/>
+
+                            <ul>
+                                <li><code>$options</code> - jQuery element containing all selected options</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr id="beforeMoveDown">
+                        <td>beforeMoveDown</td>
+                        <td><code>function</code></td>
+                        <td>return <code>true</code></td>
+                        <td>
+                            Whatever you want to do with <code>$options</code> elements before they are moved down.<br/><br/>
+
+                            <code>beforeMoveDown: function( $options) { ...; return Boolean; }</code>.<br/><br/>
+                            
+                            <ul>
+                                <li><code>$options</code> - jQuery element containing all selected options</li>
+                            </ul>
+
+                            Keep in mind that this function must return a boolean value.<br/>
+                            <ul>
+                                <li><code>true</code> will let the action to be performed</li>
+                                <li><code>false</code> will stop the action</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr id="afterMoveDown">
+                        <td>afterMoveDown</td>
+                        <td><code>function</code></td>
+                        <td>no action</td>
+                        <td>
+                            Whatever you want to do with <code>$options</code> elements after they are moved down.<br/><br/>
+
+                            <code>afterMoveDown: function($options) { ...; }</code><br/><br/>
+
+                            <ul>
+                                <li><code>$options</code> - jQuery element containing all selected options</li>
+                            </ul>
+                        </td>
+                    </tr>
                     <tr>
                         <td>keepRenderingSort</td>
                         <td><code>boolean</code></td>
