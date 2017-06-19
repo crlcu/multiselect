@@ -12,7 +12,7 @@ if (typeof jQuery === 'undefined') {
     throw new Error('multiselect requires jQuery');
 }
 
-;(function ($) {
+(function ($) {
     'use strict';
 
     var version = $.fn.jquery.split(' ')[0].split('.');
@@ -22,7 +22,7 @@ if (typeof jQuery === 'undefined') {
     }
 })(jQuery);
 
-;(function (factory) {
+(function (factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module depending on jQuery.
         define(['jquery'], factory);
@@ -486,7 +486,7 @@ if (typeof jQuery === 'undefined') {
                     }
                 }
             }
-        }
+        };
 
         return Multiselect;
     })($);
