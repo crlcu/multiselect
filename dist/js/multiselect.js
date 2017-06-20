@@ -137,6 +137,10 @@ if (typeof jQuery === 'undefined') {
 
         const HIDDEN_OPTIONS = "option:hidden";
 
+        const A_IS_BIGGER_THAN_B = 1;
+
+        const B_IS_BIGGER_THAN_A = -1;
+
         var isMS = undefined;
 
         var isSafari = undefined;
@@ -243,18 +247,20 @@ if (typeof jQuery === 'undefined') {
         var lexicographicComparison = function(a, b) {
             // FIXME: What is this? An empty element returns "" with innerHTML...
             const NA = "NA";
-            const A_IS_BIGGER = 1;
-            const B_IS_BIGGER = -1;
             if (a.innerHTML == NA) {
-                return A_IS_BIGGER;
+                return A_IS_BIGGER_THAN_B;
             } else if (b.innerHTML == NA) {
-                return B_IS_BIGGER;
+                return B_IS_BIGGER_THAN_A;
             }
             // lexicographic comparison between strings (compare chars at same index)
             // e.g. 99 > 100
             // e.g. abc99 > abc100
             // e.g. bbb > aaa
-            return (a.innerHTML > b.innerHTML) ? A_IS_BIGGER : B_IS_BIGGER;
+            return (a.innerHTML > b.innerHTML) ? A_IS_BIGGER_THAN_B : B_IS_BIGGER_THAN_A;
+        };
+
+        var initialPositionComparison = function(a,b) {
+            return $(a).data('position') > $(b).data('position') ? A_IS_BIGGER_THAN_B : B_IS_BIGGER_THAN_A;
         };
 
         var Multiselect = (function($) {
@@ -302,10 +308,7 @@ if (typeof jQuery === 'undefined') {
                         // could also be undefined and doesn't have to be false
                         // This seems to be a hack to make something work
                         if (self.callbacks.sort !== false) {
-                            // FIXME: Extract this sort function, name it accordingly
-                            self.callbacks.sort = function(a, b) {
-                                return $(a).data('position') > $(b).data('position') ? 1 : -1;
-                            };
+                            self.callbacks.sort = initialPositionComparison;
                         }
 
                         // decorate the options with their initial positions in the list so that it can be re-established
