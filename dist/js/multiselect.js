@@ -291,11 +291,12 @@ if (typeof jQuery === 'undefined') {
                         // The default sort function makes no sense, though, so...
                         // could also be undefined and doesn't have to be false
                         // This seems to be a hack to make something work
-                        // FIXME: Extract this sort function, name it accordingly
-                        // FIXME: Can we also not have a sort function? Then this could go wrong
-                        self.callbacks.sort = function(a, b) {
-                            return $(a).data('position') > $(b).data('position') ? 1 : -1;
-                        };
+                        if (self.callbacks.sort !== false) {
+                            // FIXME: Extract this sort function, name it accordingly
+                            self.callbacks.sort = function(a, b) {
+                                return $(a).data('position') > $(b).data('position') ? 1 : -1;
+                            };
+                        }
 
                         // decorate the options with their initial positions in the list so that it can be re-established
                         self.$left.attachIndex();
@@ -305,13 +306,16 @@ if (typeof jQuery === 'undefined') {
                         });
                     }
 
+                    // startUp could be a function or false
+                    // either the default is used or the function; false doesn't amount to anything
                     // startUp preprocessing function
                     // TODO: With an api, my startUp function could use that to move options around
-                    // TODO: change docs to exclude "false"
-                    self.callbacks.startUp( self.$left, self.$right );
+                    if ( typeof self.callbacks.startUp == 'function' ) {
+                        self.callbacks.startUp( self.$left, self.$right );
+                    }
 
                     // initial sort if allowed
-                    if ( !self.options.keepRenderingSort) {
+                    if ( !self.options.keepRenderingSort && typeof self.callbacks.sort == 'function' ) {
                         // sort seems to be a comparator function, not a sorting function
                         self.$left.mSort(self.callbacks.sort);
 
@@ -852,6 +856,9 @@ if (typeof jQuery === 'undefined') {
                 }
             }
         };
+
+        //var isIE = isMicrosoftBrowser();      these variables do not seem to be used
+        //var isSafari = isSafariBrowser();
 
         $.fn.multiselect = function( options ) {
             return this.each(function() {
