@@ -303,11 +303,9 @@ if (typeof jQuery === 'undefined') {
                     self.redoStack = [];
 
                     if (self.options.keepRenderingSort) {
-                        // FIXME: Huh? When I give a callback function it is ignored and overwritten by this one? The default one is NEVER used?
-                        // The default sort function makes no sense, though, so...
-                        // could also be undefined and doesn't have to be false
-                        // This seems to be a hack to make something work
-                        if (self.callbacks.sort !== false) {
+                        // if rendering sort should be retained, it makes no sense to provide a callback
+                        // so ignore it and go back to using rendering sort
+                        if (self.callbacks.sort) {
                             self.callbacks.sort = initialPositionComparison;
                         }
 
