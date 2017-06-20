@@ -235,6 +235,18 @@ if (typeof jQuery === 'undefined') {
             return (ua.toLowerCase().indexOf(USER_AGENT_SAFARI) > -1);
         };
 
+        // FIXME: What is this function? We never set NA
+        var lexicographicComparison = function(a, b) {
+            // FIXME: What is this? An empty element returns ""...
+            const NA = "NA";
+            if (a.innerHTML == NA) {
+                return 1;
+            } else if (b.innerHTML == NA) {
+                return -1;
+            }
+            return (a.innerHTML > b.innerHTML) ? 1 : -1;
+        };
+
         var Multiselect = (function($) {
             // FIXME: Define the used classes/objects/variables
             // FIXME: If we don't want to expose this class to the outside, i.e. never call it, can we prevent this?
@@ -826,16 +838,7 @@ if (typeof jQuery === 'undefined') {
                  *
                  *  @return 1/-1
                 **/
-                // FIXME: What is this function? We never set NA
-                sort: function(a, b) {
-                    if (a.innerHTML == 'NA') {
-                        return 1;
-                    } else if (b.innerHTML == 'NA') {
-                        return -1;
-                    }
-
-                    return (a.innerHTML > b.innerHTML) ? 1 : -1;
-                },
+                sort: lexicographicComparison,
 
                 /*  will tell if the search can start
                  *
