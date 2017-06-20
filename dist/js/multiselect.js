@@ -136,6 +136,10 @@ if (typeof jQuery === 'undefined') {
         const SELECTED_VISIBLE_OPTIONS = "option:selected:visible";
 
         const HIDDEN_OPTIONS = "option:hidden";
+
+        var isMS = undefined;
+
+        var isSafari = undefined;
         /**
          * Given the settings and the name for an action, looks if the settings contain the selector for the
          * action. If not, it creates its own selector using the action and the id of the left palette.
@@ -443,7 +447,7 @@ if (typeof jQuery === 'undefined') {
                     });
 
                     // dblclick support for IE
-                    if (isMicrosoftBrowser()) {
+                    if (isMS) {
                         self.$left.dblclick(function(e) {
                             self.actions.$rightSelected.trigger('click');
                         });
@@ -857,8 +861,8 @@ if (typeof jQuery === 'undefined') {
             }
         };
 
-        //var isIE = isMicrosoftBrowser();      these variables do not seem to be used
-        //var isSafari = isSafariBrowser();
+        isMS = isMicrosoftBrowser();
+        isSafari = isSafariBrowser();
 
         $.fn.multiselect = function( options ) {
             return this.each(function() {
@@ -894,7 +898,7 @@ if (typeof jQuery === 'undefined') {
         $.fn.mShow = function() {
             this.removeClass('hidden').show();
 
-            if (isMicrosoftBrowser() || isSafariBrowser()) {
+            if (isMS || isSafari) {
                 this.each(function(index, option) {
                     // Remove <span> to make it compatible with IE
                     if($(option).parent().is('span')) {
@@ -911,7 +915,7 @@ if (typeof jQuery === 'undefined') {
         $.fn.mHide = function() {
             this.addClass('hidden').hide();
 
-            if (isMicrosoftBrowser() || isSafariBrowser()) {
+            if (isMS || isSafari) {
                 this.each(function(index, option) {
                     // Wrap with <span> to make it compatible with IE
                     if(!$(option).parent().is('span')) {
@@ -936,7 +940,7 @@ if (typeof jQuery === 'undefined') {
                     $(group).children()
                         .sort(callback)
                         .appendTo(group);
-                })
+                });
 
             return this;
         };
