@@ -95,7 +95,7 @@ if (typeof jQuery === 'undefined') {
 
 (
     /**
-     * Registers multiselect with amd or directly with jQuery.
+     * Registers multiselect with amd (asynchronous module definition) or directly with jQuery.
      * // FIXME: Is this correct syntax?
      * @param {function} factory - the factory that creates the multiselect api
      */
@@ -847,8 +847,8 @@ if (typeof jQuery === 'undefined') {
             }
         };
 
-        var isIE = isMicrosoftBrowser();
-        var isSafari = isSafariBrowser();
+        //var isIE = isMicrosoftBrowser();      these variables do not seem to be used
+        //var isSafari = isSafariBrowser();
 
         $.fn.multiselect = function( options ) {
             return this.each(function() {
