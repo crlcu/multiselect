@@ -124,6 +124,9 @@ if (typeof jQuery === 'undefined') {
 
         const USER_AGENT_SAFARI = "safari";
 
+        const SELECTED_OPTIONS = "option:selected";
+
+        const SELECTED_VISIBLE_OPTIONS = "option:selected";
         /**
          * Given the settings and the name for an action, looks if the settings contain the selector for the
          * action. If not, it creates its own selector using the action and the id of the left palette.
@@ -374,7 +377,7 @@ if (typeof jQuery === 'undefined') {
                     self.$left.on('dblclick', 'option', function(e) {
                         e.preventDefault();
 
-                        var $options = self.$left.find('option:selected');
+                        var $options = self.$left.find(SELECTED_OPTIONS);
 
                         if ( $options.length ) {
                             self.moveToRight($options, e);
@@ -386,7 +389,7 @@ if (typeof jQuery === 'undefined') {
                         if (e.keyCode === KEY_ENTER) {
                             e.preventDefault();
 
-                            var $options = self.$left.find('option:selected');
+                            var $options = self.$left.find(SELECTED_OPTIONS);
 
                             if ( $options.length ) {
                                 self.moveToRight($options, e);
@@ -398,7 +401,7 @@ if (typeof jQuery === 'undefined') {
                     self.$right.on('dblclick', 'option', function(e) {
                         e.preventDefault();
 
-                        var $options = self.$right.find('option:selected');
+                        var $options = self.$right.find(SELECTED_OPTIONS);
 
                         if ( $options.length ) {
                             self.moveToLeft($options, e);
@@ -410,7 +413,7 @@ if (typeof jQuery === 'undefined') {
                         if (e.keyCode === KEY_BACKSPACE || e.keyCode === KEY_DEL) {
                             e.preventDefault();
 
-                            var $options = self.$right.find('option:selected');
+                            var $options = self.$right.find(SELECTED_OPTIONS);
 
                             if ( $options.length ) {
                                 self.moveToLeft($options, e);
@@ -432,7 +435,7 @@ if (typeof jQuery === 'undefined') {
                     self.actions.$rightSelected.on('click', function(e) {
                         e.preventDefault();
 
-                        var $options = self.$left.find('option:selected');
+                        var $options = self.$left.find(SELECTED_OPTIONS);
 
                         if ( $options.length ) {
                             self.moveToRight($options, e);
@@ -444,7 +447,7 @@ if (typeof jQuery === 'undefined') {
                     self.actions.$leftSelected.on('click', function(e) {
                         e.preventDefault();
 
-                        var $options = self.$right.find('option:selected');
+                        var $options = self.$right.find(SELECTED_OPTIONS);
 
                         if ( $options.length ) {
                             self.moveToLeft($options, e);
