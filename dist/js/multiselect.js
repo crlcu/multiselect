@@ -95,7 +95,7 @@ if (typeof jQuery === 'undefined') {
 
 (
     /**
-     * Registers multiselect with amd (asynchronous module definition) or directly with jQuery.
+     * Registers multiselect with amd or directly with jQuery.
      * // FIXME: Is this correct syntax?
      * @param {function} factory - the factory that creates the multiselect api
      */
