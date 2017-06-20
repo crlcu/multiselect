@@ -291,9 +291,7 @@ if (typeof jQuery === 'undefined') {
                     // either the default is used or the function; false doesn't amount to anything
                     // startUp preprocessing function
                     // TODO: With an api, my startUp function could use that to move options around
-                    if ( typeof self.callbacks.startUp == 'function' ) {
-                        self.callbacks.startUp( self.$left, self.$right );
-                    }
+                    self.callbacks.startUp( self.$left, self.$right );
 
                     // initial sort if allowed
                     if ( !self.options.keepRenderingSort && typeof self.callbacks.sort == 'function' ) {
