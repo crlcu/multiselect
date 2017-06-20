@@ -241,14 +241,20 @@ if (typeof jQuery === 'undefined') {
 
         // FIXME: What is this function? We never set NA
         var lexicographicComparison = function(a, b) {
-            // FIXME: What is this? An empty element returns ""...
+            // FIXME: What is this? An empty element returns "" with innerHTML...
             const NA = "NA";
+            const A_IS_BIGGER = 1;
+            const B_IS_BIGGER = -1;
             if (a.innerHTML == NA) {
-                return 1;
+                return A_IS_BIGGER;
             } else if (b.innerHTML == NA) {
-                return -1;
+                return B_IS_BIGGER;
             }
-            return (a.innerHTML > b.innerHTML) ? 1 : -1;
+            // lexicographic comparison between strings (compare chars at same index)
+            // e.g. 99 > 100
+            // e.g. abc99 > abc100
+            // e.g. bbb > aaa
+            return (a.innerHTML > b.innerHTML) ? A_IS_BIGGER : B_IS_BIGGER;
         };
 
         var Multiselect = (function($) {
