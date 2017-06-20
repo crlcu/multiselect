@@ -8,6 +8,70 @@
  * Licensed under the MIT license (https://github.com/crlcu/multiselect/blob/master/LICENSE)
  */
 
+/** @external {jQuery} */
+
+/**
+ * @typedef {Object} ActionButtons
+ * @property {jQuery} [$leftAll="$('#'+id+'_leftAll')"] - the button to click to move all visible elements in the right palette to the left palette
+ * @property {jQuery} [$rightAll=$('#'+id+'_rightAll')] - the button to click to move all visible elements in the left palette to the right palette
+ * @property {jQuery} [$leftSelected=$('#'+id+'_leftSelected')] - the button to click to move all visible selected elements in the right palette to the left palette
+ * @property {jQuery} [$rightSelected=$('#'+id+'_rightSelected')] - the button to click to move all visible selected elements in the left palette to the right palette
+ * @property {jQuery} [$undo=$('#'+id+'_undo')] - the button to click to undo the last move action
+ * @property {jQuery} [$redo=$('#'+id+'_redo')] - the button to click to redo the last undone move action
+ * @property {jQuery} [$moveUp=$('#'+id+'_moveUp')] - the button to click to move the selected element(s) up one index
+ * @property {jQuery} [$moveDown=$('#'+id+'_moveDown')] - the button to click to move the selected element(s) down one index
+ */
+
+/** @typedef {Object} ElementNames
+ * @property {jQuery} [right] - name of the element to become the right palette
+ * @property {jQuery} [leftAll] - name of the element to become the "Move all Left" button
+ * @property {jQuery} [rightAll] - name of the element to become the "Move all Right" button
+ * @property {jQuery} [leftSelected] - name of the element to become the "Move Selected Left" button
+ * @property {jQuery} [rightSelected] - name of the element to become the "Move Selected Right" button
+ * @property {jQuery} [undo] - name of the element to become the "Undo Last Move" button
+ * @property {jQuery} [redo] - name of the element to become the "Redo Last Undone Move" button
+ * @property {jQuery} [moveUp] - name of the element to become the "Move selected elements Up" button
+ * @property {jQuery} [moveDown] - name of the element to become the "Move selected elements Down" button
+ */
+/**
+ * @typedef {Object} MultiselectOptions
+ * @property {boolean} [keepRenderingSort=false] - whether to
+ * @property {boolean} [submitAllLeft=true] - FIXME
+ * @property {boolean} [submitAllRight=true] - FIXME
+ * @property {SearchElements} [search] - the meta information used in the search elements
+ * @property {boolean} [ignoreDisabled=false] - FIXME
+ * @property {string} [matchOptgroupBy='label'] - FIXME
+ */
+
+/**
+ * @typedef {Object} CallbackFunctions
+ * @property {function} startUp
+ * @property {function} sort
+ * @property {function} beforeMoveToRight
+ * @property {function} moveToRight
+ * @property {function} afterMoveToRight
+ * @property {function} beforeMoveToLeft
+ * @property {function} moveToLeft
+ * @property {function} afterMoveToLeft
+ * @property {function} beforeMoveUp
+ * @property {function} afterMoveUp
+ * @property {function} beforeMoveDown
+ * @property {function} afterMoveDown
+ * @property {function} fireSearch
+ */
+
+/**
+ * @typedef {Object} SearchElements
+ * @property {string} [left] - The html for a new input element to use as a search input for the left palette
+ * @property {jQuery} [$left] - the jQuery element for the left element when it's in the DOM
+ * @property {string} [right] - The html for a new input element to use as a search input for the right palette
+ * @property {jQuery} [$right] - the jQuery element for the right element when it's in the DOM
+ */
+
+/**
+ * @typedef {CallbackFunctions|ElementNames|MultiselectOptions} SettingsObject
+ */
+
 if (typeof jQuery === 'undefined') {
     throw new Error('multiselect requires jQuery');
 }
@@ -32,7 +96,7 @@ if (typeof jQuery === 'undefined') {
 (
     /**
      * Registers multiselect with amd or directly with jQuery.
-     * // FIXME: Is this correct?
+     * // FIXME: Is this correct syntax?
      * @param {function} factory - the factory that creates the multiselect api
      */
     function (factory) {
@@ -46,67 +110,108 @@ if (typeof jQuery === 'undefined') {
     }(function ($) {
         'use strict';
 
-        // FIXME: Define private methods here??
+        /**
+         * Given the settings and the name for an action, looks if the settings contain the selector for the
+         * action. If not, it creates its own selector using the action and the id of the left palette.
+         * @param id - the id part to look for if
+         * @param {ElementNames} settings
+         * @param actionName
+         */
+        var getActionButton = function(id, settings, actionName) {
+            var selector = "";
+            if (settings[actionName]) {
+                selector = settings[actionName];
+            } else {
+                selector = $.multiselectdefaults.actionSelector(id, actionName);
+            }
+            return $(selector);
+        };
+
+        /**
+         *
+         * @param {string} id - id of the element for the left palette
+         * @param {ElementNames} settings
+         * @returns {ActionButtons}
+         */
+        var extractActionButtons = function(id, settings) {
+            return {
+                $leftAll: getActionButton(id, settings, "leftAll"),
+                $rightAll: getActionButton(id, settings, "rightAll"),
+                $leftSelected: getActionButton(id, settings, "leftSelected"),
+                $rightSelected: getActionButton(id, settings, "rightSelected"),
+                $undo: getActionButton(id, settings, "undo"),
+                $redo: getActionButton(id, settings, "redo"),
+                $moveUp: getActionButton(id, settings, "moveUp"),
+                $moveDown: getActionButton(id, settings, "moveDown")
+            };
+        };
+
+        /**
+         * Extracts the options for the multiselect object
+         * @param {SettingsObject} settings
+         * @returns {MultiselectOptions}
+         */
+        var extractMultiselectOptions = function(settings) {
+            return {
+                keepRenderingSort:  (settings.keepRenderingSort !== undefined && typeof settings.keepRenderingSort === "boolean") ? settings.keepRenderingSort : $.multiselectdefaults.options.keepRenderingSort,
+                submitAllLeft:      (settings.submitAllLeft !== undefined && typeof settings.submitAllLeft === "boolean")  ? settings.submitAllLeft : $.multiselectdefaults.options.submitAllLeft,
+                submitAllRight:     (settings.submitAllRight !== undefined && typeof settings.submitAllRight === "boolean")  ? settings.submitAllRight : $.multiselectdefaults.options.submitAllRight,
+                search:             (settings.search !== undefined && typeof settings.search === "object")  ? settings.search : $.multiselectdefaults.options.search,
+                ignoreDisabled:     (settings.ignoreDisabled !== undefined && typeof settings.ignoreDisabled === "boolean")  ? settings.ignoreDisabled : $.multiselectdefaults.options.ignoreDisabled,
+                matchOptgroupBy:    (settings.matchOptgroupBy !== undefined && typeof settings.matchOptgroupBy === "string")  ? settings.matchOptgroupBy : $.multiselectdefaults.options.matchOptgroupBy
+            };
+        };
+
+        /**
+         *
+         * @param {SettingsObject} settings
+         */
+        var extractCallbacks = function(settings) {
+            return {
+                startUp: (settings.startUp && typeof settings.startUp === "function") ? settings.startUp : $.multiselectdefaults.callbacks.startUp,
+                sort: (settings.sort && typeof settings.sort === "function") ? settings.sort : $.multiselectdefaults.callbacks.sort,
+                beforeMoveToRight: (settings.beforeMoveToRight && typeof settings.beforeMoveToRight === "function")  ? settings.beforeMoveToRight : $.multiselectdefaults.callbacks.beforeMoveToRight,
+                moveToRight: (settings.moveToRight && typeof settings.moveToRight === "function")  ? settings.moveToRight : $.multiselectdefaults.callbacks.moveToRight,
+                afterMoveToRight: (settings.afterMoveToRight && typeof settings.afterMoveToRight === "function")  ? settings.afterMoveToRight: $.multiselectdefaults.callbacks.afterMoveToRight,
+                beforeMoveToLeft: (settings.beforeMoveToLeft && typeof settings.beforeMoveToLeft === "function")  ? settings.beforeMoveToLeft: $.multiselectdefaults.callbacks.beforeMoveToLeft,
+                moveToLeft: (settings.moveToLeft && typeof settings.moveToLeft === "function")  ? settings.moveToLeft: $.multiselectdefaults.callbacks.moveToLeft,
+                afterMoveToLeft: (settings.afterMoveToLeft && typeof settings.afterMoveToLeft === "function")  ? settings.afterMoveToLeft : $.multiselectdefaults.callbacks.afterMoveToLeft,
+                beforeMoveUp: (settings.beforeMoveUp && typeof settings.beforeMoveUp === "function")  ? settings.beforeMoveUp : $.multiselectdefaults.callbacks.beforeMoveUp,
+                afterMoveUp: (settings.afterMoveUp && typeof settings.afterMoveUp === "function")  ? settings.afterMoveUp : $.multiselectdefaults.callbacks.afterMoveUp,
+                beforeMoveDown: (settings.beforeMoveDown && typeof settings.beforeMoveDown === "function")  ? settings.beforeMoveDown : $.multiselectdefaults.callbacks.beforeMoveDown,
+                afterMoveDown: (settings.afterMoveDown && typeof settings.afterMoveDown === "function")  ? settings.afterMoveDown : $.multiselectdefaults.callbacks.afterMoveDown,
+                fireSearch: (settings.fireSearch && typeof settings.fireSearch === "function")  ? settings.fireSearch : $.multiselectdefaults.callbacks.fireSearch
+            };
+        };
 
         var Multiselect = (function($) {
-            /** Multiselect object constructor
-             *
-             *  @class Multiselect
-             *  @constructor
-            **/
             // FIXME: Define the used classes/objects/variables
             // FIXME: If we don't want to expose this class to the outside, i.e. never call it, can we prevent this?
+            /**
+             * Multiselect object constructor
+             * @param {jQuery} $select
+             * @param {SettingsObject} settings
+             * @constructor
+             */
             function Multiselect( $select, settings ) {
                 // FIXME: Check if this is a single jquery element, error message if not
                 var id = $select.prop('id');
                 // FIXME: Only assign and do the rest if it is a jquery element
+                /** @member {jQuery} */
                 this.$left = $select;
                 // FIXME: check if settings.right is a single jquery element
                 // FIXME: throw error if neither is found
+                /** @member {jQuery} */
                 this.$right = $( settings.right ).length ? $( settings.right ) : $('#' + id + '_to');
-                // FIXME: Which are required actions? Should we error if we can't init them?
-                this.actions = {
-                    $leftAll:       $( settings.leftAll ).length ? $( settings.leftAll ) : $('#' + id + '_leftAll'),
-                    $rightAll:      $( settings.rightAll ).length ? $( settings.rightAll ) : $('#' + id + '_rightAll'),
-                    $leftSelected:  $( settings.leftSelected ).length ? $( settings.leftSelected ) : $('#' + id + '_leftSelected'),
-                    $rightSelected: $( settings.rightSelected ).length ? $( settings.rightSelected ) : $('#' + id + '_rightSelected'),
-
-                    $undo:          $( settings.undo ).length ? $( settings.undo ) : $('#' + id + '_undo'),
-                    $redo:          $( settings.redo ).length ? $( settings.redo ) : $('#' + id + '_redo'),
-
-                    $moveUp:        $( settings.moveUp ).length ? $( settings.moveUp ) : $('#' + id + '_move_up'),
-                    $moveDown:      $( settings.moveDown ).length ? $( settings.moveDown ) : $('#' + id + '_move_down')
-                };
-
-                delete settings.leftAll;
-                delete settings.leftSelected;
-                delete settings.right;
-                delete settings.rightAll;
-                delete settings.rightSelected;
-                delete settings.undo;
-                delete settings.redo;
-                delete settings.moveUp;
-                delete settings.moveDown;
-
-                // FIXME: Validate the options object beforehand?
-                this.options = {
-                    keepRenderingSort:  settings.keepRenderingSort !== undefined ? settings.keepRenderingSort : false,
-                    submitAllLeft:      settings.submitAllLeft !== undefined ? settings.submitAllLeft : true,
-                    submitAllRight:     settings.submitAllRight !== undefined ? settings.submitAllRight : true,
-                    search:             settings.search !== undefined ? settings.search : {},
-                    ignoreDisabled:     settings.ignoreDisabled !== undefined ? settings.ignoreDisabled : false,
-                    matchOptgroupBy:    settings.matchOptgroupBy !== undefined ? settings.matchOptgroupBy : 'label'
-                };
-
-                delete settings.keepRenderingSort;
-                delete settings.submitAllLeft;
-                delete settings.submitAllRight;
-                delete settings.search;
-                delete settings.ignoreDisabled;
-                delete settings.matchOptgroupBy;
-
-                // FIXME: So this is the rest of the settings, i.e. only callback overwrites...Should we check this?
-                this.callbacks = settings;
+                // FIXME: Which are required action buttons? Should we error if we can't init them?
+                // FIXME: What if I use this on a page with elements with the suffixes (unlikely, yeah) that shouldn't be used as buttons?
+                // FIXME: Do we want to allow multiple elements to be buttons for a function?
+                /** @member {ActionButtons} */
+                this.actions = extractActionButtons(id, settings);
+                /** @member {MultiselectOptions} */
+                this.options = extractMultiselectOptions(settings);
+                /** @member {CallbackFunctions} */
+                this.callbacks = extractCallbacks(settings);
 
                 this.init();
             }
@@ -522,8 +627,19 @@ if (typeof jQuery === 'undefined') {
             return Multiselect;
         })($);
 
-        $.multiselect = {
-            defaults: {
+        $.multiselectdefaults = {
+            actionSelector: function(id, action) {
+                return "#" + id + "_" + action;
+            },
+            options: {
+                keepRenderingSort: false,
+                submitAllLeft: true,
+                submitAllRight: true,
+                search: {},
+                ignoreDisabled: false,
+                matchOptgroupBy: 'label'
+            },
+            callbacks: {
                 /** will be executed once - remove from $left all options that are already in $right
                  *
                  *  @method startUp
@@ -681,7 +797,7 @@ if (typeof jQuery === 'undefined') {
             return this.each(function() {
                 var $this    = $(this),
                     data     = $this.data('crlcu.multiselect'),
-                    settings = $.extend({}, $.multiselect.defaults, $this.data(), (typeof options === 'object' && options));
+                    settings = $.extend({}, $.multiselectdefaults.callbacks, $this.data(), (typeof options === 'object' && options));
 
                 if (!data) {
                     $this.data('crlcu.multiselect', (data = new Multiselect($this, settings)));
