@@ -116,6 +116,14 @@ if (typeof jQuery === 'undefined') {
 
         const KEY_DEL = 46;
 
+        const USER_AGENT_IE_UPTO_10 = "MSIE ";
+
+        const USER_AGENT_EDGE = "Edge/";
+
+        const USER_AGENT_IE_11 = "Trident/";
+
+        const USER_AGENT_SAFARI = "safari";
+
         /**
          * Given the settings and the name for an action, looks if the settings contain the selector for the
          * action. If not, it creates its own selector using the action and the id of the left palette.
@@ -159,12 +167,12 @@ if (typeof jQuery === 'undefined') {
          */
         var extractMultiselectOptions = function(settings) {
             return {
-                keepRenderingSort:  (settings.keepRenderingSort !== undefined && typeof settings.keepRenderingSort === "boolean") ? settings.keepRenderingSort : $.multiselectdefaults.options.keepRenderingSort,
-                submitAllLeft:      (settings.submitAllLeft !== undefined && typeof settings.submitAllLeft === "boolean")  ? settings.submitAllLeft : $.multiselectdefaults.options.submitAllLeft,
-                submitAllRight:     (settings.submitAllRight !== undefined && typeof settings.submitAllRight === "boolean")  ? settings.submitAllRight : $.multiselectdefaults.options.submitAllRight,
-                search:             (settings.search !== undefined && typeof settings.search === "object")  ? settings.search : $.multiselectdefaults.options.search,
-                ignoreDisabled:     (settings.ignoreDisabled !== undefined && typeof settings.ignoreDisabled === "boolean")  ? settings.ignoreDisabled : $.multiselectdefaults.options.ignoreDisabled,
-                matchOptgroupBy:    (settings.matchOptgroupBy !== undefined && typeof settings.matchOptgroupBy === "string")  ? settings.matchOptgroupBy : $.multiselectdefaults.options.matchOptgroupBy
+                keepRenderingSort:  chooseOption(settings.keepRenderingSort, $.multiselectdefaults.options.keepRenderingSort, "boolean"),
+                submitAllLeft:      chooseOption(settings.submitAllLeft, $.multiselectdefaults.options.submitAllLeft, "boolean"),
+                submitAllRight:     chooseOption(settings.submitAllRight, $.multiselectdefaults.options.submitAllRight, "boolean"),
+                search:             chooseOption(settings.search, $.multiselectdefaults.options.search, "object"),
+                ignoreDisabled:     chooseOption(settings.ignoreDisabled, $.multiselectdefaults.options.ignoreDisabled, "boolean"),
+                matchOptgroupBy:    chooseOption(settings.matchOptgroupBy, $.multiselectdefaults.options.matchOptgroupBy, "string")
             };
         };
 
@@ -174,20 +182,45 @@ if (typeof jQuery === 'undefined') {
          */
         var extractCallbacks = function(settings) {
             return {
-                startUp: (settings.startUp && typeof settings.startUp === "function") ? settings.startUp : $.multiselectdefaults.callbacks.startUp,
-                sort: (settings.sort && typeof settings.sort === "function") ? settings.sort : $.multiselectdefaults.callbacks.sort,
-                beforeMoveToRight: (settings.beforeMoveToRight && typeof settings.beforeMoveToRight === "function")  ? settings.beforeMoveToRight : $.multiselectdefaults.callbacks.beforeMoveToRight,
-                moveToRight: (settings.moveToRight && typeof settings.moveToRight === "function")  ? settings.moveToRight : $.multiselectdefaults.callbacks.moveToRight,
-                afterMoveToRight: (settings.afterMoveToRight && typeof settings.afterMoveToRight === "function")  ? settings.afterMoveToRight: $.multiselectdefaults.callbacks.afterMoveToRight,
-                beforeMoveToLeft: (settings.beforeMoveToLeft && typeof settings.beforeMoveToLeft === "function")  ? settings.beforeMoveToLeft: $.multiselectdefaults.callbacks.beforeMoveToLeft,
-                moveToLeft: (settings.moveToLeft && typeof settings.moveToLeft === "function")  ? settings.moveToLeft: $.multiselectdefaults.callbacks.moveToLeft,
-                afterMoveToLeft: (settings.afterMoveToLeft && typeof settings.afterMoveToLeft === "function")  ? settings.afterMoveToLeft : $.multiselectdefaults.callbacks.afterMoveToLeft,
-                beforeMoveUp: (settings.beforeMoveUp && typeof settings.beforeMoveUp === "function")  ? settings.beforeMoveUp : $.multiselectdefaults.callbacks.beforeMoveUp,
-                afterMoveUp: (settings.afterMoveUp && typeof settings.afterMoveUp === "function")  ? settings.afterMoveUp : $.multiselectdefaults.callbacks.afterMoveUp,
-                beforeMoveDown: (settings.beforeMoveDown && typeof settings.beforeMoveDown === "function")  ? settings.beforeMoveDown : $.multiselectdefaults.callbacks.beforeMoveDown,
-                afterMoveDown: (settings.afterMoveDown && typeof settings.afterMoveDown === "function")  ? settings.afterMoveDown : $.multiselectdefaults.callbacks.afterMoveDown,
-                fireSearch: (settings.fireSearch && typeof settings.fireSearch === "function")  ? settings.fireSearch : $.multiselectdefaults.callbacks.fireSearch
+                startUp: chooseCallback(settings.startUp, $.multiselectdefaults.callbacks.startUp),
+                sort: chooseCallback(settings.sort, $.multiselectdefaults.callbacks.sort),
+                beforeMoveToRight: chooseCallback(settings.beforeMoveToRight, $.multiselectdefaults.callbacks.beforeMoveToRight),
+                moveToRight: chooseCallback(settings.moveToRight, $.multiselectdefaults.callbacks.moveToRight),
+                afterMoveToRight: chooseCallback(settings.afterMoveToRight, $.multiselectdefaults.callbacks.afterMoveToRight),
+                beforeMoveToLeft: chooseCallback(settings.beforeMoveToLeft, $.multiselectdefaults.callbacks.beforeMoveToLeft),
+                moveToLeft: chooseCallback(settings.moveToLeft, $.multiselectdefaults.callbacks.moveToLeft),
+                afterMoveToLeft: chooseCallback(settings.afterMoveToLeft, $.multiselectdefaults.callbacks.afterMoveToLeft),
+                beforeMoveUp: chooseCallback(settings.beforeMoveUp, $.multiselectdefaults.callbacks.beforeMoveUp),
+                afterMoveUp: chooseCallback(settings.afterMoveUp, $.multiselectdefaults.callbacks.afterMoveUp),
+                beforeMoveDown: chooseCallback(settings.beforeMoveDown, $.multiselectdefaults.callbacks.beforeMoveDown),
+                afterMoveDown: chooseCallback(settings.afterMoveDown, $.multiselectdefaults.callbacks.afterMoveDown),
+                fireSearch: chooseCallback(settings.fireSearch, $.multiselectdefaults.callbacks.fireSearch)
             };
+        };
+
+        var chooseCallback = function(userCallback, defaultCallback) {
+            return chooseOption(userCallback, defaultCallback, "function");
+        };
+
+        var chooseOption = function(userOption, defaultOption, optionType) {
+            if (userOption !== undefined && typeof userOption === optionType) {
+                return userOption;
+            } else {
+                return defaultOption;
+            }
+        };
+
+        var isMicrosoftBrowser = function() {
+            var ua = window.navigator.userAgent;
+            return ( ua.indexOf(USER_AGENT_IE_UPTO_10) > 0 ||
+                    ua.indexOf(USER_AGENT_IE_11) > 0 ||
+                    ua.indexOf(USER_AGENT_EDGE) > 0
+            );
+        };
+
+        var isSafariBrowser = function() {
+            var ua = window.navigator.userAgent;
+            return (ua.toLowerCase().indexOf("safari") > -1);
         };
 
         var Multiselect = (function($) {
@@ -386,7 +419,7 @@ if (typeof jQuery === 'undefined') {
                     });
 
                     // dblclick support for IE
-                    if ( navigator.userAgent.match(/MSIE/i)  || navigator.userAgent.indexOf('Trident/') > 0 || navigator.userAgent.indexOf('Edge/') > 0) {
+                    if (isMicrosoftBrowser()) {
                         self.$left.dblclick(function(e) {
                             self.actions.$rightSelected.trigger('click');
                         });
@@ -809,9 +842,8 @@ if (typeof jQuery === 'undefined') {
             }
         };
 
-        var ua = window.navigator.userAgent;
-        var isIE = (ua.indexOf("MSIE ") + ua.indexOf("Trident/") + ua.indexOf("Edge/")) > -3;
-        var isSafari = ua.toLowerCase().indexOf("safari") > -1;
+        var isIE = isMicrosoftBrowser();
+        var isSafari = isSafariBrowser();
 
         $.fn.multiselect = function( options ) {
             return this.each(function() {
@@ -847,7 +879,7 @@ if (typeof jQuery === 'undefined') {
         $.fn.mShow = function() {
             this.removeClass('hidden').show();
 
-            if (isIE || isSafari) {
+            if (isMicrosoftBrowser() || isSafariBrowser()) {
                 this.each(function(index, option) {
                     // Remove <span> to make it compatible with IE
                     if($(option).parent().is('span')) {
@@ -864,7 +896,7 @@ if (typeof jQuery === 'undefined') {
         $.fn.mHide = function() {
             this.addClass('hidden').hide();
 
-            if (isIE || isSafari) {
+            if (isMicrosoftBrowser() || isSafariBrowser()) {
                 this.each(function(index, option) {
                     // Wrap with <span> to make it compatible with IE
                     if(!$(option).parent().is('span')) {
