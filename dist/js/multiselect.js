@@ -141,6 +141,8 @@ if (typeof jQuery === 'undefined') {
 
         const B_IS_BIGGER_THAN_A = -1;
 
+        const DATA_POSITION = "position";
+
         var isMS = undefined;
 
         var isSafari = undefined;
@@ -260,7 +262,27 @@ if (typeof jQuery === 'undefined') {
         };
 
         var initialPositionComparison = function(a,b) {
-            return $(a).data('position') > $(b).data('position') ? A_IS_BIGGER_THAN_B : B_IS_BIGGER_THAN_A;
+            var aPosition = getInitialPosition($(a));
+            var bPosition = getInitialPosition($(b));
+            if (aPosition !== null && bPosition !== null) {
+                return aPosition > bPosition ? A_IS_BIGGER_THAN_B : B_IS_BIGGER_THAN_A;
+            }
+            // should never be reached, ergo undefined behaviour
+            return undefined;
+        };
+
+        var getInitialPosition = function($optionOrOptgroup) {
+            if ($optionOrOptgroup !== undefined && $optionOrOptgroup.is("option,optgroup")) {
+                return $optionOrOptgroup.data(DATA_POSITION);
+            }
+            return null;
+        };
+
+        var setInitialPosition = function($optionOrOptgroup, newPosition) {
+            if ($optionOrOptgroup !== undefined && $optionOrOptgroup.is("option,optgroup")) {
+                $optionOrOptgroup.data(DATA_POSITION, newPosition);
+            }
+            return $optionOrOptgroup;
         };
 
         var Multiselect = (function($) {
@@ -310,10 +332,10 @@ if (typeof jQuery === 'undefined') {
                         }
 
                         // decorate the options with their initial positions in the list so that it can be re-established
-                        self.$left.attachIndex();
+                        storeInitialPositions(self.$left);
 
                         self.$right.each(function(i, select) {
-                            $(select).attachIndex();
+                            storeInitialPositions($(select));
                         });
                     }
 
@@ -956,20 +978,20 @@ if (typeof jQuery === 'undefined') {
             }
         };
 
-        // attach index to children
-        $.fn.attachIndex = function() {
-            this.children().each(function(index, option) {
+        var storeInitialPositions = function($select) {
+            if ($select instanceof "jQuery" && $select.is("select")) {
                 // FIXME: Check if this is ok, optgroups start at 0, and options in each group start at 0
-                var $option = $(option);
+                $select.children().each(function(index, optionOrOptgroup) {
+                    var $optionOrOptgroup = $(optionOrOptgroup);
+                    if ($optionOrOptgroup.is("optgroup")) {
+                        $optionOrOptgroup.children().each(function(i, optgroupOption) {
+                            setInitialPosition($(optgroupOption), i);
+                        });
+                    }
 
-                if ($option.is('optgroup')) {
-                    $option.children().each(function(i, children) {
-                        $(children).data('position', i);
-                    });
-                }
-
-                $option.data('position', index);
-            });
+                    setInitialPosition($optionOrOptgroupm, index);
+                });
+            }
         };
 
         $.expr[":"].search = function(elem, index, meta) {
