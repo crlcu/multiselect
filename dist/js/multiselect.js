@@ -110,6 +110,12 @@ if (typeof jQuery === 'undefined') {
     }(function ($) {
         'use strict';
 
+        const KEY_ENTER = 13;
+
+        const KEY_BACKSPACE = 8;
+
+        const KEY_DEL = 46;
+
         /**
          * Given the settings and the name for an action, looks if the settings contain the selector for the
          * action. If not, it creates its own selector using the action and the id of the left palette.
@@ -224,11 +230,10 @@ if (typeof jQuery === 'undefined') {
                     self.redoStack = [];
 
                     if (self.options.keepRenderingSort) {
-                        // decorate the options with their initial positions in the list so that it can be re-established
-
                         // FIXME: Huh? When I give a callback function it is ignored and overwritten by this one? The default one is NEVER used?
                         // The default sort function makes no sense, though, so...
                         // could also be undefined and doesn't have to be false
+                        // This seems to be a hack to make something work
                         if (self.callbacks.sort !== false) {
                             // FIXME: Extract this sort function, name it accordingly
                             self.callbacks.sort = function(a, b) {
@@ -236,6 +241,7 @@ if (typeof jQuery === 'undefined') {
                             };
                         }
 
+                        // decorate the options with their initial positions in the list so that it can be re-established
                         self.$left.attachIndex();
 
                         self.$right.each(function(i, select) {
@@ -251,21 +257,26 @@ if (typeof jQuery === 'undefined') {
                         self.callbacks.startUp( self.$left, self.$right );
                     }
 
+                    // initial sort if allowed
                     if ( !self.options.keepRenderingSort && typeof self.callbacks.sort == 'function' ) {
+                        // sort seems to be a comparator function, not a sorting function
                         self.$left.mSort(self.callbacks.sort);
 
+                        // here we acknowledge that we could have multiple right elements
                         self.$right.each(function(i, select) {
                             $(select).mSort(self.callbacks.sort);
                         });
                     }
 
-                    // Append left filter
+                    // Prepend left filter before right palette (above)
+                    // FIXME: Allow already existing element to be the filter input
                     if (self.options.search && self.options.search.left) {
                         self.options.search.$left = $(self.options.search.left);
                         self.$left.before(self.options.search.$left);
                     }
 
-                    // Append right filter
+                    // Prepend right filter before right palette (above)
+                    // FIXME: Allow already existing element to be the filter input
                     if (self.options.search && self.options.search.right) {
                         self.options.search.$right = $(self.options.search.right);
                         self.$right.before($(self.options.search.$right));
@@ -281,6 +292,7 @@ if (typeof jQuery === 'undefined') {
                     // Attach event to left filter
                     if (self.options.search && self.options.search.$left) {
                         self.options.search.$left.on('keyup', function(e) {
+                            // FIXME: Extract function to make it readable and reusable
                             if (self.callbacks.fireSearch(this.value)) {
                                 var $toShow = self.$left.find('option:search("' + this.value + '")').mShow();
                                 var $toHide = self.$left.find('option:not(:search("' + this.value + '"))').mHide();
@@ -295,6 +307,7 @@ if (typeof jQuery === 'undefined') {
                     // Attach event to right filter
                     if (self.options.search && self.options.search.$right) {
                         self.options.search.$right.on('keyup', function(e) {
+                            // FIXME: Extract function to make it readable and reusable
                             if (self.callbacks.fireSearch(this.value)) {
                                 var $toShow = self.$right.find('option:search("' + this.value + '")').mShow();
                                 var $toHide = self.$right.find('option:not(:search("' + this.value + '"))').mHide();
@@ -306,7 +319,7 @@ if (typeof jQuery === 'undefined') {
                         });
                     }
 
-                    // Select all the options from left and right side when submiting the parent form
+                    // Select all the options from left and right side when submitting the parent form
                     self.$right.closest('form').on('submit', function(e) {
                         if (self.options.search) {
                             // Clear left search input
@@ -337,7 +350,7 @@ if (typeof jQuery === 'undefined') {
 
                     // Attach event for pushing ENTER on options from left side
                     self.$left.on('keypress', function(e) {
-                        if (e.keyCode === 13) {
+                        if (e.keyCode === KEY_ENTER) {
                             e.preventDefault();
 
                             var $options = self.$left.find('option:selected');
@@ -361,7 +374,7 @@ if (typeof jQuery === 'undefined') {
 
                     // Attach event for pushing BACKSPACE or DEL on options from right side
                     self.$right.on('keydown', function(e) {
-                        if (e.keyCode === 8 || e.keyCode === 46) {
+                        if (e.keyCode === KEY_BACKSPACE || e.keyCode === KEY_DEL) {
                             e.preventDefault();
 
                             var $options = self.$right.find('option:selected');
