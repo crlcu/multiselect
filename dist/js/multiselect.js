@@ -843,9 +843,6 @@ if (typeof jQuery === 'undefined') {
             }
         };
 
-        var isIE = isMicrosoftBrowser();
-        var isSafari = isSafariBrowser();
-
         $.fn.multiselect = function( options ) {
             return this.each(function() {
                 var $this    = $(this),
