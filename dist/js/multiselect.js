@@ -126,7 +126,9 @@ if (typeof jQuery === 'undefined') {
 
         const SELECTED_OPTIONS = "option:selected";
 
-        const SELECTED_VISIBLE_OPTIONS = "option:selected";
+        const SELECTED_VISIBLE_OPTIONS = "option:selected:visible";
+
+        const HIDDEN_OPTIONS = "option:hidden";
         /**
          * Given the settings and the name for an action, looks if the settings contain the selector for the
          * action. If not, it creates its own selector using the action and the id of the left palette.
@@ -223,7 +225,7 @@ if (typeof jQuery === 'undefined') {
 
         var isSafariBrowser = function() {
             var ua = window.navigator.userAgent;
-            return (ua.toLowerCase().indexOf("safari") > -1);
+            return (ua.toLowerCase().indexOf(USER_AGENT_SAFARI) > -1);
         };
 
         var Multiselect = (function($) {
