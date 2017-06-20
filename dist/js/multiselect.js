@@ -324,13 +324,13 @@ if (typeof jQuery === 'undefined') {
                     self.callbacks.startUp( self.$left, self.$right );
 
                     // initial sort if allowed
-                    if ( !self.options.keepRenderingSort && typeof self.callbacks.sort == 'function' ) {
+                    if ( !self.options.keepRenderingSort && self.callbacks.sort) {
                         // sort seems to be a comparator function, not a sorting function
-                        self.$left.mSort(self.callbacks.sort);
+                        sortSelect(self.$left, self.callbacks.sort);
 
                         // here we acknowledge that we could have multiple right elements
                         self.$right.each(function(i, select) {
-                            $(select).mSort(self.callbacks.sort);
+                            sortSelect($(select), self.callbacks.sort);
                         });
                     }
 
@@ -566,8 +566,9 @@ if (typeof jQuery === 'undefined') {
                             self.redoStack = [];
                         }
 
-                        if ( typeof self.callbacks.sort == 'function' && !silent && !self.doNotSortRight ) {
-                            self.$right.mSort(self.callbacks.sort);
+                        if (!silent && !self.doNotSortRight ) {
+                            // FIXME: here only a single right element allowed?
+                            sortSelect(self.$right, self.callbacks.sort);
                         }
 
                         if ( typeof self.callbacks.afterMoveToRight == 'function' && !silent ) {
@@ -597,11 +598,8 @@ if (typeof jQuery === 'undefined') {
                             self.redoStack = [];
                         }
 
-                        if ( typeof self.callbacks.sort == 'function' && !silent ) {
-                            self.$left.mSort(self.callbacks.sort);
-                        }
-
-                        if ( typeof self.callbacks.afterMoveToLeft == 'function' && !silent ) {
+                        if (!silent ) {
+                            sortSelect(self.$left, self.callbacks.sort);
                             self.callbacks.afterMoveToLeft( self.$left, self.$right, $options );
                         }
 
@@ -932,27 +930,36 @@ if (typeof jQuery === 'undefined') {
             return this;
         };
 
-        // sort options then reappend them to the select
-        $.fn.mSort = function(callback) {
-            this
-                .children()
-                .sort(callback)
-                .appendTo(this);
+        var sortSelect = function($select, comparatorCallback) {
+            if ($select !== undefined && $select.is("select")) {
+                // sort any direct children (can be combination of options and optgroups)
+                // FIXME: without initial rendering sort, this can lead to strange behaviour
+                // example: oa="aaa", ob="bbb", oc="zzz", oga="ddd", ogb="eee"
+                // options without optgroup would potentially be separated, would this be expected behaviour?
+                // FIXME: Check what happens here, do the sorted children overwrite the old children?
+                $select
+                    .children()
+                    .sort(comparatorCallback)
+                    .appendTo($select);
 
-            this
-                .find('optgroup')
-                .each(function(i, group) {
-                    $(group).children()
-                        .sort(callback)
-                        .appendTo(group);
-                });
+                // check for optgroups, if none present we've already sorted everything
+                // if any, sort their children, i.e. all other previously unsorted options
+                $select
+                    .find("optgroup")
+                    .each(function(i, group) {
+                        $(group).children()
+                            .sort(comparatorCallback)
+                            .appendTo(group);
+                    });
 
-            return this;
+                return $select;
+            }
         };
 
         // attach index to children
         $.fn.attachIndex = function() {
             this.children().each(function(index, option) {
+                // FIXME: Check if this is ok, optgroups start at 0, and options in each group start at 0
                 var $option = $(option);
 
                 if ($option.is('optgroup')) {
