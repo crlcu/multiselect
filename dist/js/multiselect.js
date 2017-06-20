@@ -110,18 +110,25 @@ if (typeof jQuery === 'undefined') {
     }(function ($) {
         'use strict';
 
+        /** Keycode for Enter. */
         const KEY_ENTER = 13;
 
+        /** Keycode for Backspace. */
         const KEY_BACKSPACE = 8;
 
+        /** Keycode for Del. */
         const KEY_DEL = 46;
 
+        /** User Agent identification for Internet Explorer up until IE 10. */
         const USER_AGENT_IE_UPTO_10 = "MSIE ";
 
+        /** User Agent identification for the Edge Browser. */
         const USER_AGENT_EDGE = "Edge/";
 
+        /** User Agent identification for Internet Explorer 11. */
         const USER_AGENT_IE_11 = "Trident/";
 
+        /** User Agent identification for the Safari browser. */
         const USER_AGENT_SAFARI = "safari";
 
         const SELECTED_OPTIONS = "option:selected";
