@@ -292,6 +292,12 @@ if (typeof jQuery === 'undefined') {
             return $optionOrOptgroup;
         };
 
+        var prependSearchFilter = function($select, searchFilterHtml) {
+            var $searchFilter = $(searchFilterHtml);
+            $select.before($searchFilter);
+            return $searchFilter;
+        };
+
         var Multiselect = (function($) {
             // FIXME: Define the used classes/objects/variables
             // FIXME: If we don't want to expose this class to the outside, i.e. never call it, can we prevent this?
@@ -364,18 +370,16 @@ if (typeof jQuery === 'undefined') {
                         });
                     }
 
-                    // Prepend left filter before right palette (above)
                     // FIXME: Allow already existing element to be the filter input
-                    if (self.options.search && self.options.search.left) {
-                        self.options.search.$left = $(self.options.search.left);
-                        self.$left.before(self.options.search.$left);
-                    }
-
-                    // Prepend right filter before right palette (above)
-                    // FIXME: Allow already existing element to be the filter input
-                    if (self.options.search && self.options.search.right) {
-                        self.options.search.$right = $(self.options.search.right);
-                        self.$right.before($(self.options.search.$right));
+                    if (self.options.search) {
+                        // Prepend left filter before right palette (above)
+                        if (self.options.search.left) {
+                            self.$leftSearch = prependSearchFilter(self.$left, self.options.search.left);
+                        }
+                        // Prepend right filter before right palette (above)
+                        if (self.options.search.right) {
+                            self.$rightSearch = prependSearchFilter(self.$right, self.options.search.right);
+                        }
                     }
 
                     // Initialize events
@@ -386,8 +390,8 @@ if (typeof jQuery === 'undefined') {
                     var self = this;
 
                     // Attach event to left filter
-                    if (self.options.search && self.options.search.$left) {
-                        self.options.search.$left.keyup(function(e) {
+                    if (self.$leftSearch) {
+                        self.$leftSearch.keyup(function(e) {
                             // FIXME: Extract function to make it readable and reusable
                             if (self.callbacks.fireSearch(this.value)) {
                                 var $toShow = self.$left.find('option:search("' + this.value + '")').mShow();
@@ -401,8 +405,8 @@ if (typeof jQuery === 'undefined') {
                     }
 
                     // Attach event to right filter
-                    if (self.options.search && self.options.search.$right) {
-                        self.options.search.$right.keyup(function(e) {
+                    if (self.$rightSearch) {
+                        self.$rightSearch.keyup(function(e) {
                             // FIXME: Extract function to make it readable and reusable
                             if (self.callbacks.fireSearch(this.value)) {
                                 var $toShow = self.$right.find('option:search("' + this.value + '")').mShow();
@@ -417,16 +421,13 @@ if (typeof jQuery === 'undefined') {
 
                     // Select all the options from left and right side when submitting the parent form
                     self.$right.closest('form').submit(function(e) {
-                        if (self.options.search) {
-                            // Clear left search input
-                            if (self.options.search.$left) {
-                                self.options.search.$left.val('').trigger('keyup');
-                            }
-
-                            // Clear right search input
-                            if (self.options.search.$right) {
-                                self.options.search.$right.val('').trigger('keyup');
-                            }
+                        // Clear left search input
+                        if (self.$leftSearch) {
+                            self.$leftSearch.val('').keyup();
+                        }
+                        // Clear right search input
+                        if (self.$rightSearch) {
+                            self.$rightSearch.val('').keyup();
                         }
 
                         self.$left.find('option').prop('selected', self.options.submitAllLeft);
