@@ -95,7 +95,8 @@ if (typeof jQuery === 'undefined') {
         }
     }
 )(jQuery);
-
+// FIXME: Check if everything works when we use multiple destinations ("right" elements)
+// FIXME: Check if everything works when we use filters
 (
     /**
      * Registers multiselect with amd or directly with jQuery.
@@ -292,12 +293,23 @@ if (typeof jQuery === 'undefined') {
             return $optionOrOptgroup;
         };
 
+        // FIXME: right can be multiple selects
         var prependSearchFilter = function($select, searchFilterHtml) {
             var $searchFilter = $(searchFilterHtml);
             $select.before($searchFilter);
             return $searchFilter;
         };
 
+        var bla = function(fireSearchCallback, $selectToFilter) {
+            if (fireSearchCallback(this.value)) {
+                var $toShow = $selectToFilter.find('option:search("' + this.value + '")').mShow();
+                var $toHide = $selectToFilter.find('option:not(:search("' + this.value + '"))').mHide();
+                var $grpHide= $selectToFilter.find('option.hidden').parent('optgroup').not($(":visible").parent()).mHide();
+                var $grpShow= $selectToFilter.find('option:not(.hidden)').parent('optgroup').mShow();
+            } else {
+                self.$left.find('option, optgroup').mShow();
+            }
+        };
         var Multiselect = (function($) {
             // FIXME: Define the used classes/objects/variables
             // FIXME: If we don't want to expose this class to the outside, i.e. never call it, can we prevent this?
@@ -377,6 +389,7 @@ if (typeof jQuery === 'undefined') {
                             self.$leftSearch = prependSearchFilter(self.$left, self.options.search.left);
                         }
                         // Prepend right filter before right palette (above)
+                        // FIXME: What about multiple destinations?
                         if (self.options.search.right) {
                             self.$rightSearch = prependSearchFilter(self.$right, self.options.search.right);
                         }
@@ -988,7 +1001,7 @@ if (typeof jQuery === 'undefined') {
         };
 
         var storeRenderingSortOrder = function($select) {
-            if ($select instanceof "jQuery" && $select.is("select")) {
+            if ($select instanceof jQuery && $select.is("select")) {
                 // FIXME: Check if this is ok, optgroups start at 0, and options in each group start at 0
                 $select.children().each(function(index, optionOrOptgroup) {
                     var $optionOrOptgroup = $(optionOrOptgroup);
@@ -998,11 +1011,12 @@ if (typeof jQuery === 'undefined') {
                         });
                     }
 
-                    setInitialPosition($optionOrOptgroupm, index);
+                    setInitialPosition($optionOrOptgroup, index);
                 });
             }
         };
 
+        // this is the custom jQuery selector :search used when filtering
         $.expr[":"].search = function(elem, index, meta) {
             var regex = new RegExp(meta[3], "i");
 
