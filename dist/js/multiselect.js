@@ -268,7 +268,7 @@ if (typeof jQuery === 'undefined') {
             return (a.innerHTML > b.innerHTML) ? A_IS_BIGGER_THAN_B : B_IS_BIGGER_THAN_A;
         };
 
-        var initialPositionComparison = function(a,b) {
+        var renderingSortComparison = function(a, b) {
             var aPosition = getInitialPosition($(a));
             var bPosition = getInitialPosition($(b));
             if (aPosition !== null && bPosition !== null) {
@@ -336,14 +336,14 @@ if (typeof jQuery === 'undefined') {
                         // if rendering sort should be retained, it makes no sense to provide a callback
                         // so ignore it and go back to using rendering sort
                         if (self.callbacks.sort) {
-                            self.callbacks.sort = initialPositionComparison;
+                            self.callbacks.sort = renderingSortComparison;
                         }
 
                         // decorate the options with their initial positions in the list so that it can be re-established
-                        storeInitialPositions(self.$left);
+                        storeRenderingSortOrder(self.$left);
 
                         self.$right.each(function(i, select) {
-                            storeInitialPositions($(select));
+                            storeRenderingSortOrder($(select));
                         });
                     }
 
@@ -356,11 +356,11 @@ if (typeof jQuery === 'undefined') {
                     // initial sort if allowed
                     if ( !self.options.keepRenderingSort && self.callbacks.sort) {
                         // sort seems to be a comparator function, not a sorting function
-                        sortSelect(self.$left, self.callbacks.sort);
+                        sortSelectItems(self.$left, self.callbacks.sort);
 
                         // here we acknowledge that we could have multiple right elements
                         self.$right.each(function(i, select) {
-                            sortSelect($(select), self.callbacks.sort);
+                            sortSelectItems($(select), self.callbacks.sort);
                         });
                     }
 
@@ -598,7 +598,7 @@ if (typeof jQuery === 'undefined') {
 
                         if (!silent && !self.doNotSortRight ) {
                             // FIXME: here only a single right element allowed?
-                            sortSelect(self.$right, self.callbacks.sort);
+                            sortSelectItems(self.$right, self.callbacks.sort);
                         }
 
                         if ( typeof self.callbacks.afterMoveToRight == 'function' && !silent ) {
@@ -629,7 +629,7 @@ if (typeof jQuery === 'undefined') {
                         }
 
                         if (!silent ) {
-                            sortSelect(self.$left, self.callbacks.sort);
+                            sortSelectItems(self.$left, self.callbacks.sort);
                             self.callbacks.afterMoveToLeft( self.$left, self.$right, $options );
                         }
 
@@ -960,7 +960,7 @@ if (typeof jQuery === 'undefined') {
             return this;
         };
 
-        var sortSelect = function($select, comparatorCallback) {
+        var sortSelectItems = function($select, comparatorCallback) {
             if ($select !== undefined && $select.is("select")) {
                 // sort any direct children (can be combination of options and optgroups)
                 // FIXME: without initial rendering sort, this can lead to strange behaviour
@@ -986,7 +986,7 @@ if (typeof jQuery === 'undefined') {
             }
         };
 
-        var storeInitialPositions = function($select) {
+        var storeRenderingSortOrder = function($select) {
             if ($select instanceof "jQuery" && $select.is("select")) {
                 // FIXME: Check if this is ok, optgroups start at 0, and options in each group start at 0
                 $select.children().each(function(index, optionOrOptgroup) {
