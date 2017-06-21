@@ -34,9 +34,9 @@ $(document).ready(function() {
 
     $('#multiselect').multiselect({
         keepRenderingSort: true,
-        sort: false
-        // sort: function() {
-        //
-        // }
+        search: {
+            left: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
+            right: '<input type="text" name="q" class="form-control" placeholder="Search..." />'
+        }
     });
 });
