@@ -312,9 +312,9 @@ if (typeof jQuery === 'undefined') {
             var $grpShow= $select.find('option:not(.hidden)').parent('optgroup').mShow();
         };
 
-        var filterOptions = function($filterValue, $select) {
+        var applyFilter = function($filterValue, $select) {
             if ($filterValue === undefined || $filterValue == "") {
-                removeOptionFilter($select);
+                removeFilter($select);
             }
             var $allOptions = $select.find("option");
             var $prevHiddenOptions = $allOptions.filter(SELECTOR_HIDDEN);
@@ -374,7 +374,7 @@ if (typeof jQuery === 'undefined') {
             }
         };
 
-        var removeOptionFilter = function($select) {
+        var removeFilter = function($select) {
             $select.find('option, optgroup').mShow();
         };
 
@@ -493,9 +493,9 @@ if (typeof jQuery === 'undefined') {
                     if (self.$leftSearch) {
                         self.$leftSearch.keyup(function(e) {
                             if (self.callbacks.fireSearch(this.value)) {
-                                filterOptions(this.value, self.$left);
+                                applyFilter(this.value, self.$left);
                             } else {
-                                removeOptionFilter(self.$left);
+                                removeFilter(self.$left);
                             }
                         });
                     }
@@ -504,9 +504,9 @@ if (typeof jQuery === 'undefined') {
                     if (self.$rightSearch) {
                         self.$rightSearch.keyup(function(e) {
                             if (self.callbacks.fireSearch(this.value)) {
-                                filterOptions(this.value, self.$right);
+                                applyFilter(this.value, self.$right);
                             } else {
-                                removeOptionFilter(self.$right);
+                                removeFilter(self.$right);
                             }
                         });
                     }
@@ -673,28 +673,27 @@ if (typeof jQuery === 'undefined') {
                 moveToRight: function( $options, event, silent, skipStack ) {
                     var self = this;
 
-                    if ( typeof self.callbacks.moveToRight == 'function' ) {
+                    if (self.callbacks.moveToRight) {
                         return self.callbacks.moveToRight( self, $options, event, silent, skipStack );
                     } else {
-                        if ( typeof self.callbacks.beforeMoveToRight == 'function' && !silent ) {
-                            if ( !self.callbacks.beforeMoveToRight( self.$left, self.$right, $options ) ) {
+                        if (!silent) {
+                            if (!self.callbacks.beforeMoveToRight( self.$left, self.$right, $options ) ) {
                                 return false;
                             }
                         }
 
                         self.moveFromAtoB(self.$left, self.$right, $options, event, silent, skipStack);
 
-                        if ( !skipStack ) {
+                        if (!skipStack) {
+                            // FIXME: Does UNDO/REDO work with multiple destinations?
                             self.undoStack.push(['right', $options ]);
                             self.redoStack = [];
                         }
 
-                        if (!silent && !self.doNotSortRight ) {
+                        // FIXME: doNotSortRight doesn't exist
+                        if (!silent) {
                             // FIXME: here only a single right element allowed?
                             sortSelectItems(self.$right, self.callbacks.sort);
-                        }
-
-                        if ( typeof self.callbacks.afterMoveToRight == 'function' && !silent ) {
                             self.callbacks.afterMoveToRight( self.$left, self.$right, $options );
                         }
 
@@ -705,11 +704,11 @@ if (typeof jQuery === 'undefined') {
                 moveToLeft: function( $options, event, silent, skipStack ) {
                     var self = this;
 
-                    if ( typeof self.callbacks.moveToLeft == 'function' ) {
+                    if (self.callbacks.moveToLeft) {
                         return self.callbacks.moveToLeft( self, $options, event, silent, skipStack );
                     } else {
-                        if ( typeof self.callbacks.beforeMoveToLeft == 'function' && !silent ) {
-                            if ( !self.callbacks.beforeMoveToLeft( self.$left, self.$right, $options ) ) {
+                        if (!silent) {
+                            if (!self.callbacks.beforeMoveToLeft( self.$left, self.$right, $options ) ) {
                                 return false;
                             }
                         }
@@ -733,6 +732,7 @@ if (typeof jQuery === 'undefined') {
                 moveFromAtoB: function( $source, $destination, $options, event, silent, skipStack ) {
                     var self = this;
 
+                    var $changedOptgroups = undefined;
                     $options.each(function(index, option) {
                         var $option = $(option);
 
@@ -742,6 +742,12 @@ if (typeof jQuery === 'undefined') {
 
                         if ($option.parent().is('optgroup')) {
                             var $sourceGroup = $option.parent();
+
+                            if (typeof $changedOptgroups === "undefined") {
+                                $changedOptgroups = $sourceGroup;
+                            } else {
+                                $changedOptgroups = $changedOptgroups.add($sourceGroup);
+                            }
                             var optgroupSelector = 'optgroup[' + self.options.matchOptgroupBy + '="' + $sourceGroup.prop(self.options.matchOptgroupBy) + '"]';
                             var $destinationGroup = $destination.find(optgroupSelector);
 
@@ -752,46 +758,36 @@ if (typeof jQuery === 'undefined') {
                                 $destination.move($destinationGroup);
                             }
                             $destinationGroup.move($option);
-
-                            $sourceGroup.removeIfEmpty();
                         } else {
                             $destination.move($option);
                         }
                     });
-
+                    $($changedOptgroups).removeIfEmpty();
                     return self;
                 },
 
                 moveUp: function($options) {
                     var self = this;
 
-                    if ( typeof self.callbacks.beforeMoveUp == 'function' ) {
-                        if ( !self.callbacks.beforeMoveUp( $options ) ) {
-                            return false;
-                        }
+                    if ( !self.callbacks.beforeMoveUp( $options ) ) {
+                        return false;
                     }
 
                     $options.first().prev().before($options);
 
-                    if ( typeof self.callbacks.afterMoveUp == 'function' ) {
-                        self.callbacks.afterMoveUp( $options );
-                    }
+                    self.callbacks.afterMoveUp( $options );
                 },
 
                 moveDown: function($options) {
                     var self = this;
 
-                    if ( typeof self.callbacks.beforeMoveDown == 'function' ) {
-                        if ( !self.callbacks.beforeMoveDown( $options ) ) {
-                            return false;
-                        }
+                    if ( !self.callbacks.beforeMoveDown( $options ) ) {
+                        return false;
                     }
 
                     $options.last().next().after($options);
 
-                    if ( typeof self.callbacks.afterMoveDown == 'function' ) {
-                        self.callbacks.afterMoveDown( $options );
-                    }
+                    self.callbacks.afterMoveDown( $options );
                 },
 
                 undo: function(event) {
@@ -843,7 +839,9 @@ if (typeof jQuery === 'undefined') {
                 submitAllLeft: true,
                 submitAllRight: true,
                 search: {},
+                // FIXME: ignoreDisabled is not documented
                 ignoreDisabled: false,
+                // FIXME: matchOptgroupBy is not documented
                 matchOptgroupBy: 'label'
             },
             callbacks: {
