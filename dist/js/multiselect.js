@@ -139,6 +139,10 @@ if (typeof jQuery === 'undefined') {
 
         const SELECTED_VISIBLE_OPTIONS = "option:selected:visible";
 
+        const CSS_HIDDEN = "hidden";
+
+        const SELECTOR_HIDDEN = "." + CSS_HIDDEN;
+
         const HIDDEN_OPTIONS = "option:hidden";
 
         const A_IS_BIGGER_THAN_B = 1;
@@ -150,6 +154,7 @@ if (typeof jQuery === 'undefined') {
         var isMS = undefined;
 
         var isSafari = undefined;
+
         /**
          * Given the settings and the name for an action, looks if the settings contain the selector for the
          * action. If not, it creates its own selector using the action and the id of the left palette.
@@ -300,16 +305,85 @@ if (typeof jQuery === 'undefined') {
             return $searchFilter;
         };
 
-        var bla = function(fireSearchCallback, $selectToFilter) {
-            if (fireSearchCallback(this.value)) {
-                var $toShow = $selectToFilter.find('option:search("' + this.value + '")').mShow();
-                var $toHide = $selectToFilter.find('option:not(:search("' + this.value + '"))').mHide();
-                var $grpHide= $selectToFilter.find('option.hidden').parent('optgroup').not($(":visible").parent()).mHide();
-                var $grpShow= $selectToFilter.find('option:not(.hidden)').parent('optgroup').mShow();
+        var oldFilterOptions = function($filterValue, $select) {
+            var $toShow = $select.find('option:search("' + $filterValue + '")').mShow();
+            var $toHide = $select.find('option:not(:search("' + $filterValue + '"))').mHide();
+            var $grpHide= $select.find('option.hidden').parent('optgroup').not($(":visible").parent()).mHide();
+            var $grpShow= $select.find('option:not(.hidden)').parent('optgroup').mShow();
+        };
+
+        var filterOptions = function($filterValue, $select) {
+            if ($filterValue === undefined || $filterValue == "") {
+                removeOptionFilter($select);
+            }
+            var $allOptions = $select.find("option");
+            var $prevHiddenOptions = $allOptions.filter(SELECTOR_HIDDEN);
+            var $matchingOptions = $allOptions.filter(':search("' + $filterValue + '")');
+            var $allOptgroups = $select.children("optgroup");
+            var hasOptgroups = $allOptgroups.length > 0;
+            if (hasOptgroups){
+                var $prevHiddenOptgroups = $allOptgroups.filter(SELECTOR_HIDDEN);
+            }
+            if ($allOptions.length == $matchingOptions.length) {
+                // edge case: if all options match
+                // if there is any previously hidden option, we show them
+                if ($prevHiddenOptions.length > 0) {
+                // $allOptions.mShow();
+                    $prevHiddenOptions.mShow();
+                }
+                // if there is any previously hidden optgroup, we show them
+                if (hasOptgroups && $prevHiddenOptgroups.length > 0) {
+                    // $allOptgroups.mShow();
+                    $prevHiddenOptgroups.mShow();
+                }
+                // if there is nothing hidden right now, we just do nothing
             } else {
-                self.$left.find('option, optgroup').mShow();
+                // if one or more options do not match and therefore should be hidden
+                if ($matchingOptions.length == 0) {
+                    // edge case: hide all options
+                    // just hide those that aren't hidden yet
+                    $allOptions.not($prevHiddenOptions).mHide();
+                    if (hasOptgroups) {
+                        $allOptgroups.not($prevHiddenOptgroups).mHide();
+                    }
+                } else {
+                    // 1 to n-1 options should be filtered
+                    // hide all options that do not match and aren't already hidden
+                    // show all options that match and aren't already shown
+                    // show all previously hidden optgroups that have at least one shown option now
+                    var $prevShownOptions = $allOptions.not($prevHiddenOptions);
+                    var $additionalOptionsToHide = $prevShownOptions.not($matchingOptions);
+                    var $additionalOptionsToShow = $matchingOptions.not($prevShownOptions);
+                    $additionalOptionsToHide.mHide();
+                    $additionalOptionsToShow.mShow();
+                    if (hasOptgroups) {
+                        var $prevShownOptgroups = $allOptgroups.not($prevHiddenOptgroups);
+                        var $additionalOptgroupsToShow = $prevHiddenOptgroups.filter($additionalOptionsToShow.parent());
+                        $additionalOptgroupsToShow.mShow();
+                        // hide all previously shown optgroups that have all their remaining shown options hidden
+                        $prevShownOptgroups.each(function(i, prevShownOptgroup) {
+                            var $prevShownOptGroup = $(prevShownOptgroup);
+                            var $shownOptions = $(prevShownOptgroup).children(":not(" + SELECTOR_HIDDEN + ")");
+                            var $remainingOptions = $shownOptions.not($additionalOptionsToHide);
+                            if ($remainingOptions.length == 0) {
+                                $prevShownOptGroup.mHide();
+                            }
+                        });
+                    }
+                }
             }
         };
+
+        var removeOptionFilter = function($select) {
+            $select.find('option, optgroup').mShow();
+        };
+
+        var measurePerformance = function(startTimestamp, feature) {
+            var endTimestamp = performance.now();
+            var timeSpent = endTimestamp - startTimestamp;
+            console.log("Measuring " + feature + ": " + timeSpent);
+        };
+
         var Multiselect = (function($) {
             // FIXME: Define the used classes/objects/variables
             // FIXME: If we don't want to expose this class to the outside, i.e. never call it, can we prevent this?
@@ -405,14 +479,10 @@ if (typeof jQuery === 'undefined') {
                     // Attach event to left filter
                     if (self.$leftSearch) {
                         self.$leftSearch.keyup(function(e) {
-                            // FIXME: Extract function to make it readable and reusable
                             if (self.callbacks.fireSearch(this.value)) {
-                                var $toShow = self.$left.find('option:search("' + this.value + '")').mShow();
-                                var $toHide = self.$left.find('option:not(:search("' + this.value + '"))').mHide();
-                                var $grpHide= self.$left.find('option.hidden').parent('optgroup').not($(":visible").parent()).mHide();
-                                var $grpShow= self.$left.find('option:not(.hidden)').parent('optgroup').mShow();
+                                filterOptions(this.value, self.$left);
                             } else {
-                                self.$left.find('option, optgroup').mShow();
+                                removeOptionFilter(self.$left);
                             }
                         });
                     }
@@ -420,14 +490,10 @@ if (typeof jQuery === 'undefined') {
                     // Attach event to right filter
                     if (self.$rightSearch) {
                         self.$rightSearch.keyup(function(e) {
-                            // FIXME: Extract function to make it readable and reusable
                             if (self.callbacks.fireSearch(this.value)) {
-                                var $toShow = self.$right.find('option:search("' + this.value + '")').mShow();
-                                var $toHide = self.$right.find('option:not(:search("' + this.value + '"))').mHide();
-                                var $grpHide= self.$right.find('option.hidden').parent('optgroup').not($(":visible").parent()).mHide();
-                                var $grpShow= self.$right.find('option:not(.hidden)').parent('optgroup').mShow();
+                                filterOptions(this.value, self.$right);
                             } else {
-                                self.$right.find('option, optgroup').mShow();
+                                removeOptionFilter(self.$right);
                             }
                         });
                     }
@@ -943,7 +1009,7 @@ if (typeof jQuery === 'undefined') {
         };
 
         $.fn.mShow = function() {
-            this.removeClass('hidden').show();
+            this.removeClass(CSS_HIDDEN).show();
 
             if (isMS || isSafari) {
                 this.each(function(index, option) {
@@ -960,7 +1026,7 @@ if (typeof jQuery === 'undefined') {
         };
 
         $.fn.mHide = function() {
-            this.addClass('hidden').hide();
+            this.addClass(CSS_HIDDEN).hide();
 
             if (isMS || isSafari) {
                 this.each(function(index, option) {
