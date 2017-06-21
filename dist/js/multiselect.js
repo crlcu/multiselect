@@ -83,12 +83,15 @@ if (typeof jQuery === 'undefined') {
      */
     function ($) {
         'use strict';
+        const REQ_JQUERY_MAJOR = 1;
+
+        const REQ_JQUERY_MINOR = 7;
 
         /** @type {string[]} version Array containing the jQuery version numbers */
         var version = $.fn.jquery.split(' ')[0].split('.');
 
-        if (version[0] < 2 && version[1] < 7) {
-            throw new Error('multiselect requires jQuery version 1.7 or higher');
+        if (version[0] < REQ_JQUERY_MAJOR || (version[0] == REQ_JQUERY_MAJOR && version[1] < REQ_JQUERY_MINOR)) {
+            throw new Error('multiselect requires jQuery version ' + REQ_JQUERY_MAJOR + '.' + REQ_JQUERY_MINOR + ' or higher');
         }
     }
 )(jQuery);
