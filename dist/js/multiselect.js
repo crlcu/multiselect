@@ -384,6 +384,18 @@ if (typeof jQuery === 'undefined') {
             console.log("Measuring " + feature + ": " + timeSpent);
         };
 
+        var getOptionsToMove = function($select, onlySelected) {
+            if (onlySelected === undefined) {
+                onlySelected = true;
+            }
+            var $allVisibleOptions = $select.find("option:not(.hidden)");
+            if (onlySelected) {
+                return $allVisibleOptions.filter(":selected");
+            } else {
+                return $allVisibleOptions;
+            }
+        };
+
         var Multiselect = (function($) {
             // FIXME: Define the used classes/objects/variables
             // FIXME: If we don't want to expose this class to the outside, i.e. never call it, can we prevent this?
@@ -399,6 +411,7 @@ if (typeof jQuery === 'undefined') {
                 // FIXME: Only assign and do the rest if it is a jquery element
                 /** @member {jQuery} */
                 this.$left = $select;
+                // FIXME: Would be cool for performance reasons if there was a way to dynamically update the options so that you don't have to find all options first
                 // FIXME: throw error if neither is found
                 // $right can be more than one (multiple destinations) (then dblclick etc would not be usable
                 // FIXME: switch for ambiguous actions?
@@ -517,7 +530,7 @@ if (typeof jQuery === 'undefined') {
                     self.$left.dblclick('option', function(e) {
                         e.preventDefault();
 
-                        var $options = self.$left.find(SELECTED_OPTIONS);
+                        var $options = getOptionsToMove(self.$left);
 
                         if ( $options.length ) {
                             self.moveToRight($options, e);
@@ -529,7 +542,7 @@ if (typeof jQuery === 'undefined') {
                         if (e.keyCode === KEY_ENTER) {
                             e.preventDefault();
 
-                            var $options = self.$left.find(SELECTED_OPTIONS);
+                            var $options = getOptionsToMove(self.$left);
 
                             if ( $options.length ) {
                                 self.moveToRight($options, e);
@@ -541,7 +554,7 @@ if (typeof jQuery === 'undefined') {
                     self.$right.dblclick('option', function(e) {
                         e.preventDefault();
 
-                        var $options = self.$right.find(SELECTED_OPTIONS);
+                        var $options = getOptionsToMove(self.$right);
 
                         if ( $options.length ) {
                             self.moveToLeft($options, e);
@@ -553,7 +566,7 @@ if (typeof jQuery === 'undefined') {
                         if (e.keyCode === KEY_BACKSPACE || e.keyCode === KEY_DEL) {
                             e.preventDefault();
 
-                            var $options = self.$right.find(SELECTED_OPTIONS);
+                            var $options = getOptionsToMove(self.$right);
 
                             if ( $options.length ) {
                                 self.moveToLeft($options, e);
@@ -561,21 +574,21 @@ if (typeof jQuery === 'undefined') {
                         }
                     });
 
-                    // dblclick support for IE
+                    // dblclick support for IE (need to deselect other palette)
                     if (isMS) {
                         self.$left.dblclick(function(e) {
-                            self.actions.$rightSelected.trigger('click');
+                            self.actions.$rightSelected.click();
                         });
 
                         self.$right.dblclick(function(e) {
-                            self.actions.$leftSelected.trigger('click');
+                            self.actions.$leftSelected.click();
                         });
                     }
 
                     self.actions.$rightSelected.click(function(e) {
                         e.preventDefault();
 
-                        var $options = self.$left.find(SELECTED_OPTIONS);
+                        var $options = getOptionsToMove(self.$left);
 
                         if ( $options.length ) {
                             self.moveToRight($options, e);
@@ -587,7 +600,7 @@ if (typeof jQuery === 'undefined') {
                     self.actions.$leftSelected.click(function(e) {
                         e.preventDefault();
 
-                        var $options = self.$right.find(SELECTED_OPTIONS);
+                        var $options = getOptionsToMove(self.$right);
 
                         if ( $options.length ) {
                             self.moveToLeft($options, e);
@@ -598,8 +611,8 @@ if (typeof jQuery === 'undefined') {
 
                     self.actions.$rightAll.click(function(e) {
                         e.preventDefault();
-
-                        var $options = self.$left.find('option:not(span):not(.hidden)');
+                        // FIXME: Check, "option:not(span)" is redundant, isn't it?
+                        var $options = getOptionsToMove(self.$left, false);
 
                         if ( $options.length ) {
                             self.moveToRight($options, e);
@@ -611,7 +624,7 @@ if (typeof jQuery === 'undefined') {
                     self.actions.$leftAll.click(function(e) {
                         e.preventDefault();
 
-                        var $options = self.$right.find('option:not(span):not(.hidden)');
+                        var $options = getOptionsToMove(self.$right, false);
 
                         if ( $options.length ) {
                             self.moveToLeft($options, e);
@@ -635,7 +648,7 @@ if (typeof jQuery === 'undefined') {
                     self.actions.$moveUp.click(function(e) {
                         e.preventDefault();
 
-                        var $options = self.$right.find(':selected:not(span):not(.hidden)');
+                        var $options = getOptionsToMove(self.$right);
 
                         if ( $options.length ) {
                             self.moveUp($options, e);
@@ -647,7 +660,7 @@ if (typeof jQuery === 'undefined') {
                     self.actions.$moveDown.click(function(e) {
                         e.preventDefault();
 
-                        var $options = self.$right.find(':selected:not(span):not(.hidden)');
+                        var $options = getOptionsToMove(self.$right);
 
                         if ( $options.length ) {
                             self.moveDown($options, e);
