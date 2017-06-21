@@ -306,10 +306,10 @@ if (typeof jQuery === 'undefined') {
         };
 
         var oldFilterOptions = function($filterValue, $select) {
-            var $toShow = $select.find('option:search("' + $filterValue + '")').mShow();
-            var $toHide = $select.find('option:not(:search("' + $filterValue + '"))').mHide();
-            var $grpHide= $select.find('option.hidden').parent('optgroup').not($(":visible").parent()).mHide();
-            var $grpShow= $select.find('option:not(.hidden)').parent('optgroup').mShow();
+            var $toShow = extendedShow($select.find('option:search("' + $filterValue + '")'));
+            var $toHide = extendedHide($select.find('option:not(:search("' + $filterValue + '"))'));
+            var $grpHide= extendedHide($select.find('option.hidden').parent('optgroup').not($(":visible").parent());
+            var $grpShow= extendedShow($select.find('option:not(.hidden)').parent('optgroup'));
         };
 
         var applyFilter = function($filterValue, $select) {
@@ -328,13 +328,11 @@ if (typeof jQuery === 'undefined') {
                 // edge case: if all options match
                 // if there is any previously hidden option, we show them
                 if ($prevHiddenOptions.length > 0) {
-                // $allOptions.mShow();
-                    $prevHiddenOptions.mShow();
+                    extendedShow($prevHiddenOptions);
                 }
                 // if there is any previously hidden optgroup, we show them
                 if (hasOptgroups && $prevHiddenOptgroups.length > 0) {
-                    // $allOptgroups.mShow();
-                    $prevHiddenOptgroups.mShow();
+                    extendedShow($prevHiddenOptgroups);
                 }
                 // if there is nothing hidden right now, we just do nothing
             } else {
@@ -342,9 +340,9 @@ if (typeof jQuery === 'undefined') {
                 if ($matchingOptions.length == 0) {
                     // edge case: hide all options
                     // just hide those that aren't hidden yet
-                    $allOptions.not($prevHiddenOptions).mHide();
+                    extendedHide($allOptions.not($prevHiddenOptions));
                     if (hasOptgroups) {
-                        $allOptgroups.not($prevHiddenOptgroups).mHide();
+                        extendedHide($allOptgroups.not($prevHiddenOptgroups));
                     }
                 } else {
                     // 1 to n-1 options should be filtered
@@ -354,19 +352,19 @@ if (typeof jQuery === 'undefined') {
                     var $prevShownOptions = $allOptions.not($prevHiddenOptions);
                     var $additionalOptionsToHide = $prevShownOptions.not($matchingOptions);
                     var $additionalOptionsToShow = $matchingOptions.not($prevShownOptions);
-                    $additionalOptionsToHide.mHide();
-                    $additionalOptionsToShow.mShow();
+                    extendedHide($additionalOptionsToHide);
+                    extendedShow($additionalOptionsToShow);
                     if (hasOptgroups) {
                         var $prevShownOptgroups = $allOptgroups.not($prevHiddenOptgroups);
                         var $additionalOptgroupsToShow = $prevHiddenOptgroups.filter($additionalOptionsToShow.parent());
-                        $additionalOptgroupsToShow.mShow();
+                        extendedShow($additionalOptgroupsToShow);
                         // hide all previously shown optgroups that have all their remaining shown options hidden
                         $prevShownOptgroups.each(function(i, prevShownOptgroup) {
                             var $prevShownOptGroup = $(prevShownOptgroup);
                             var $shownOptions = $(prevShownOptgroup).children(":not(" + SELECTOR_HIDDEN + ")");
                             var $remainingOptions = $shownOptions.not($additionalOptionsToHide);
                             if ($remainingOptions.length == 0) {
-                                $prevShownOptGroup.mHide();
+                                extendedHide($prevShownOptGroup);
                             }
                         });
                     }
@@ -375,7 +373,7 @@ if (typeof jQuery === 'undefined') {
         };
 
         var removeFilter = function($select) {
-            $select.find('option, optgroup').mShow();
+            extendedShow($select.find('option, optgroup'));
         };
 
         var measurePerformance = function(startTimestamp, feature) {
@@ -755,14 +753,14 @@ if (typeof jQuery === 'undefined') {
                                 $destinationGroup = $sourceGroup.clone(true);
                                 $destinationGroup.empty();
 
-                                $destination.move($destinationGroup);
+                                moveOptionsTo($destination, $destinationGroup);
                             }
-                            $destinationGroup.move($option);
+                            moveOptionsTo($destinationGroup,$option);
                         } else {
-                            $destination.move($option);
+                            moveOptionsTo($destination, $option);
                         }
                     });
-                    $($changedOptgroups).removeIfEmpty();
+                    removeIfEmpty($changedOptgroups);
                     return self;
                 },
 
@@ -858,7 +856,7 @@ if (typeof jQuery === 'undefined') {
                             $left.find(optgroupSelector + ' option[value="' + rightOption.value + '"]').each(function(index, leftOption) {
                                 leftOption.remove();
                             });
-                            $left.find(optgroupSelector).removeIfEmpty();
+                            removeIfEmpty($left.find(optgroupSelector));
                         } else {
                             var $option = $left.find('option[value="' + rightOption.value + '"]');
                             $option.remove();
@@ -1002,53 +1000,55 @@ if (typeof jQuery === 'undefined') {
 
         // append options
         // then set the selected attribute to false
-        $.fn.move = function( $options ) {
-            this
+        var moveOptionsTo = function($targetSelect, $options) {
+            $targetSelect
                 .append($options)
                 .find('option')
                 .prop('selected', false);
 
-            return this;
+            return $targetSelect;
         };
 
-        $.fn.removeIfEmpty = function() {
-            if (!this.children().length) {
-                this.remove();
-            }
+        var removeIfEmpty = function($elements) {
+            $elements.each(function(i, element) {
+                var $element = $(element);
+                if (!$element.children().length) {
+                    $element.remove();
+                }
+            });
 
-            return this;
+            return $elements;
         };
 
-        $.fn.mShow = function() {
-            this.removeClass(CSS_HIDDEN).show();
-
+        var extendedShow = function($elements) {
+            $elements.removeClass(CSS_HIDDEN).show();
             if (isMS || isSafari) {
-                this.each(function(index, option) {
+                $elements.each(function(index, element) {
                     // Remove <span> to make it compatible with IE
-                    if($(option).parent().is('span')) {
-                        $(option).parent().replaceWith(option);
+                    var $option = $(element);
+                    var $parent = $option.parent("span");
+                    if ($parent.length > 0) {
+                        $parent.replaceWith(element);
                     }
-
-                    $(option).show();
                 });
             }
-
-            return this;
+            return $elements;
         };
 
-        $.fn.mHide = function() {
-            this.addClass(CSS_HIDDEN).hide();
+        var extendedHide = function($elements) {
+            $elements.addClass(CSS_HIDDEN).hide();
 
             if (isMS || isSafari) {
-                this.each(function(index, option) {
+                this.each(function(index, element) {
+                    var $option = $(element);
                     // Wrap with <span> to make it compatible with IE
-                    if(!$(option).parent().is('span')) {
-                        $(option).wrap('<span>').hide();
+                    if(!$option.parent().is('span')) {
+                        $option.wrap('<span></span>').hide();
                     }
                 });
             }
 
-            return this;
+            return $elements;
         };
 
         var sortSelectItems = function($select, comparatorCallback) {
