@@ -304,10 +304,14 @@
         };
 
         var oldFilterOptions = function($filterValue, $select) {
-            var $toShow = extendedShow($select.find('option:search("' + $filterValue + '")'));
-            var $toHide = extendedHide($select.find('option:not(:search("' + $filterValue + '"))'));
-            var $grpHide= extendedHide($select.find('option.hidden').parent('optgroup').not($(":visible").parent()));
-            var $grpShow= extendedShow($select.find('option:not(.hidden)').parent('optgroup'));
+            // options to show
+            extendedShow($select.find('option:search("' + $filterValue + '")'));
+            // options to hide
+            extendedHide($select.find('option:not(:search("' + $filterValue + '"))'));
+            // optgroups to hide
+            extendedHide($select.find('option.hidden').parent('optgroup').not($(":visible").parent()));
+            // optgroups to show
+            extendedShow($select.find('option:not(.hidden)').parent('optgroup'));
         };
 
         var applyFilter = function($filterValue, $select) {
@@ -488,7 +492,7 @@
 
                     // Attach event to left filter
                     if (self.$leftSearch) {
-                        self.$leftSearch.keyup(function(e) {
+                        self.$leftSearch.keyup(function() {
                             if (self.callbacks.fireSearch(this.value)) {
                                 applyFilter(this.value, self.$left);
                             } else {
@@ -499,7 +503,7 @@
 
                     // Attach event to right filter
                     if (self.$rightSearch) {
-                        self.$rightSearch.keyup(function(e) {
+                        self.$rightSearch.keyup(function() {
                             if (self.callbacks.fireSearch(this.value)) {
                                 applyFilter(this.value, self.$right);
                             } else {
@@ -509,7 +513,7 @@
                     }
 
                     // Select all the options from left and right side when submitting the parent form
-                    self.$right.closest('form').submit(function(e) {
+                    self.$right.closest('form').submit(function() {
                         // Clear left search input
                         if (self.$leftSearch) {
                             self.$leftSearch.val('').keyup();
@@ -573,11 +577,11 @@
 
                     // dblclick support for IE (need to deselect other palette)
                     if (isMS) {
-                        self.$left.dblclick(function(e) {
+                        self.$left.dblclick(function() {
                             self.actions.$rightSelected.click();
                         });
 
-                        self.$right.dblclick(function(e) {
+                        self.$right.dblclick(function() {
                             self.actions.$leftSelected.click();
                         });
                     }
@@ -679,7 +683,7 @@
                             }
                         }
 
-                        self.moveFromAtoB(self.$left, self.$right, $options, event, silent, skipStack);
+                        self.moveFromAtoB(self.$left, self.$right, $options);
                         self.$rightSearch.keyup();
                         if (!skipStack) {
                             // FIXME: Does UNDO/REDO work with multiple destinations?
@@ -710,7 +714,7 @@
                             }
                         }
 
-                        self.moveFromAtoB(self.$right, self.$left, $options, event, silent, skipStack);
+                        self.moveFromAtoB(self.$right, self.$left, $options);
                         self.$leftSearch.keyup();
 
                         if ( !skipStack ) {
@@ -727,7 +731,7 @@
                     }
                 },
 
-                moveFromAtoB: function( $source, $destination, $options, event, silent, skipStack ) {
+                moveFromAtoB: function( $source, $destination, $options) {
                     var self = this;
 
                     var $changedOptgroups = undefined;
@@ -994,7 +998,7 @@
                     settings = $.extend({}, $.multiselectdefaults.callbacks, $this.data(), (typeof options === 'object' && options));
 
                 if (!data) {
-                    $this.data('crlcu.multiselect', (data = new Multiselect($this, settings)));
+                    $this.data('crlcu.multiselect', (new Multiselect($this, settings)));
                 }
             });
         };
