@@ -139,15 +139,9 @@
         /** User Agent identification for the Safari browser. */
         const USER_AGENT_SAFARI = "safari";
 
-        const SELECTED_OPTIONS = "option:selected";
-
-        const SELECTED_VISIBLE_OPTIONS = "option:selected:visible";
-
         const CSS_HIDDEN = "hidden";
 
         const SELECTOR_HIDDEN = "." + CSS_HIDDEN;
-
-        const HIDDEN_OPTIONS = "option:hidden";
 
         const A_IS_BIGGER_THAN_B = 1;
 
@@ -390,6 +384,7 @@
             if (onlySelected === undefined) {
                 onlySelected = true;
             }
+            // FIXME: Unsure if this is good, as I could define and use my own hidden class
             var $allVisibleOptions = $select.find("option:not(.hidden)");
             if (onlySelected) {
                 return $allVisibleOptions.filter(":selected");
@@ -685,7 +680,7 @@
                         }
 
                         self.moveFromAtoB(self.$left, self.$right, $options, event, silent, skipStack);
-
+                        self.$rightSearch.keyup();
                         if (!skipStack) {
                             // FIXME: Does UNDO/REDO work with multiple destinations?
                             self.undoStack.push(['right', $options ]);
@@ -716,6 +711,7 @@
                         }
 
                         self.moveFromAtoB(self.$right, self.$left, $options, event, silent, skipStack);
+                        self.$leftSearch.keyup();
 
                         if ( !skipStack ) {
                             self.undoStack.push(['left', $options ]);
@@ -854,6 +850,7 @@
                  *  @attribute $right jQuery object
                 **/
                 startUp: function( $left, $right ) {
+                    // FIXME: extract readable method
                     $right.find('option').each(function(index, rightOption) {
                         if ($(rightOption).parent().prop('tagName') == 'OPTGROUP') {
                             var optgroupSelector = 'optgroup[label="' + $(rightOption).parent().attr('label') + '"]';
