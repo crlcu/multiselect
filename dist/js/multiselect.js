@@ -228,11 +228,15 @@ if (typeof jQuery === 'undefined') {
         };
 
         var chooseOption = function(userOption, defaultOption, optionType) {
-            if (userOption !== undefined && typeof userOption === optionType) {
-                return userOption;
-            } else {
-                return defaultOption;
+            if (userOption !== undefined) {
+                if (optionType === "jQuery" && userOption instanceof jQuery && userOption.length > 0) {
+                    return userOption;
+                }
+                if (optionType !== "jQuery" && typeof userOption === optionType) {
+                    return userOption;
+                }
             }
+            return defaultOption;
         };
 
         var isMicrosoftBrowser = function() {
@@ -303,10 +307,11 @@ if (typeof jQuery === 'undefined') {
                 // FIXME: Only assign and do the rest if it is a jquery element
                 /** @member {jQuery} */
                 this.$left = $select;
-                // FIXME: check if settings.right is a single jquery element
                 // FIXME: throw error if neither is found
+                // $right can be more than one (multiple destinations) (then dblclick etc would not be usable
+                // FIXME: switch for ambiguous actions?
                 /** @member {jQuery} */
-                this.$right = $( settings.right ).length ? $( settings.right ) : $('#' + id + '_to');
+                this.$right = chooseOption($(settings.right),$('#' + id + '_to'));
                 // FIXME: Which are required action buttons? Should we error if we can't init them?
                 // FIXME: What if I use this on a page with elements with the suffixes (unlikely, yeah) that shouldn't be used as buttons?
                 // FIXME: Do we want to allow multiple elements to be buttons for a function?
