@@ -35,11 +35,11 @@
  */
 /**
  * @typedef {Object} MultiselectOptions
- * @property {boolean} [keepRenderingSort=false] - whether to
- * @property {boolean} [submitAllLeft=true] - FIXME
- * @property {boolean} [submitAllRight=true] - FIXME
+ * @property {boolean} [keepRenderingSort=false] - whether to keep the sort order given by the html option order
+ * @property {boolean} [submitAllLeft=true] - whether to submit all visible left options when a form is submitted
+ * @property {boolean} [submitAllRight=true] - whether to submit all visible right options when a form is submitted
  * @property {SearchElements} [search] - the meta information used in the search elements
- * @property {boolean} [ignoreDisabled=false] - FIXME
+ * @property {boolean} [ignoreDisabled=false] - whether to ignore disabled options when moving
  * @property {string} [matchOptgroupBy='label'] - FIXME
  */
 
