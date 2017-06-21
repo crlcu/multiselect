@@ -72,29 +72,6 @@
  * @typedef {CallbackFunctions|ElementNames|MultiselectOptions} SettingsObject
  */
 
-if (typeof jQuery === 'undefined') {
-    throw new Error('multiselect requires jQuery');
-}
-
-(
-    /**
-     * Checks if the current jQuery is of the necessary minimum version.
-     * @param {jQuery} $
-     */
-    function ($) {
-        'use strict';
-        const REQ_JQUERY_MAJOR = 1;
-
-        const REQ_JQUERY_MINOR = 7;
-
-        /** @type {string[]} version Array containing the jQuery version numbers */
-        var version = $.fn.jquery.split(' ')[0].split('.');
-
-        if (version[0] < REQ_JQUERY_MAJOR || (version[0] == REQ_JQUERY_MAJOR && version[1] < REQ_JQUERY_MINOR)) {
-            throw new Error('multiselect requires jQuery version ' + REQ_JQUERY_MAJOR + '.' + REQ_JQUERY_MINOR + ' or higher');
-        }
-    }
-)(jQuery);
 // FIXME: Check if everything works when we use multiple destinations ("right" elements)
 // FIXME: Check if everything works when we use filters
 (
@@ -104,11 +81,38 @@ if (typeof jQuery === 'undefined') {
      * @param {function} factory - the factory that creates the multiselect api
      */
     function (factory) {
+        var checkForGlobaljQuery = function() {
+            if (typeof jQuery === 'undefined') {
+                throw new Error('multiselect requires jQuery');
+            }
+        };
+        /**
+         * Checks if the current jQuery is of the necessary minimum version.
+         * @param {jQuery} $
+         */
+        var checkjQueryVersion = function($) {
+                'use strict';
+
+                const REQ_JQUERY_MAJOR = 1;
+
+                const REQ_JQUERY_MINOR = 7;
+
+            /** @type {string[]} version Array containing the jQuery version numbers */
+            var version = $.fn.jquery.split(' ')[0].split('.');
+
+            if (version[0] < REQ_JQUERY_MAJOR || (version[0] == REQ_JQUERY_MAJOR && version[1] < REQ_JQUERY_MINOR)) {
+                throw new Error('multiselect requires jQuery version ' + REQ_JQUERY_MAJOR + '.' + REQ_JQUERY_MINOR + ' or higher');
+            }
+        };
+
         if (typeof define === 'function' && define.amd) {
             // AMD. Register as an anonymous module depending on jQuery.
             define(['jquery'], factory);
+            requirejs("jquery", checkjQueryVersion);
         } else {
             // No AMD. Register plugin with global jQuery object.
+            checkForGlobaljQuery();
+            checkjQueryVersion(jQuery);
             factory(jQuery);
         }
     }(function ($) {
@@ -308,7 +312,7 @@ if (typeof jQuery === 'undefined') {
         var oldFilterOptions = function($filterValue, $select) {
             var $toShow = extendedShow($select.find('option:search("' + $filterValue + '")'));
             var $toHide = extendedHide($select.find('option:not(:search("' + $filterValue + '"))'));
-            var $grpHide= extendedHide($select.find('option.hidden').parent('optgroup').not($(":visible").parent());
+            var $grpHide= extendedHide($select.find('option.hidden').parent('optgroup').not($(":visible").parent()));
             var $grpShow= extendedShow($select.find('option:not(.hidden)').parent('optgroup'));
         };
 
