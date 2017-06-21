@@ -379,7 +379,7 @@ if (typeof jQuery === 'undefined') {
 
                     // Attach event to left filter
                     if (self.options.search && self.options.search.$left) {
-                        self.options.search.$left.on('keyup', function(e) {
+                        self.options.search.$left.keyup(function(e) {
                             // FIXME: Extract function to make it readable and reusable
                             if (self.callbacks.fireSearch(this.value)) {
                                 var $toShow = self.$left.find('option:search("' + this.value + '")').mShow();
@@ -394,7 +394,7 @@ if (typeof jQuery === 'undefined') {
 
                     // Attach event to right filter
                     if (self.options.search && self.options.search.$right) {
-                        self.options.search.$right.on('keyup', function(e) {
+                        self.options.search.$right.keyup(function(e) {
                             // FIXME: Extract function to make it readable and reusable
                             if (self.callbacks.fireSearch(this.value)) {
                                 var $toShow = self.$right.find('option:search("' + this.value + '")').mShow();
@@ -408,7 +408,7 @@ if (typeof jQuery === 'undefined') {
                     }
 
                     // Select all the options from left and right side when submitting the parent form
-                    self.$right.closest('form').on('submit', function(e) {
+                    self.$right.closest('form').submit(function(e) {
                         if (self.options.search) {
                             // Clear left search input
                             if (self.options.search.$left) {
@@ -426,7 +426,7 @@ if (typeof jQuery === 'undefined') {
                     });
 
                     // Attach event for double clicking on options from left side
-                    self.$left.on('dblclick', 'option', function(e) {
+                    self.$left.dblclick('option', function(e) {
                         e.preventDefault();
 
                         var $options = self.$left.find(SELECTED_OPTIONS);
@@ -437,7 +437,7 @@ if (typeof jQuery === 'undefined') {
                     });
 
                     // Attach event for pushing ENTER on options from left side
-                    self.$left.on('keypress', function(e) {
+                    self.$left.keypress(function(e) {
                         if (e.keyCode === KEY_ENTER) {
                             e.preventDefault();
 
@@ -450,7 +450,7 @@ if (typeof jQuery === 'undefined') {
                     });
 
                     // Attach event for double clicking on options from right side
-                    self.$right.on('dblclick', 'option', function(e) {
+                    self.$right.dblclick('option', function(e) {
                         e.preventDefault();
 
                         var $options = self.$right.find(SELECTED_OPTIONS);
@@ -461,7 +461,7 @@ if (typeof jQuery === 'undefined') {
                     });
 
                     // Attach event for pushing BACKSPACE or DEL on options from right side
-                    self.$right.on('keydown', function(e) {
+                    self.$right.keydown(function(e) {
                         if (e.keyCode === KEY_BACKSPACE || e.keyCode === KEY_DEL) {
                             e.preventDefault();
 
@@ -484,7 +484,7 @@ if (typeof jQuery === 'undefined') {
                         });
                     }
 
-                    self.actions.$rightSelected.on('click', function(e) {
+                    self.actions.$rightSelected.click(function(e) {
                         e.preventDefault();
 
                         var $options = self.$left.find(SELECTED_OPTIONS);
@@ -496,7 +496,7 @@ if (typeof jQuery === 'undefined') {
                         $(this).blur();
                     });
 
-                    self.actions.$leftSelected.on('click', function(e) {
+                    self.actions.$leftSelected.click(function(e) {
                         e.preventDefault();
 
                         var $options = self.$right.find(SELECTED_OPTIONS);
@@ -508,7 +508,7 @@ if (typeof jQuery === 'undefined') {
                         $(this).blur();
                     });
 
-                    self.actions.$rightAll.on('click', function(e) {
+                    self.actions.$rightAll.click(function(e) {
                         e.preventDefault();
 
                         var $options = self.$left.find('option:not(span):not(.hidden)');
@@ -520,7 +520,7 @@ if (typeof jQuery === 'undefined') {
                         $(this).blur();
                     });
 
-                    self.actions.$leftAll.on('click', function(e) {
+                    self.actions.$leftAll.click(function(e) {
                         e.preventDefault();
 
                         var $options = self.$right.find('option:not(span):not(.hidden)');
@@ -532,19 +532,19 @@ if (typeof jQuery === 'undefined') {
                         $(this).blur();
                     });
 
-                    self.actions.$undo.on('click', function(e) {
+                    self.actions.$undo.click(function(e) {
                         e.preventDefault();
 
                         self.undo(e);
                     });
 
-                    self.actions.$redo.on('click', function(e) {
+                    self.actions.$redo.click(function(e) {
                         e.preventDefault();
 
                         self.redo(e);
                     });
 
-                    self.actions.$moveUp.on('click', function(e) {
+                    self.actions.$moveUp.click(function(e) {
                         e.preventDefault();
 
                         var $options = self.$right.find(':selected:not(span):not(.hidden)');
@@ -556,7 +556,7 @@ if (typeof jQuery === 'undefined') {
                         $(this).blur();
                     });
 
-                    self.actions.$moveDown.on('click', function(e) {
+                    self.actions.$moveDown.click(function(e) {
                         e.preventDefault();
 
                         var $options = self.$right.find(':selected:not(span):not(.hidden)');
