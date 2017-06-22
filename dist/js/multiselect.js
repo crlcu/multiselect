@@ -259,12 +259,16 @@
         // FIXME: What is this function? We never set NA
         var lexicographicComparison = function(a, b) {
             // FIXME: What is this? An empty element returns "" with innerHTML...
+            // BF: Commented that out, checked, seems ok, elements beginning with "NA"
+            // are sorted first, e.g. "NAME1" before "Item 1"?
+            /*
             const NA = "NA";
             if (a.innerHTML == NA) {
                 return A_IS_BIGGER_THAN_B;
             } else if (b.innerHTML == NA) {
                 return B_IS_BIGGER_THAN_A;
             }
+            */
             // lexicographic comparison between strings (compare chars at same index)
             // e.g. 99 > 100
             // e.g. abc99 > abc100
