@@ -149,9 +149,9 @@
 
         const DATA_POSITION = "position";
 
-        var isMS = undefined;
+        var isMS = isMicrosoftBrowser();
 
-        var isSafari = undefined;
+        var isSafari = isSafariBrowser();
 
         /**
          * Given the settings and the name for an action, looks if the settings contain the selector for the
@@ -160,7 +160,7 @@
          * @param {ElementNames} settings
          * @param actionName
          */
-        var getActionButton = function(id, settings, actionName) {
+        function getActionButton(id, settings, actionName) {
             var selector = "";
             if (settings[actionName]) {
                 selector = settings[actionName];
@@ -168,7 +168,7 @@
                 selector = $.multiselectdefaults.actionSelector(id, actionName);
             }
             return $(selector);
-        };
+        }
 
         /**
          *
@@ -176,7 +176,7 @@
          * @param {ElementNames} settings
          * @returns {ActionButtons}
          */
-        var extractActionButtons = function(id, settings) {
+        function extractActionButtons(id, settings) {
             return {
                 $leftAll: getActionButton(id, settings, "leftAll"),
                 $rightAll: getActionButton(id, settings, "rightAll"),
@@ -187,14 +187,14 @@
                 $moveUp: getActionButton(id, settings, "moveUp"),
                 $moveDown: getActionButton(id, settings, "moveDown")
             };
-        };
+        }
 
         /**
          * Extracts the options for the multiselect object
          * @param {SettingsObject} settings
          * @returns {MultiselectOptions}
          */
-        var extractMultiselectOptions = function(settings) {
+        function extractMultiselectOptions(settings) {
             return {
                 keepRenderingSort:  chooseOption(settings.keepRenderingSort, $.multiselectdefaults.options.keepRenderingSort, "boolean"),
                 submitAllLeft:      chooseOption(settings.submitAllLeft, $.multiselectdefaults.options.submitAllLeft, "boolean"),
@@ -203,13 +203,13 @@
                 ignoreDisabled:     chooseOption(settings.ignoreDisabled, $.multiselectdefaults.options.ignoreDisabled, "boolean"),
                 matchOptgroupBy:    chooseOption(settings.matchOptgroupBy, $.multiselectdefaults.options.matchOptgroupBy, "string")
             };
-        };
+        }
 
         /**
          *
          * @param {SettingsObject} settings
          */
-        var extractCallbacks = function(settings) {
+        function extractCallbacks(settings) {
             return {
                 startUp: chooseCallback(settings.startUp, $.multiselectdefaults.callbacks.startUp),
                 sort: chooseCallback(settings.sort, $.multiselectdefaults.callbacks.sort),
@@ -225,13 +225,13 @@
                 afterMoveDown: chooseCallback(settings.afterMoveDown, $.multiselectdefaults.callbacks.afterMoveDown),
                 fireSearch: chooseCallback(settings.fireSearch, $.multiselectdefaults.callbacks.fireSearch)
             };
-        };
+        }
 
-        var chooseCallback = function(userCallback, defaultCallback) {
+        function chooseCallback(userCallback, defaultCallback) {
             return chooseOption(userCallback, defaultCallback, "function");
-        };
+        }
 
-        var chooseOption = function(userOption, defaultOption, optionType) {
+        function chooseOption(userOption, defaultOption, optionType) {
             if (userOption !== undefined) {
                 if (optionType === "jQuery" && userOption instanceof jQuery && userOption.length > 0) {
                     return userOption;
@@ -241,23 +241,23 @@
                 }
             }
             return defaultOption;
-        };
+        }
 
-        var isMicrosoftBrowser = function() {
+        function isMicrosoftBrowser() {
             var ua = window.navigator.userAgent;
             return ( ua.indexOf(USER_AGENT_IE_UPTO_10) > 0 ||
                     ua.indexOf(USER_AGENT_IE_11) > 0 ||
                     ua.indexOf(USER_AGENT_EDGE) > 0
             );
-        };
+        }
 
-        var isSafariBrowser = function() {
+        function isSafariBrowser() {
             var ua = window.navigator.userAgent;
             return (ua.toLowerCase().indexOf(USER_AGENT_SAFARI) > -1);
-        };
+        }
 
         // FIXME: What is this function? We never set NA
-        var lexicographicComparison = function(a, b) {
+        function lexicographicComparison(a, b) {
             // FIXME: What is this? An empty element returns "" with innerHTML...
             // Elements beginning with "NA"
             // are sorted first, e.g. "NAME1" before "Item 1"?
@@ -274,9 +274,9 @@
             // e.g. abc99 > abc100
             // e.g. bbb > aaa
             return (a.innerHTML > b.innerHTML) ? A_IS_BIGGER_THAN_B : B_IS_BIGGER_THAN_A;
-        };
+        }
 
-        var renderingSortComparison = function(a, b) {
+        function renderingSortComparison(a, b) {
             var aPosition = getInitialPosition($(a));
             var bPosition = getInitialPosition($(b));
             if (aPosition !== null && bPosition !== null) {
@@ -284,30 +284,30 @@
             }
             // should never be reached, ergo undefined behaviour
             return undefined;
-        };
+        }
 
-        var getInitialPosition = function($optionOrOptgroup) {
+        function getInitialPosition($optionOrOptgroup) {
             if ($optionOrOptgroup !== undefined && $optionOrOptgroup.is("option,optgroup")) {
                 return $optionOrOptgroup.data(DATA_POSITION);
             }
             return null;
-        };
+        }
 
-        var setInitialPosition = function($optionOrOptgroup, newPosition) {
+        function setInitialPosition($optionOrOptgroup, newPosition) {
             if ($optionOrOptgroup !== undefined && $optionOrOptgroup.is("option,optgroup")) {
                 $optionOrOptgroup.data(DATA_POSITION, newPosition);
             }
             return $optionOrOptgroup;
-        };
+        }
 
         // FIXME: right can be multiple selects
-        var prependSearchFilter = function($select, searchFilterHtml) {
+        function prependSearchFilter($select, searchFilterHtml) {
             var $searchFilter = $(searchFilterHtml);
             $select.before($searchFilter);
             return $searchFilter;
-        };
+        }
 
-        var oldFilterOptions = function($filterValue, $select) {
+        function oldFilterOptions($filterValue, $select) {
             // options to show
             extendedShow($select.find('option:search("' + $filterValue + '")'));
             // options to hide
@@ -316,9 +316,9 @@
             extendedHide($select.find('option.hidden').parent('optgroup').not($(":visible").parent()));
             // optgroups to show
             extendedShow($select.find('option:not(.hidden)').parent('optgroup'));
-        };
+        }
 
-        var applyFilter = function($filterValue, $select) {
+        function applyFilter($filterValue, $select) {
             if ($filterValue === undefined || $filterValue == "") {
                 removeFilter($select);
             }
@@ -376,19 +376,19 @@
                     }
                 }
             }
-        };
+        }
 
-        var removeFilter = function($select) {
+        function removeFilter($select) {
             extendedShow($select.find('option, optgroup'));
-        };
+        }
 
-        var measurePerformance = function(startTimestamp, feature) {
+        function measurePerformance(startTimestamp, feature) {
             var endTimestamp = performance.now();
             var timeSpent = endTimestamp - startTimestamp;
             console.log("Measuring " + feature + ": " + timeSpent);
-        };
+        }
 
-        var getOptionsToMove = function($select, onlySelected) {
+        function getOptionsToMove($select, onlySelected) {
             if (onlySelected === undefined) {
                 onlySelected = true;
             }
@@ -399,9 +399,9 @@
             } else {
                 return $allVisibleOptions;
             }
-        };
+        }
 
-        var removeDuplicateOptions = function($left, $right) {
+        function removeDuplicateOptions($left, $right) {
             $right.find('option').each(function(index, rightOption) {
                 var $rightOption = $(rightOption);
                 var $parentOptgroup = $rightOption.parent("optgroup");
@@ -421,7 +421,7 @@
                     $option.remove();
                 }
             });
-        };
+        }
 
         var Multiselect = (function($) {
             // FIXME: Define the used classes/objects/variables
@@ -1024,9 +1024,6 @@
             }
         };
 
-        isMS = isMicrosoftBrowser();
-        isSafari = isSafariBrowser();
-
         $.fn.multiselect = function( options ) {
             return this.each(function() {
                 var $this    = $(this),
@@ -1041,16 +1038,16 @@
 
         // append options
         // then set the selected attribute to false
-        var moveOptionsTo = function($targetSelect, $options) {
+        function moveOptionsTo($targetSelect, $options) {
             $targetSelect
                 .append($options)
                 .find('option')
                 .prop('selected', false);
 
             return $targetSelect;
-        };
+        }
 
-        var removeIfEmpty = function($elements) {
+        function removeIfEmpty($elements) {
             $elements.each(function(i, element) {
                 var $element = $(element);
                 if (!$element.children().length) {
@@ -1059,9 +1056,9 @@
             });
 
             return $elements;
-        };
+        }
 
-        var extendedShow = function($elements) {
+        function extendedShow($elements) {
             $elements.removeClass(CSS_HIDDEN).show();
             if (isMS || isSafari) {
                 $elements.each(function(index, element) {
@@ -1074,9 +1071,9 @@
                 });
             }
             return $elements;
-        };
+        }
 
-        var extendedHide = function($elements) {
+        function extendedHide($elements) {
             $elements.addClass(CSS_HIDDEN).hide();
 
             if (isMS || isSafari) {
@@ -1090,9 +1087,9 @@
             }
 
             return $elements;
-        };
+        }
 
-        var sortSelectItems = function($select, comparatorCallback) {
+        function sortSelectItems($select, comparatorCallback) {
             if ($select !== undefined && $select.is("select")) {
                 // sort any direct children (can be combination of options and optgroups)
                 // FIXME: without initial rendering sort, this can lead to strange behaviour
@@ -1116,9 +1113,9 @@
 
                 return $select;
             }
-        };
+        }
 
-        var storeRenderingSortOrder = function($select) {
+        function storeRenderingSortOrder($select) {
             if ($select instanceof jQuery && $select.is("select")) {
                 // FIXME: Check if this is ok, optgroups start at 0, and options in each group start at 0
                 $select.children().each(function(index, optionOrOptgroup) {
@@ -1132,7 +1129,7 @@
                     setInitialPosition($optionOrOptgroup, index);
                 });
             }
-        };
+        }
 
         // this is the custom jQuery selector :search used when filtering
         $.expr[":"].search = function(elem, index, meta) {
