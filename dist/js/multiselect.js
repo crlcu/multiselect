@@ -545,6 +545,8 @@
                     // Attach event for pushing ENTER on options from left side
                     self.$left.keypress(function(e) {
                         // this does not seem to work for firefox, linux, maybe a cr/lf problem?
+                        // According to https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode
+                        // this should work...
                         if (e.keyCode === KEY_ENTER) {
                             e.preventDefault();
 
