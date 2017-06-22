@@ -40,7 +40,7 @@
  * @property {boolean} [submitAllRight=true] - whether to submit all visible right options when a form is submitted
  * @property {SearchElements} [search] - the meta information used in the search elements
  * @property {boolean} [ignoreDisabled=false] - whether to ignore disabled options when moving
- * @property {string} [matchOptgroupBy='label'] - FIXME
+ * @property {string} [matchOptgroupBy='label'] - Which html attribute should be compared against when filtering
  */
 
 /**
@@ -393,7 +393,7 @@
                 onlySelected = true;
             }
             // FIXME: Unsure if this is good, as I could define and use my own hidden class
-            var $allVisibleOptions = $select.find("option:not(.hidden)");
+            var $allVisibleOptions = $select.find("option:not(" + SELECTOR_HIDDEN + ")");
             if (onlySelected) {
                 return $allVisibleOptions.filter(":selected");
             } else {
@@ -424,7 +424,6 @@
         }
 
         var Multiselect = (function($) {
-            // FIXME: Define the used classes/objects/variables
             // FIXME: If we don't want to expose this class to the outside, i.e. never call it, can we prevent this?
             /**
              * Multiselect object constructor
@@ -433,7 +432,9 @@
              * @constructor
              */
             function Multiselect( $select, settings ) {
-                // FIXME: Check if this is a single jquery element, error message if not
+                if (!($select instanceof jQuery) || $select.length !== 1 || !$select.is("select")) {
+                    throw new Error("A single Multiselect requires a single jQuery select element for the left side.");
+                }
                 var id = $select.prop('id');
                 // FIXME: Only assign and do the rest if it is a jquery element
                 /** @member {jQuery} */
@@ -867,9 +868,9 @@
                 submitAllLeft: true,
                 submitAllRight: true,
                 search: {},
-                // FIXME: ignoreDisabled is not documented
+                // FIXME: ignoreDisabled is not documented online
                 ignoreDisabled: false,
-                // FIXME: matchOptgroupBy is not documented
+                // FIXME: matchOptgroupBy is not documented online
                 matchOptgroupBy: 'label'
             },
             callbacks: {
