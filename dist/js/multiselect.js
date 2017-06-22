@@ -99,8 +99,8 @@
 
             /** @type {string[]} version Array containing the jQuery version numbers */
             var version = $.fn.jquery.split(' ')[0].split('.');
-
-            if (version[0] < REQ_JQUERY_MAJOR || (version[0] == REQ_JQUERY_MAJOR && version[1] < REQ_JQUERY_MINOR)) {
+            // main check, changed to better reading
+            if ((version[0] <= REQ_JQUERY_MAJOR) && (version[1] <= REQ_JQUERY_MINOR)) {
                 throw new Error('multiselect requires jQuery version ' + REQ_JQUERY_MAJOR + '.' + REQ_JQUERY_MINOR + ' or higher');
             }
         };
@@ -540,6 +540,7 @@
 
                     // Attach event for pushing ENTER on options from left side
                     self.$left.keypress(function(e) {
+                        // this does not seem to work for firefox, linux, maybe a cr/lf problem?
                         if (e.keyCode === KEY_ENTER) {
                             e.preventDefault();
 
