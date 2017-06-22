@@ -91,11 +91,11 @@
          * @param {jQuery} $
          */
         var checkjQueryVersion = function($) {
-                'use strict';
+            'use strict';
 
-                const REQ_JQUERY_MAJOR = 1;
+            const REQ_JQUERY_MAJOR = 1;
 
-                const REQ_JQUERY_MINOR = 7;
+            const REQ_JQUERY_MINOR = 7;
 
             /** @type {string[]} version Array containing the jQuery version numbers */
             var version = $.fn.jquery.split(' ')[0].split('.');
@@ -108,7 +108,7 @@
         if (typeof define === 'function' && define.amd) {
             // AMD. Register as an anonymous module depending on jQuery.
             define(['jquery'], factory);
-            requirejs("jquery", checkjQueryVersion);
+            require(["jquery"], checkjQueryVersion);
         } else {
             // No AMD. Register plugin with global jQuery object.
             checkForGlobaljQuery();
@@ -262,7 +262,7 @@
 
         function chooseOption(userOption, defaultOption, optionType) {
             if (userOption !== undefined) {
-                if (optionType === "jQuery" && userOption instanceof jQuery && userOption.length > 0) {
+                if (optionType === "jQuery" && userOption instanceof $ && userOption.length > 0) {
                     return userOption;
                 }
                 if (optionType !== "jQuery" && typeof userOption === optionType) {
@@ -275,8 +275,8 @@
         function isMicrosoftBrowser() {
             var ua = window.navigator.userAgent;
             return ( ua.indexOf(USER_AGENT_IE_UPTO_10) > 0 ||
-                    ua.indexOf(USER_AGENT_IE_11) > 0 ||
-                    ua.indexOf(USER_AGENT_EDGE) > 0
+                ua.indexOf(USER_AGENT_IE_11) > 0 ||
+                ua.indexOf(USER_AGENT_EDGE) > 0
             );
         }
 
@@ -471,7 +471,7 @@
              * @constructor
              */
             function Multiselect( $select, settings ) {
-                if (!($select instanceof jQuery) || $select.length !== 1 || !$select.is("select")) {
+                if (!($select instanceof $) || $select.length !== 1 || !$select.is("select")) {
                     throw new Error("A single Multiselect requires a single jQuery select element for the left side.");
                 }
                 var id = $select.prop('id');
@@ -482,7 +482,7 @@
                 // FIXME: switch to indicate we have more than one "right" for ambiguous actions?
                 /** @member {jQuery} */
                 this.$right = chooseOption($(settings.right),$('#' + id + '_to'));
-                if (!(this.$right instanceof jQuery)) {
+                if (!(this.$right instanceof $)) {
                     throw new Error("Something went wrong, the right elements should be jQuery objects, may be undefined.");
                 }
                 if (this.$right.length == 0) {
@@ -919,7 +919,7 @@
                  *  @method startUp
                  *  @attribute $left jQuery object
                  *  @attribute $right jQuery object
-                **/
+                 **/
                 startUp: removeDuplicateOptions,
 
                 /** will be executed each time before moving option[s] to right
@@ -935,7 +935,7 @@
                  *
                  *  @default true
                  *  @return {boolean}
-                **/
+                 **/
                 beforeMoveToRight: function($left, $right, $options) { return true; },
 
                 /*  will be executed instead of the default action
@@ -955,7 +955,7 @@
                  *  @attribute $left jQuery object
                  *  @attribute $right jQuery object
                  *  @attribute $options HTML object (the option[s] which was selected to be moved)
-                **/
+                 **/
                 afterMoveToRight: function($left, $right, $options) {},
 
                 /** will be executed each time before moving option[s] to left
@@ -971,7 +971,7 @@
                  *
                  *  @default true
                  *  @return {boolean}
-                **/
+                 **/
                 beforeMoveToLeft: function($left, $right, $options) { return true; },
 
                 /*  will be executed instead of the default action
@@ -993,7 +993,7 @@
                  *  @attribute $left jQuery object
                  *  @attribute $right jQuery object
                  *  @attribute $options HTML object (the option[s] which was selected to be moved)
-                **/
+                 **/
                 afterMoveToLeft: function($left, $right, $options) {},
 
                 /** will be executed each time before moving option[s] up
@@ -1007,7 +1007,7 @@
                  *
                  *  @default true
                  *  @return {boolean}
-                **/
+                 **/
                 beforeMoveUp: function($options) { return true; },
 
                 /*  will be executed each time after moving option[s] up
@@ -1016,7 +1016,7 @@
                  *  @attribute $left jQuery object
                  *  @attribute $right jQuery object
                  *  @attribute $options HTML object (the option[s] which was selected to be moved)
-                **/
+                 **/
                 afterMoveUp: function($options) {},
 
                 /** will be executed each time before moving option[s] down
@@ -1030,7 +1030,7 @@
                  *
                  *  @default true
                  *  @return {boolean}
-                **/
+                 **/
                 beforeMoveDown: function($options) { return true; },
 
                 /*  will be executed each time after moving option[s] down
@@ -1039,7 +1039,7 @@
                  *  @attribute $left jQuery object
                  *  @attribute $right jQuery object
                  *  @attribute $options HTML object (the option[s] which was selected to be moved)
-                **/
+                 **/
                 afterMoveDown: function($options) {},
 
                 /** sort options by option text
@@ -1049,7 +1049,7 @@
                  *  @attribute b HTML option
                  *
                  *  @return 1/-1
-                **/
+                 **/
                 sort: lexicographicComparison,
 
                 /*  will tell if the search can start
@@ -1058,7 +1058,7 @@
                  *  @attribute value String
                  *
                  *  @return {boolean}
-                **/
+                 **/
                 fireSearch: function(value) {
                     return value.length > 1;
                 }
@@ -1141,7 +1141,7 @@
                     // check for optgroups, if none present we've already sorted everything
                     // if any, sort their children, i.e. all other previously unsorted options
                     $select.find("optgroup").each(function(i, group) {
-                            $(group).children().sort(renderingSortComparison()).appendTo(group);
+                        $(group).children().sort(renderingSortComparison()).appendTo(group);
                     });
                 } else {
                     // TODO: How about allowing the user decide which in which order this is done?
@@ -1153,7 +1153,7 @@
                         $optgroups.sort(comparatorCallback).appendTo($select);
                         // then sort their options
                         $optgroups.each(function(i, optgroup) {
-                                $(optgroup).children().sort(comparatorCallback).appendTo(optgroup);
+                            $(optgroup).children().sort(comparatorCallback).appendTo(optgroup);
                         });
                     }
                 }
@@ -1162,7 +1162,7 @@
         }
 
         function storeRenderingSortOrder($select) {
-            if ($select instanceof jQuery && $select.is("select")) {
+            if ($select instanceof $ && $select.is("select")) {
                 // FIXME: Check if this is ok, optgroups start at 0, and options in each group start at 0
                 $select.children().each(function(index, optionOrOptgroup) {
                     var $optionOrOptgroup = $(optionOrOptgroup);
@@ -1185,4 +1185,3 @@
         }
     })
 );
-
