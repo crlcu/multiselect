@@ -401,6 +401,28 @@
             }
         };
 
+        var removeDuplicateOptions = function($left, $right) {
+            $right.find('option').each(function(index, rightOption) {
+                var $rightOption = $(rightOption);
+                var $parentOptgroup = $rightOption.parent("optgroup");
+                var duplicateOptionSelector = 'option[value="' + rightOption.value + '"]';
+                // FIXME: What about matchOptgroupBy?
+                if ($parentOptgroup.length > 0) {
+                    var sameOptgroupSelector = 'optgroup[label="' + $parentOptgroup.attr('label') + '"]';
+                    var $sameOptgroup = $left.find(sameOptgroupSelector);
+                    if ($sameOptgroup.length > 0) {
+                        $sameOptgroup.find(duplicateOptionSelector).each(function(index, duplicateOption) {
+                            duplicateOption.remove();
+                        });
+                        removeIfEmpty($sameOptgroup);
+                    }
+                } else {
+                    var $option = $left.find(duplicateOptionSelector);
+                    $option.remove();
+                }
+            });
+        };
+
         var Multiselect = (function($) {
             // FIXME: Define the used classes/objects/variables
             // FIXME: If we don't want to expose this class to the outside, i.e. never call it, can we prevent this?
@@ -857,21 +879,7 @@
                  *  @attribute $left jQuery object
                  *  @attribute $right jQuery object
                 **/
-                startUp: function( $left, $right ) {
-                    // FIXME: extract readable method
-                    $right.find('option').each(function(index, rightOption) {
-                        if ($(rightOption).parent().prop('tagName') == 'OPTGROUP') {
-                            var optgroupSelector = 'optgroup[label="' + $(rightOption).parent().attr('label') + '"]';
-                            $left.find(optgroupSelector + ' option[value="' + rightOption.value + '"]').each(function(index, leftOption) {
-                                leftOption.remove();
-                            });
-                            removeIfEmpty($left.find(optgroupSelector));
-                        } else {
-                            var $option = $left.find('option[value="' + rightOption.value + '"]');
-                            $option.remove();
-                        }
-                    });
-                },
+                startUp: removeDuplicateOptions,
 
                 /** will be executed each time before moving option[s] to right
                  *
