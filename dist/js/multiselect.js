@@ -568,7 +568,7 @@
 
                     // Attach event for pushing BACKSPACE or DEL on options from right side
                     self.$right.keydown(function(e) {
-                        if (e.keyCode === KEY_BACKSPACE || e.keyCode === KEY_DEL) {
+                        if (e.keyCode === KEY_ENTER || e.keyCode === KEY_BACKSPACE || e.keyCode === KEY_DEL) {
                             e.preventDefault();
 
                             var $options = getOptionsToMove(self.$right);
