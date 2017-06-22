@@ -190,6 +190,17 @@
         }
 
         /**
+         * This should ensure the action buttons fulfill some required conditions
+         * (e.g. perhaps only one button per multiselect)
+         * (e.g. perhaps we allow other elements than buttons)
+         * @param {ActionButtons} actions
+         */
+        function validateActionButtons(actions) {
+            // FIXME: Which are required action buttons? Should we error if we can't init them?
+            // FIXME: Do we want to allow multiple elements to be buttons for a function?
+        }
+
+        /**
          * Extracts the options for the multiselect object
          * @param {SettingsObject} settings
          * @returns {MultiselectOptions}
@@ -203,6 +214,15 @@
                 ignoreDisabled:     chooseOption(settings.ignoreDisabled, $.multiselectdefaults.options.ignoreDisabled, "boolean"),
                 matchOptgroupBy:    chooseOption(settings.matchOptgroupBy, $.multiselectdefaults.options.matchOptgroupBy, "string")
             };
+        }
+
+        /**
+         * This should ensure the options fulfill some required conditions
+         * (e.g. search is allowed to contain html and jQuery objects)
+         * @param {MultiselectOptions} options
+         */
+        function validateMultiselectOptions(options) {
+            // FIXME: Validation criteria for options
         }
 
         /**
@@ -225,6 +245,15 @@
                 afterMoveDown: chooseCallback(settings.afterMoveDown, $.multiselectdefaults.callbacks.afterMoveDown),
                 fireSearch: chooseCallback(settings.fireSearch, $.multiselectdefaults.callbacks.fireSearch)
             };
+        }
+
+        /**
+         * This should ensure the callbacks fulfill some required conditions
+         * (e.g. moveToRight is allowed to be undefined)
+         * @param {CallbackFunctions} callbacks
+         */
+        function validateCallbacks(callbacks) {
+            // FIXME: Validation criteria for callbacks
         }
 
         function chooseCallback(userCallback, defaultCallback) {
@@ -452,14 +481,15 @@
                 if (this.$right.not("select").length > 0) {
                     throw new Error("Some found right element for the multiselect isn't a select element.");
                 }
-                // FIXME: Which are required action buttons? Should we error if we can't init them?
-                // FIXME: Do we want to allow multiple elements to be buttons for a function?
                 /** @member {ActionButtons} */
                 this.actions = extractActionButtons(id, settings);
+                validateActionButtons(this.actions);
                 /** @member {MultiselectOptions} */
                 this.options = extractMultiselectOptions(settings);
+                validateMultiselectOptions(this.options);
                 /** @member {CallbackFunctions} */
                 this.callbacks = extractCallbacks(settings);
+                validateCallbacks(this.callbacks);
 
                 this.init();
             }
