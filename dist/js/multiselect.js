@@ -897,6 +897,17 @@
                 **/
                 beforeMoveToRight: function($left, $right, $options) { return true; },
 
+                /*  will be executed instead of the default action
+                 * (move selected items from left to right palette)
+                 *
+                 *  @method moveToRight
+                 *  @attribute {jQuery} $options HTML object (the option[s] which was selected to be moved)
+                 *  @attribute {object} event - the event that initialised the action
+                 *  @attribute {boolean} silent - that tells if you have to trigger beforeMoveToRight and afterMoveToRight
+                 *  @attribute {boolean} skipStack - that tells if you have to handle the undo/redo stack
+                 *  @return {object} the Multiselect object
+                 **/
+                moveToRight: undefined,
                 /*  will be executed each time after moving option[s] to right
                  *
                  *  @method afterMoveToRight
@@ -921,6 +932,19 @@
                  *  @return {boolean}
                 **/
                 beforeMoveToLeft: function($left, $right, $options) { return true; },
+
+                /*  will be executed instead of the default action
+                 * (move selected items from right to left palette)
+                 *
+                 *  @method moveToLeft
+                 *  @attribute $right jQuery object
+                 *  @attribute {jQuery} $options HTML object (the option[s] which was selected to be moved)
+                 *  @attribute {object} event - the event that initialised the action
+                 *  @attribute {boolean} silent - that tells if you have to trigger beforeMoveToLeft and afterMoveToLeft
+                 *  @attribute {boolean} skipStack - that tells if you have to handle the undo/redo stack
+                 *  @return {object} the Multiselect object
+                 **/
+                moveToLeft: undefined,
 
                 /*  will be executed each time after moving option[s] to left
                  *
