@@ -436,17 +436,23 @@
                     throw new Error("A single Multiselect requires a single jQuery select element for the left side.");
                 }
                 var id = $select.prop('id');
-                // FIXME: Only assign and do the rest if it is a jquery element
                 /** @member {jQuery} */
                 this.$left = $select;
-                // FIXME: Would be cool for performance reasons if there was a way to dynamically update the options so that you don't have to find all options first
-                // FIXME: throw error if neither is found
+                // TODO: Would be cool for performance reasons if there was a way to dynamically update the options so that you don't have to find all options first
                 // $right can be more than one (multiple destinations) (then dblclick etc would not be usable
                 // FIXME: switch for ambiguous actions?
                 /** @member {jQuery} */
                 this.$right = chooseOption($(settings.right),$('#' + id + '_to'));
+                if (!(this.$right instanceof jQuery)) {
+                    throw new Error("Something went wrong, the right elements should be jQuery objects, may be undefined.");
+                }
+                if (this.$right.length == 0) {
+                    throw new Error("No right elements found, either settings wrong or default IDs not used in the page.");
+                }
+                if (this.$right.not("select").length > 0) {
+                    throw new Error("Some found right element for the multiselect isn't a select element.");
+                }
                 // FIXME: Which are required action buttons? Should we error if we can't init them?
-                // FIXME: What if I use this on a page with elements with the suffixes (unlikely, yeah) that shouldn't be used as buttons?
                 // FIXME: Do we want to allow multiple elements to be buttons for a function?
                 /** @member {ActionButtons} */
                 this.actions = extractActionButtons(id, settings);
