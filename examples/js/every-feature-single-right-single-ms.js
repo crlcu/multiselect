@@ -32,11 +32,15 @@ $(document).ready(function() {
         });
     }
 
-    $('#multiselect').multiselect({
+    var settings = {
         keepRenderingSort: true,
         search: {
             left: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
             right: '<input type="text" name="q" class="form-control" placeholder="Search..." />'
         }
-    });
+    };
+
+    $('#multiselect').multiselect(settings);
+    var settingsstring = JSON.stringify(settings, null, 2);
+    $("#insert-settings-here").text(settingsstring);
 });
