@@ -24,3 +24,14 @@
 #download {
 	padding-top: 40px;
 }
+
+select.palette {
+	height: 80%;
+}
+
+.row-eq-height {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display:         flex;
+}
