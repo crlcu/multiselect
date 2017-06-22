@@ -285,24 +285,34 @@
             return (ua.toLowerCase().indexOf(USER_AGENT_SAFARI) > -1);
         }
 
-        // FIXME: What is this function? We never set NA
+        // this only works with options, innerHtml of an option is its text
+        // innerHtml of an optgroup is full inside html code + options + their values
         function lexicographicComparison(a, b) {
-            // FIXME: What is this? An empty element returns "" with innerHTML...
             // Elements beginning with "NA"
             // are sorted first, e.g. "NAME1" before "Item 1"?
-
-            const NA = "NA";
-            if (a.innerHTML == NA) {
-                return A_IS_BIGGER_THAN_B;
-            } else if (b.innerHTML == NA) {
-                return B_IS_BIGGER_THAN_A;
+            // compare options by their innnerHtml
+            var aText = getOptionOrOptgroupText(a);
+            var bText = getOptionOrOptgroupText(b);
+            if (aText == null || bText == null) {
+                return 0;
             }
 
             // lexicographic comparison between strings (compare chars at same index)
             // e.g. 99 > 100
             // e.g. abc99 > abc100
             // e.g. bbb > aaa
-            return (a.innerHTML > b.innerHTML) ? A_IS_BIGGER_THAN_B : B_IS_BIGGER_THAN_A;
+            return (aText > bText) ? A_IS_BIGGER_THAN_B : B_IS_BIGGER_THAN_A;
+        }
+
+        function getOptionOrOptgroupText(optionOrOptgroup) {
+            var type = optionOrOptgroup.tagName;
+            if (type == "OPTION") {
+                return optionOrOptgroup.innerHTML;
+            }
+            if (type == "OPTGROUP") {
+                return optionOrOptgroup.label;
+            }
+            return null;
         }
 
         function renderingSortComparison(a, b) {
@@ -469,7 +479,7 @@
                 this.$left = $select;
                 // TODO: Would be cool for performance reasons if there was a way to dynamically update the options so that you don't have to find all options first
                 // $right can be more than one (multiple destinations) (then dblclick etc would not be usable
-                // FIXME: switch for ambiguous actions?
+                // FIXME: switch to indicate we have more than one "right" for ambiguous actions?
                 /** @member {jQuery} */
                 this.$right = chooseOption($(settings.right),$('#' + id + '_to'));
                 if (!(this.$right instanceof jQuery)) {
@@ -502,12 +512,6 @@
                     self.redoStack = [];
 
                     if (self.options.keepRenderingSort) {
-                        // if rendering sort should be retained, it makes no sense to provide a callback
-                        // so ignore it and go back to using rendering sort
-                        if (self.callbacks.sort) {
-                            self.callbacks.sort = renderingSortComparison;
-                        }
-
                         // decorate the options with their initial positions in the list so that it can be re-established
                         storeRenderingSortOrder(self.$left);
 
@@ -522,14 +526,14 @@
                     // TODO: With an api, my startUp function could use that to move options around
                     self.callbacks.startUp( self.$left, self.$right );
 
-                    // initial sort if allowed
+                    // initial sort if necessary
                     if ( !self.options.keepRenderingSort && self.callbacks.sort) {
                         // sort seems to be a comparator function, not a sorting function
-                        sortSelectItems(self.$left, self.callbacks.sort);
+                        sortSelectItems(self.$left, self.callbacks.sort, self.keepRenderingSort);
 
                         // here we acknowledge that we could have multiple right elements
                         self.$right.each(function(i, select) {
-                            sortSelectItems($(select), self.callbacks.sort);
+                            sortSelectItems($(select), self.callbacks.sort, self.keepRenderingSort);
                         });
                     }
 
@@ -757,7 +761,7 @@
                         // FIXME: doNotSortRight doesn't exist
                         if (!silent) {
                             // FIXME: here only a single right element allowed?
-                            sortSelectItems(self.$right, self.callbacks.sort);
+                            sortSelectItems(self.$right, self.callbacks.sort, self.keepRenderingSort);
                             self.callbacks.afterMoveToRight( self.$left, self.$right, $options );
                         }
 
@@ -786,7 +790,7 @@
                         }
 
                         if (!silent ) {
-                            sortSelectItems(self.$left, self.callbacks.sort);
+                            sortSelectItems(self.$left, self.callbacks.sort, self.keepRenderingSort);
                             self.callbacks.afterMoveToLeft( self.$left, self.$right, $options );
                         }
 
@@ -1126,28 +1130,33 @@
             return $elements;
         }
 
-        function sortSelectItems($select, comparatorCallback) {
+        function sortSelectItems($select, comparatorCallback, keepRenderingSort) {
             if ($select !== undefined && $select.is("select")) {
                 // sort any direct children (can be combination of options and optgroups)
-                // FIXME: without initial rendering sort, this can lead to strange behaviour
                 // example: oa="aaa", ob="bbb", oc="zzz", oga="ddd", ogb="eee"
-                // options without optgroup would potentially be separated, would this be expected behaviour?
-                // FIXME: Check what happens here, do the sorted children overwrite the old children?
-                $select
-                    .children()
-                    .sort(comparatorCallback)
-                    .appendTo($select);
+                if (keepRenderingSort) {
+                    // Different approach, as following order would be possible: oa, ob, og1, og2, oc
+                    $select.children().sort(renderingSortComparison).appendTo($select);
 
-                // check for optgroups, if none present we've already sorted everything
-                // if any, sort their children, i.e. all other previously unsorted options
-                $select
-                    .find("optgroup")
-                    .each(function(i, group) {
-                        $(group).children()
-                            .sort(comparatorCallback)
-                            .appendTo(group);
+                    // check for optgroups, if none present we've already sorted everything
+                    // if any, sort their children, i.e. all other previously unsorted options
+                    $select.find("optgroup").each(function(i, group) {
+                            $(group).children().sort(renderingSortComparison()).appendTo(group);
                     });
-
+                } else {
+                    // TODO: How about allowing the user decide which in which order this is done?
+                    // the options that are not in an optgroup come first
+                    $select.children("option").sort(comparatorCallback).appendTo($select);
+                    var $optgroups = $select.children("optgroup");
+                    if ($optgroups.length > 0) {
+                        // then sort the optgroups themselves, if any are there
+                        $optgroups.sort(comparatorCallback).appendTo($select);
+                        // then sort their options
+                        $optgroups.each(function(i, optgroup) {
+                                $(optgroup).children().sort(comparatorCallback).appendTo(optgroup);
+                        });
+                    }
+                }
                 return $select;
             }
         }
