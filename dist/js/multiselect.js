@@ -503,9 +503,9 @@
                 validateCallbacks(this.callbacks);
 
                 // FIXME: Check if this would be avoidable
-                if (this.options.keepRenderingSort && this.$right.find("option").length > 0) {
-                    throw new Error("Multiselect can't index the items properly if any are on the right side at the beginning.");
-                }
+                // if (this.options.keepRenderingSort && this.$right.find("option").length > 0) {
+                //     throw new Error("Multiselect can't index the items properly if any are on the right side at the beginning.");
+                // }
                 this.init();
             }
 
@@ -534,11 +534,11 @@
                     // initial sort if necessary
                     if ( !self.options.keepRenderingSort && self.callbacks.sort) {
                         // sort seems to be a comparator function, not a sorting function
-                        sortSelectItems(self.$left, self.callbacks.sort, self.keepRenderingSort);
+                        sortSelectItems(self.$left, self.callbacks.sort, self.options.keepRenderingSort);
 
                         // here we acknowledge that we could have multiple right elements
                         self.$right.each(function(i, select) {
-                            sortSelectItems($(select), self.callbacks.sort, self.keepRenderingSort);
+                            sortSelectItems($(select), self.callbacks.sort, self.options.keepRenderingSort);
                         });
                     }
 
@@ -766,7 +766,7 @@
                         // FIXME: doNotSortRight doesn't exist
                         if (!silent) {
                             // FIXME: here only a single right element allowed?
-                            sortSelectItems(self.$right, self.callbacks.sort, self.keepRenderingSort);
+                            sortSelectItems(self.$right, self.callbacks.sort, self.options.keepRenderingSort);
                             self.callbacks.afterMoveToRight( self.$left, self.$right, $options );
                         }
 
@@ -795,7 +795,7 @@
                         }
 
                         if (!silent ) {
-                            sortSelectItems(self.$left, self.callbacks.sort, self.keepRenderingSort);
+                            sortSelectItems(self.$left, self.callbacks.sort, self.options.keepRenderingSort);
                             self.callbacks.afterMoveToLeft( self.$left, self.$right, $options );
                         }
 
@@ -806,7 +806,7 @@
                 moveFromAtoB: function( $source, $destination, $options) {
                     var self = this;
 
-                    var $changedOptgroups = undefined;
+                    var $changedOptgroups = $();
                     $options.each(function(index, option) {
                         var $option = $(option);
 
@@ -836,7 +836,9 @@
                             moveOptionsTo($destination, $option);
                         }
                     });
-                    removeIfEmpty($changedOptgroups);
+                    if ($changedOptgroups.length > 0) {
+                        removeIfEmpty($changedOptgroups);
+                    }
                     return self;
                 },
 
@@ -1146,7 +1148,7 @@
                     // check for optgroups, if none present we've already sorted everything
                     // if any, sort their children, i.e. all other previously unsorted options
                     $select.find("optgroup").each(function(i, group) {
-                        $(group).children().sort(renderingSortComparison()).appendTo(group);
+                        $(group).children().sort(renderingSortComparison).appendTo(group);
                     });
                 } else {
                     // TODO: How about allowing the user decide which in which order this is done?
