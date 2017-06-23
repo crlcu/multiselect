@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>jQuery multiselect plugin with two sides</title>
+    <meta charset="utf-8">
+
+    <link rel="icon" type="image/x-icon" href="https://github.com/favicon.ico" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
+</head>
+<body>
+    <div id="wrap" class="container">
+        <h4 id="demo-zero-configuration-separate-js">Zero configuration, multiple destinations, separate JS file</h4>
+
+        <div class="row">
+            <div class="col-xs-5">
+                <select name="from[]" id="multi_d" class="form-control" size="26" multiple="multiple">
+                    <option value="1">C++</option>
+                    <option value="2">C#</option>
+                    <option value="3">Haskell</option>
+                    <option value="4">Java</option>
+                    <option value="5">JavaScript</option>
+                    <option value="6">Lisp</option>
+                    <option value="7">Lua</option>
+                    <option value="8">MATLAB</option>
+                    <option value="9">NewLISP</option>
+                    <option value="10">PHP</option>
+                    <option value="11">Perl</option>
+                    <option value="12">SQL</option>
+                    <option value="13">Unix shell</option>
+                </select>
+            </div>
+            
+            <div class="col-sm-2">
+                <button type="button" id="multi_d_undo" class="btn btn-primary btn-block">Undo</button>
+                <button type="button" id="multi_d_redo" class="btn btn-warning btn-block">Redo</button>
+                <button type="button" id="multi_d_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                <button type="button" id="multi_d_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                <button type="button" id="multi_d_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                <button type="button" id="multi_d_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+                <hr style="margin: 40px 0 60px;" />
+                <button type="button" id="multi_d_undo_2" class="btn btn-primary btn-block">Undo</button>
+                <button type="button" id="multi_d_redo_2" class="btn btn-warning btn-block">Redo</button>
+                <button type="button" id="multi_d_rightAll_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                <button type="button" id="multi_d_rightSelected_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                <button type="button" id="multi_d_leftSelected_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                <button type="button" id="multi_d_leftAll_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+            </div>
+
+
+
+
+            <div class="col-xs-5">
+                <b>Known languages</b>
+                <select name="to[]" id="multi_d_to" class="form-control" size="8" multiple="multiple">
+                    <option value="1">C++</option>
+                    <option value="2">C#</option>
+                    <option value="2">ABCDE</option>
+                </select>
+
+                <br/><hr/><br/>
+
+                <b>I want to learn</b>
+                <select name="to_2[]" id="multi_d_to_2" class="form-control" size="8" multiple="multiple">
+                    <option value="12">SQL</option>
+                    <option value="13">Unix shell</option>
+                    <option value="2">FGHIJ</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript" src="../../dist/js/multiselect.js"></script>
+
+    <script type="text/javascript" src="js/every-feature-multiple-dest-single-ms.js"></script>
+
+</body>
+</html>
