@@ -482,7 +482,7 @@
                 // $right can be more than one (multiple destinations) (then dblclick etc would not be usable
                 // FIXME: switch to indicate we have more than one "right" for ambiguous actions?
                 /** @member {jQuery} */
-                this.$right = chooseOption($(settings.right),$('#' + id + '_to'));
+                this.$right = chooseOption($(settings.right),$('#' + id + '_to'), "jQuery");
                 if (!(this.$right instanceof $)) {
                     throw new Error("Something went wrong, the right elements should be jQuery objects, may be undefined.");
                 }
@@ -1119,7 +1119,7 @@
             $elements.addClass(CSS_HIDDEN).hide();
 
             if (isMS || isSafari) {
-                this.each(function(index, element) {
+                $elements.each(function(index, element) {
                     var $option = $(element);
                     // Wrap with <span> to make it compatible with IE
                     if(!$option.parent().is('span')) {
