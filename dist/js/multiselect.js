@@ -502,6 +502,10 @@
                 this.callbacks = extractCallbacks(settings);
                 validateCallbacks(this.callbacks);
 
+                // FIXME: Check if this would be avoidable
+                if (this.options.keepRenderingSort && this.$right.find("option").length > 0) {
+                    throw new Error("Multiselect can't index the items properly if any are on the right side at the beginning.");
+                }
                 this.init();
             }
 
