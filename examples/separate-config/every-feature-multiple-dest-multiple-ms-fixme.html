@@ -1,80 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>jQuery multiselect plugin with two sides</title>
+    <title>Zero configuration jQuery multiselect plugin with two sides</title>
     <meta charset="utf-8">
+
     <link rel="icon" type="image/x-icon" href="https://github.com/favicon.ico" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
     <link rel="stylesheet" href="../../css/style.css" />
 </head>
 <body>
-    <div id="wrap" class="container">
-        <h4 id="demo-zero-configuration-separate-js">Zero configuration, separate JS file</h4>
-        
-        <div class="row row-eq-height">
-            <div class="col-sm-5">
-                <select title="Left Palette" name="from[]" id="multiselect" class="form-control palette" size="8" multiple="multiple">
-                    <optgroup label="Optgroup 1">
-                        <option value="1">abcd</option>
-                        <option value="2">abca</option>
-                        <option value="2">abc2</option>
-                        <option value="2">abc4</option>
-                        <option value="3">abc1</option>
-                    </optgroup>
-                    <optgroup label="Optgroup 2">
-                        <option value="1">Item 1</option>
-                        <option value="2">Item 5</option>
-                        <option value="2">Item 2</option>
-                        <option value="2">Item 4</option>
-                        <option value="3">Item 3</option>
-                    </optgroup>
-                    <optgroup label="Optgroup 3">
-                        <option value="1">Item 1</option>
-                        <option value="2">Item 5</option>
-                        <option value="2">Item 2</option>
-                        <option value="2">Item 4</option>
-                        <option value="3">Item 3</option>
-                    </optgroup>
-                    <optgroup label="Optgroup 4">
-                        <option value="1">Item 1</option>
-                        <option value="2">Item 5</option>
-                        <option value="2">Item 2</option>
-                        <option value="2">Item 4</option>
-                        <option value="3">Item 3</option>
-                    </optgroup>
-                </select>
-            </div>
-            
-            <div class="col-sm-2">
-                <button type="button" id="multiselect_undo" class="btn btn-primary btn-block">Undo</button>
-                <button type="button" id="multiselect_redo" class="btn btn-warning btn-block">Redo</button>
-                <button type="button" id="multiselect_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
-                <button type="button" id="multiselect_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
-                <button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
-                <button type="button" id="multiselect_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
 
-            </div>
-            
-            <div class="col-sm-5">
-                <select title="Right Palette" name="to[]" id="multiselect_to" class="form-control palette" size="8" multiple="multiple"></select>
-                <div class="row">
-                <div class="col-sm-6">
-                <button type="button" id="multiselect_move_up" class="btn btn-block"><i class="glyphicon glyphicon-arrow-up"></i></button>
-                </div>
-                <div class="col-sm-6">
-                <button type="button" id="multiselect_move_down" class="btn btn-block col-sm-6"><i class="glyphicon glyphicon-arrow-down"></i></button>
-                </div>
-                </div>
-            </div>
+<div id="wrap" class="container">
+    <h4 id="demo-zero-configuration-separate-js">Zero configuration, multiple-multiple destinations, separate JS file</h4>
+
+    <div class="row">
+        <div class="col-sm-5">
+            <select name="from[]" id="multiselect1" class="form-control" size="8" multiple="multiple">
+                <option value="1" data-position="1">Item 1</option>
+                <option value="2" data-position="2">Item 5</option>
+                <option value="2" data-position="3">Item 2</option>
+                <option value="2" data-position="4">Item 4</option>
+                <option value="3" data-position="5">Item 3</option>
+            </select>
+        </div>
+
+        <div class="col-sm-2">
+            <button type="button" id="multiselect1_undo" class="btn btn-primary btn-block">Undo</button>
+            <button type="button" id="multiselect1_redo" class="btn btn-warning btn-block">Redo</button>
+
+            <button type="button" id="multiselect1_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+            <button type="button" id="multiselect1_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+            <button type="button" id="multiselect1_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+            <button type="button" id="multiselect1_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+        </div>
+
+        <div class="col-sm-5">
+            <select name="to[]" id="multiselect1_to" class="form-control" size="8" multiple="multiple"></select>
         </div>
     </div>
-    <pre id="insert-settings-here" class="prettyprint">
 
-    </pre>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../../dist/js/multiselect.js"></script>
-<script type="text/javascript" src="js/every-feature-multiple-dest-multiple-ms.js"></script>
+    <h4>Second multiselect</h4>
 
+    <div class="row">
+        <div class="col-sm-5">
+            <select name="from[]" id="multiselect2" class="form-control" size="8" multiple="multiple">
+                <option value="1" data-position="1">Item 1</option>
+                <option value="2" data-position="2">Item 5</option>
+                <option value="2" data-position="3">Item 2</option>
+                <option value="2" data-position="4">Item 4</option>
+                <option value="3" data-position="5">Item 3</option>
+            </select>
+        </div>
+
+        <div class="col-sm-2">
+            <button type="button" id="multiselect2_undo" class="btn btn-primary btn-block">Undo</button>
+            <button type="button" id="multiselect2_redo" class="btn btn-warning btn-block">Redo</button>
+            <button type="button" id="multiselect2_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+            <button type="button" id="multiselect2_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+            <button type="button" id="multiselect2_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+            <button type="button" id="multiselect2_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+        </div>
+
+        <div class="col-sm-5">
+            <select name="to[]" id="multiselect2_to" class="form-control" size="8" multiple="multiple"></select>
+        </div>
+    </div>
+</div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+
+    <script type="text/javascript" src="js/every-feature-multiple-dest-multiple-ms.js"></script>
 </body>
 </html>
