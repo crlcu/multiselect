@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Zero configuration jQuery multiselect plugin with two sides</title>
+    <title>jQuery multiselect plugin with two sides</title>
     <meta charset="utf-8">
 
     <link rel="icon" type="image/x-icon" href="https://github.com/favicon.ico" />
@@ -9,67 +9,162 @@
     <link rel="stylesheet" href="../../css/style.css" />
 </head>
 <body>
-
 <div id="wrap" class="container">
-    <h4 id="demo-zero-configuration-separate-js">Zero configuration, multiple-multiple destinations, separate JS file</h4>
+    <h4 id="demo-zero-configuration-separate-js">Zero configuration, multiple destinations, separate JS file</h4>
 
     <div class="row">
-        <div class="col-sm-5">
-            <select name="from[]" id="multiselect1" class="form-control" size="8" multiple="multiple">
-                <option value="1" data-position="1">Item 1</option>
-                <option value="2" data-position="2">Item 5</option>
-                <option value="2" data-position="3">Item 2</option>
-                <option value="2" data-position="4">Item 4</option>
-                <option value="3" data-position="5">Item 3</option>
+        <div class="col-xs-5">
+            <select name="from[]" id="multi_d_1" class="form-control palette" size="26" multiple="multiple">
+                <option value="1">C++</option>
+                <option value="2">C#</option>
+                <option value="3">Haskell</option>
+                <option value="4">Java</option>
+                <option value="5">JavaScript</option>
+                <option value="6">Lisp</option>
+                <option value="7">Lua</option>
+                <option value="8">MATLAB</option>
+                <option value="9">NewLISP</option>
+                <option value="10">PHP</option>
+                <option value="11">Perl</option>
+                <option value="12">SQL</option>
+                <option value="13">Unix shell</option>
             </select>
         </div>
 
         <div class="col-sm-2">
-            <button type="button" id="multiselect1_undo" class="btn btn-primary btn-block">Undo</button>
-            <button type="button" id="multiselect1_redo" class="btn btn-warning btn-block">Redo</button>
-
-            <button type="button" id="multiselect1_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
-            <button type="button" id="multiselect1_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
-            <button type="button" id="multiselect1_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
-            <button type="button" id="multiselect1_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+            <button type="button" id="multi_d_1_undo_1" class="btn btn-primary btn-block">Undo</button>
+            <button type="button" id="multi_d_1_redo_1" class="btn btn-warning btn-block">Redo</button>
+            <button type="button" id="multi_d_1_rightAll_1" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+            <button type="button" id="multi_d_1_rightSelected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+            <button type="button" id="multi_d_1_leftSelected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+            <button type="button" id="multi_d_1_leftAll_1" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+            <hr style="margin: 40px 0 60px;" />
+            <button type="button" id="multi_d_1_undo_2" class="btn btn-primary btn-block">Undo</button>
+            <button type="button" id="multi_d_1_redo_2" class="btn btn-warning btn-block">Redo</button>
+            <button type="button" id="multi_d_1_rightAll_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+            <button type="button" id="multi_d_1_rightSelected_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+            <button type="button" id="multi_d_1_leftSelected_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+            <button type="button" id="multi_d_1_leftAll_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-backward"></i></button>
         </div>
 
-        <div class="col-sm-5">
-            <select name="to[]" id="multiselect1_to" class="form-control" size="8" multiple="multiple"></select>
+
+
+
+        <div class="col-xs-5">
+            <b>Known languages</b>
+            <select name="to[]" id="multi_d_1_to_1" class="form-control palette" size="8" multiple="multiple">
+                <option value="1">C++</option>
+                <option value="2">C#</option>
+                <option value="2">ABCDE</option>
+            </select>
+            <div class="row">
+                <div class="col-sm-6">
+                    <button type="button" id="multi_d_1_moveUp_1" class="btn btn-block"><i class="glyphicon glyphicon-arrow-up"></i></button>
+                </div>
+                <div class="col-sm-6">
+                    <button type="button" id="multi_d_1_moveDown_1" class="btn btn-block col-sm-6"><i class="glyphicon glyphicon-arrow-down"></i></button>
+                </div>
+            </div>
+
+            <br/><hr/><br/>
+
+            <b>I want to learn</b>
+            <select name="to_2[]" id="multi_d_1_to_2" class="form-control palette" size="8" multiple="multiple">
+                <option value="12">SQL</option>
+                <option value="13">Unix shell</option>
+                <option value="2">FGHIJ</option>
+            </select>
+            <div class="row">
+                <div class="col-sm-6">
+                    <button type="button" id="multi_d_1_moveUp_2" class="btn btn-block"><i class="glyphicon glyphicon-arrow-up"></i></button>
+                </div>
+                <div class="col-sm-6">
+                    <button type="button" id="multi_d_1_moveDown_2" class="btn btn-block col-sm-6"><i class="glyphicon glyphicon-arrow-down"></i></button>
+                </div>
+            </div>
         </div>
     </div>
-
-    <h4>Second multiselect</h4>
-
+    <hr/>
     <div class="row">
-        <div class="col-sm-5">
-            <select name="from[]" id="multiselect2" class="form-control" size="8" multiple="multiple">
-                <option value="1" data-position="1">Item 1</option>
-                <option value="2" data-position="2">Item 5</option>
-                <option value="2" data-position="3">Item 2</option>
-                <option value="2" data-position="4">Item 4</option>
-                <option value="3" data-position="5">Item 3</option>
+        <div class="col-xs-5">
+            <select name="from[]" id="multi_d_2" class="form-control palette" size="26" multiple="multiple">
+                <option value="1">C++</option>
+                <option value="2">C#</option>
+                <option value="3">Haskell</option>
+                <option value="4">Java</option>
+                <option value="5">JavaScript</option>
+                <option value="6">Lisp</option>
+                <option value="7">Lua</option>
+                <option value="8">MATLAB</option>
+                <option value="9">NewLISP</option>
+                <option value="10">PHP</option>
+                <option value="11">Perl</option>
+                <option value="12">SQL</option>
+                <option value="13">Unix shell</option>
             </select>
         </div>
 
         <div class="col-sm-2">
-            <button type="button" id="multiselect2_undo" class="btn btn-primary btn-block">Undo</button>
-            <button type="button" id="multiselect2_redo" class="btn btn-warning btn-block">Redo</button>
-            <button type="button" id="multiselect2_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
-            <button type="button" id="multiselect2_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
-            <button type="button" id="multiselect2_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
-            <button type="button" id="multiselect2_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+            <button type="button" id="multi_d_2_undo_1" class="btn btn-primary btn-block">Undo</button>
+            <button type="button" id="multi_d_2_redo_1" class="btn btn-warning btn-block">Redo</button>
+            <button type="button" id="multi_d_2_rightAll_1" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+            <button type="button" id="multi_d_2_rightSelected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+            <button type="button" id="multi_d_2_leftSelected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+            <button type="button" id="multi_d_2_leftAll_1" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+            <hr style="margin: 40px 0 60px;" />
+            <button type="button" id="multi_d_2_undo_2" class="btn btn-primary btn-block">Undo</button>
+            <button type="button" id="multi_d_2_redo_2" class="btn btn-warning btn-block">Redo</button>
+            <button type="button" id="multi_d_2_rightAll_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+            <button type="button" id="multi_d_2_rightSelected_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+            <button type="button" id="multi_d_2_leftSelected_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+            <button type="button" id="multi_d_2_leftAll_2" class="btn btn-default btn-block"><i class="glyphicon glyphicon-backward"></i></button>
         </div>
 
-        <div class="col-sm-5">
-            <select name="to[]" id="multiselect2_to" class="form-control" size="8" multiple="multiple"></select>
+
+
+
+        <div class="col-xs-5">
+            <b>Known languages</b>
+            <select name="to[]" id="multi_d_2_to_1" class="form-control palette" size="8" multiple="multiple">
+                <option value="1">C++</option>
+                <option value="2">C#</option>
+                <option value="2">ABCDE</option>
+            </select>
+            <div class="row">
+                <div class="col-sm-6">
+                    <button type="button" id="multi_d_2_moveUp_1" class="btn btn-block"><i class="glyphicon glyphicon-arrow-up"></i></button>
+                </div>
+                <div class="col-sm-6">
+                    <button type="button" id="multi_d_2_moveDown_1" class="btn btn-block col-sm-6"><i class="glyphicon glyphicon-arrow-down"></i></button>
+                </div>
+            </div>
+
+            <br/><hr/><br/>
+
+            <b>I want to learn</b>
+            <select name="to_2[]" id="multi_d_2_to_2" class="form-control palette" size="8" multiple="multiple">
+                <option value="12">SQL</option>
+                <option value="13">Unix shell</option>
+                <option value="2">FGHIJ</option>
+            </select>
+            <div class="row">
+                <div class="col-sm-6">
+                    <button type="button" id="multi_d_2_moveUp_2" class="btn btn-block"><i class="glyphicon glyphicon-arrow-up"></i></button>
+                </div>
+                <div class="col-sm-6">
+                    <button type="button" id="multi_d_2_moveDown_2" class="btn btn-block col-sm-6"><i class="glyphicon glyphicon-arrow-down"></i></button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
 
-    <script type="text/javascript" src="js/every-feature-multiple-dest-multiple-ms.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+<script type="text/javascript" src="../../dist/js/multiselect.js"></script>
+
+<script type="text/javascript" src="js/every-feature-multiple-dest-multiple-ms.js"></script>
+
 </body>
 </html>
