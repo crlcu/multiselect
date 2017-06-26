@@ -69,6 +69,12 @@
  */
 
 /**
+ * @typedef {Object} FilterRelation
+ * @property {jQuery} $filterInput - the input that you enter text in so that the select is filtered
+ * @property {jQuery} $filteredSelects - the select elements filtered by the input (currently always all right elements)
+ */
+
+/**
  * @typedef {CallbackFunctions|ElementNames|MultiselectOptions} SettingsObject
  */
 
@@ -342,14 +348,20 @@
             return $optionOrOptgroup;
         }
 
-        function prependSearchFilters($selects, searchFilterHtml) {
-            var $filterInputs = $();
-            $selects.each(function(i, select) {
-                var $searchFilter = $(searchFilterHtml);
-                $(select).before($searchFilter);
-                $filterInputs = $filterInputs.add($searchFilter);
-            });
-            return $filterInputs;
+        /**
+         *
+         * @param $targetSelect - the select element where the filter should be prepended
+         * @param searchFilterHtml - the html for the search filter
+         * @param $filteredSelects - the select elements that should be filtered with this input
+         * @returns {FilterRelation}
+         */
+        function prependSearchFilter($targetSelect, searchFilterHtml, $filteredSelects) {
+            var $searchFilter = $(searchFilterHtml);
+            $targetSelect.before($searchFilter);
+            return {
+                $filterInput: $searchFilter,
+                $filteredSelects: $filteredSelects
+            };
         }
 
         function oldFilterOptions($filterValue, $select) {
@@ -363,14 +375,14 @@
             extendedShow($select.find('option:not(.hidden)').parent('optgroup'));
         }
 
-        function applyFilter($filterValue, $select) {
+        function applyFilter($filterValue, $selectsToFilter) {
             if ($filterValue === undefined || $filterValue == "") {
-                removeFilter($select);
+                removeFilter($selectsToFilter);
             }
-            var $allOptions = $select.find("option");
+            var $allOptions = $selectsToFilter.find("option");
             var $prevHiddenOptions = $allOptions.filter(SELECTOR_HIDDEN);
             var $matchingOptions = $allOptions.filter(':search("' + $filterValue + '")');
-            var $allOptgroups = $select.children("optgroup");
+            var $allOptgroups = $selectsToFilter.children("optgroup");
             var hasOptgroups = $allOptgroups.length > 0;
             if (hasOptgroups){
                 var $prevHiddenOptgroups = $allOptgroups.filter(SELECTOR_HIDDEN);
@@ -423,8 +435,8 @@
             }
         }
 
-        function removeFilter($select) {
-            extendedShow($select.find('option, optgroup'));
+        function removeFilter($selects) {
+            extendedShow($selects.find('option, optgroup'));
         }
 
         function measurePerformance(startTimestamp, feature) {
@@ -552,14 +564,15 @@
 
                     // FIXME: Allow already existing element to be the filter input
                     if (self.options.search) {
-                        // Prepend left filter before right palette (above)
+                        // Prepend left filter above left palette
                         if (self.options.search.left) {
-                            self.$leftSearch = prependSearchFilters(self.$left, self.options.search.left);
+                            /** @member {FilterRelation} */
+                            self.$leftSearch = prependSearchFilter(self.$left, self.options.search.left, self.$left);
                         }
-                        // Prepend right filter before right palette (above)
-                        // FIXME: What about multiple destinations?
+                        // Prepend right filter above the first right palette
                         if (self.options.search.right) {
-                            self.$rightSearch = prependSearchFilters(self.$right, self.options.search.right);
+                            /** @member {FilterRelation} */
+                            self.$rightSearch = prependSearchFilter(self.$right.first(), self.options.search.right, self.$right);
                         }
                     }
 
@@ -572,22 +585,22 @@
 
                     // Attach event to left filter
                     if (self.$leftSearch) {
-                        self.$leftSearch.keyup(function() {
+                        self.$leftSearch.$filterInput.keyup(function() {
                             if (self.callbacks.fireSearch(this.value)) {
-                                applyFilter(this.value, self.$left);
+                                applyFilter(this.value, self.$leftSearch.$filteredSelects);
                             } else {
-                                removeFilter(self.$left);
+                                removeFilter(self.$leftSearch.$filteredSelects);
                             }
                         });
                     }
 
                     // Attach event to right filter
                     if (self.$rightSearch) {
-                        self.$rightSearch.keyup(function() {
+                        self.$rightSearch.$filterInput.keyup(function() {
                             if (self.callbacks.fireSearch(this.value)) {
-                                applyFilter(this.value, self.$right);
+                                applyFilter(this.value, self.$rightSearch.$filteredSelects);
                             } else {
-                                removeFilter(self.$right);
+                                removeFilter(self.$rightSearch.$filteredSelects);
                             }
                         });
                     }
@@ -596,11 +609,11 @@
                     self.$right.closest('form').submit(function() {
                         // Clear left search input
                         if (self.$leftSearch) {
-                            self.$leftSearch.val('').keyup();
+                            self.$leftSearch.$filterInput.val('').keyup();
                         }
                         // Clear right search input
                         if (self.$rightSearch) {
-                            self.$rightSearch.val('').keyup();
+                            self.$rightSearch.$filterInput.val('').keyup();
                         }
 
                         self.$left.find('option').prop('selected', self.options.submitAllLeft);
@@ -692,7 +705,6 @@
 
                     self.actions.$rightAll.click(function(e) {
                         e.preventDefault();
-                        // FIXME: Check, "option:not(span)" is redundant, isn't it?
                         var $options = getOptionsToMove(self.$left, false);
 
                         if ( $options.length ) {
@@ -752,6 +764,9 @@
                 },
 
                 moveToRight: function( $options, event, silent, skipStack ) {
+                    if (skipStack === "undefined") {
+                        skipStack = false;
+                    }
                     var self = this;
 
                     if (self.callbacks.moveToRight) {
@@ -764,7 +779,7 @@
                         }
 
                         self.moveFromAtoB(self.$left, self.$right, $options);
-                        self.$rightSearch.keyup();
+                        self.$rightSearch.$filterInput.keyup();
                         if (!skipStack) {
                             // FIXME: Does UNDO/REDO work with multiple destinations?
                             self.undoStack.push(['right', $options ]);
@@ -774,6 +789,7 @@
                         // FIXME: doNotSortRight doesn't exist
                         if (!silent) {
                             // FIXME: here only a single right element allowed?
+                            // FIXME: You'd only need to sort that $select where something happened...
                             sortSelectItems(self.$right, self.callbacks.sort, self.options.keepRenderingSort);
                             self.callbacks.afterMoveToRight( self.$left, self.$right, $options );
                         }
