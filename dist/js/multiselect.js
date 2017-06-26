@@ -75,6 +75,11 @@
  */
 
 /**
+ * @typedef {Object} MoveRelation
+ * @property {jQuery} $moveButton
+ */
+
+/**
  * @typedef {Object} StackElement
  * @property {jQuery} $source - the element where the options were before the move
  * @property {jQuery} $target - the element where the options were after the move
@@ -749,6 +754,7 @@
                         self.redo(e);
                     });
 
+                    // FIXME: MoveUp doesn't work with multiple destinations
                     self.actions.$moveUp.click(function(e) {
                         e.preventDefault();
 
@@ -885,7 +891,10 @@
                         return false;
                     }
 
-                    $options.first().prev().before($options);
+                    $options.each(function(i, optionToMove) {
+                        var $option = $(optionToMove);
+                        $option.prev().before($option);
+                    });
 
                     self.callbacks.afterMoveUp( $options );
                 },
@@ -897,7 +906,11 @@
                         return false;
                     }
 
-                    $options.last().next().after($options);
+                    $options.each(function(i, optionToMove) {
+                        var $option = $(optionToMove);
+                        var $optionNext = $option.next();
+                        $optionNext.after($option);
+                    });
 
                     self.callbacks.afterMoveDown( $options );
                 },
