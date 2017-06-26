@@ -342,11 +342,14 @@
             return $optionOrOptgroup;
         }
 
-        // FIXME: right can be multiple selects
-        function prependSearchFilter($select, searchFilterHtml) {
-            var $searchFilter = $(searchFilterHtml);
-            $select.before($searchFilter);
-            return $searchFilter;
+        function prependSearchFilters($selects, searchFilterHtml) {
+            var $filterInputs = $();
+            $selects.each(function(i, select) {
+                var $searchFilter = $(searchFilterHtml);
+                $(select).before($searchFilter);
+                $filterInputs = $filterInputs.add($searchFilter);
+            });
+            return $filterInputs;
         }
 
         function oldFilterOptions($filterValue, $select) {
@@ -467,6 +470,7 @@
 
         var Multiselect = (function($) {
             // FIXME: If we don't want to expose this class to the outside, i.e. never call it, can we prevent this?
+
             /**
              * Multiselect object constructor
              * @param {jQuery} $select
@@ -483,7 +487,7 @@
                 // TODO: Would be cool for performance reasons if there was a way to dynamically update the options so that you don't have to find all options first
                 // $right can be more than one (multiple destinations) (then dblclick etc would not be usable
                 // FIXME: switch to indicate we have more than one "right" for ambiguous actions?
-                /** @member {jQuery} */
+                /** @member {jQuery} one or more select elements */
                 this.$right = chooseOption($(settings.right),$('#' + id + '_to'), "jQuery");
                 if (!(this.$right instanceof $)) {
                     throw new Error("Something went wrong, the right elements should be jQuery objects, may be undefined.");
@@ -505,6 +509,7 @@
                 validateCallbacks(this.callbacks);
 
                 // FIXME: Check if this would be avoidable
+                // FIXME: Check if we can do a union of the options in the multiselect and then index the options appropriately
                 // if (this.options.keepRenderingSort && this.$right.find("option").length > 0) {
                 //     throw new Error("Multiselect can't index the items properly if any are on the right side at the beginning.");
                 // }
@@ -522,6 +527,7 @@
                         // decorate the options with their initial positions in the list so that it can be re-established
                         storeRenderingSortOrder(self.$left);
 
+                        // FIXME: This doesn't work so good, does it?
                         self.$right.each(function(i, select) {
                             storeRenderingSortOrder($(select));
                         });
@@ -548,12 +554,12 @@
                     if (self.options.search) {
                         // Prepend left filter before right palette (above)
                         if (self.options.search.left) {
-                            self.$leftSearch = prependSearchFilter(self.$left, self.options.search.left);
+                            self.$leftSearch = prependSearchFilters(self.$left, self.options.search.left);
                         }
                         // Prepend right filter before right palette (above)
                         // FIXME: What about multiple destinations?
                         if (self.options.search.right) {
-                            self.$rightSearch = prependSearchFilter(self.$right, self.options.search.right);
+                            self.$rightSearch = prependSearchFilters(self.$right, self.options.search.right);
                         }
                     }
 
