@@ -4,9 +4,6 @@
 
 // FIXME: Init the two multiselects
 
-/**
- * Created by poggenpohlda on 23.06.2017.
- */
 $(document).ready(function() {
     // make code pretty
     window.prettyPrint && prettyPrint();            // Why?
