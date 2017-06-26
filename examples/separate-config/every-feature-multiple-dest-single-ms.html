@@ -32,12 +32,12 @@
             </div>
             
             <div class="col-sm-2">
-                <button type="button" id="multi_d_undo" class="btn btn-primary btn-block">Undo</button>
-                <button type="button" id="multi_d_redo" class="btn btn-warning btn-block">Redo</button>
-                <button type="button" id="multi_d_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
-                <button type="button" id="multi_d_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
-                <button type="button" id="multi_d_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
-                <button type="button" id="multi_d_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+                <button type="button" id="multi_d_undo_1" class="btn btn-primary btn-block">Undo</button>
+                <button type="button" id="multi_d_redo_1" class="btn btn-warning btn-block">Redo</button>
+                <button type="button" id="multi_d_rightAll_1" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                <button type="button" id="multi_d_rightSelected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                <button type="button" id="multi_d_leftSelected_1" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                <button type="button" id="multi_d_leftAll_1" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
                 <hr style="margin: 40px 0 60px;" />
                 <button type="button" id="multi_d_undo_2" class="btn btn-primary btn-block">Undo</button>
                 <button type="button" id="multi_d_redo_2" class="btn btn-warning btn-block">Redo</button>
@@ -52,11 +52,19 @@
 
             <div class="col-xs-5">
                 <b>Known languages</b>
-                <select name="to[]" id="multi_d_to" class="form-control palette" size="8" multiple="multiple">
+                <select name="to[]" id="multi_d_to_1" class="form-control palette" size="8" multiple="multiple">
                     <option value="1">C++</option>
                     <option value="2">C#</option>
                     <option value="2">ABCDE</option>
                 </select>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <button type="button" id="multi_d_moveUp_1" class="btn btn-block"><i class="glyphicon glyphicon-arrow-up"></i></button>
+                    </div>
+                    <div class="col-sm-6">
+                        <button type="button" id="multi_d_moveDown_1" class="btn btn-block col-sm-6"><i class="glyphicon glyphicon-arrow-down"></i></button>
+                    </div>
+                </div>
 
                 <br/><hr/><br/>
 
@@ -66,6 +74,14 @@
                     <option value="13">Unix shell</option>
                     <option value="2">FGHIJ</option>
                 </select>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <button type="button" id="multi_d_moveUp_2" class="btn btn-block"><i class="glyphicon glyphicon-arrow-up"></i></button>
+                    </div>
+                    <div class="col-sm-6">
+                        <button type="button" id="multi_d_moveDown_2" class="btn btn-block col-sm-6"><i class="glyphicon glyphicon-arrow-down"></i></button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
