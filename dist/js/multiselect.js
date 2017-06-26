@@ -75,11 +75,17 @@
  */
 
 /**
+ * @typedef {Object} StackElement
+ * @property {jQuery} $source - the element where the options were before the move
+ * @property {jQuery} $target - the element where the options were after the move
+ * @property {jQuery} $options - which options were moved
+ */
+
+/**
  * @typedef {CallbackFunctions|ElementNames|MultiselectOptions} SettingsObject
  */
 
 // FIXME: Check if everything works when we use multiple destinations ("right" elements)
-// FIXME: Check if everything works when we use filters
 // FIXME: Provide a switch to tell what part of the select content should be sorted and what shouldn't
 // FIXME: Provide a way to replace the options
 (
@@ -350,9 +356,9 @@
 
         /**
          *
-         * @param $targetSelect - the select element where the filter should be prepended
-         * @param searchFilterHtmlOrElement - the html for the search filter or an existing jQuery element
-         * @param $filteredSelects - the select elements that should be filtered with this input
+         * @param {jQuery} $targetSelect - the select element where the filter should be prepended
+         * @param {string|jQuery} searchFilterHtmlOrElement - the html for the search filter or an existing jQuery element
+         * @param {jQuery} $filteredSelects - the select elements that should be filtered with this input
          * @returns {FilterRelation}
          */
         function prependSearchFilter($targetSelect, searchFilterHtmlOrElement, $filteredSelects) {
@@ -537,9 +543,10 @@
                 init: function() {
                     var self = this;
                     // initialize the undo/redo functionality
+                    /** @member {StackElement[]} */
                     self.undoStack = [];
+                    /** @member {StackElement[]} */
                     self.redoStack = [];
-
                     if (self.options.keepRenderingSort) {
                         // decorate the options with their initial positions in the list so that it can be re-established
                         storeRenderingSortOrder(self.$left);
@@ -567,7 +574,6 @@
                         });
                     }
 
-                    // FIXME: Allow already existing element to be the filter input
                     if (self.options.search) {
                         // Prepend left filter above left palette
                         if (self.options.search.left) {
@@ -787,6 +793,7 @@
                         self.$rightSearch.$filterInput.keyup();
                         if (!skipStack) {
                             // FIXME: Does UNDO/REDO work with multiple destinations?
+
                             self.undoStack.push(['right', $options ]);
                             self.redoStack = [];
                         }
