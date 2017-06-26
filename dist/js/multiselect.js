@@ -351,13 +351,18 @@
         /**
          *
          * @param $targetSelect - the select element where the filter should be prepended
-         * @param searchFilterHtml - the html for the search filter
+         * @param searchFilterHtmlOrElement - the html for the search filter or an existing jQuery element
          * @param $filteredSelects - the select elements that should be filtered with this input
          * @returns {FilterRelation}
          */
-        function prependSearchFilter($targetSelect, searchFilterHtml, $filteredSelects) {
-            var $searchFilter = $(searchFilterHtml);
-            $targetSelect.before($searchFilter);
+        function prependSearchFilter($targetSelect, searchFilterHtmlOrElement, $filteredSelects) {
+            var $searchFilter = $();
+            if (typeof searchFilterHtmlOrElement === "string") {
+                $searchFilter = $(searchFilterHtmlOrElement);
+                $targetSelect.before($searchFilter);
+            } else if (searchFilterHtmlOrElement instanceof $) {
+                $searchFilter = searchFilterHtmlOrElement;
+            }
             return {
                 $filterInput: $searchFilter,
                 $filteredSelects: $filteredSelects
