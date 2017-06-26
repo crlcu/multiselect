@@ -893,7 +893,10 @@
 
                     $options.each(function(i, optionToMove) {
                         var $option = $(optionToMove);
-                        $option.prev().before($option);
+                        var $optionPrev = $option.prev();
+                        if ($optionPrev.length > 0 && $options.filter($optionPrev).length == 0) {
+                            $optionPrev.before($option);
+                        }
                     });
 
                     self.callbacks.afterMoveUp( $options );
@@ -909,7 +912,9 @@
                     $options.each(function(i, optionToMove) {
                         var $option = $(optionToMove);
                         var $optionNext = $option.next();
-                        $optionNext.after($option);
+                        if ($optionNext.length > 0 && $options.filter($optionNext).length == 0) {
+                            $optionNext.after($option);
+                        }
                     });
 
                     self.callbacks.afterMoveDown( $options );
