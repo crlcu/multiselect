@@ -278,9 +278,9 @@
 
         function isMicrosoftBrowser() {
             var ua = window.navigator.userAgent;
-            return ( ua.indexOf(USER_AGENT_IE_UPTO_10) > 0 ||
-                ua.indexOf(USER_AGENT_IE_11) > 0 ||
-                ua.indexOf(USER_AGENT_EDGE) > 0
+            return ( ua.indexOf(USER_AGENT_IE_UPTO_10) > -1 ||
+                ua.indexOf(USER_AGENT_IE_11) > -1 ||
+                ua.indexOf(USER_AGENT_EDGE) > -1
             );
         }
 
