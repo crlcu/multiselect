@@ -33,7 +33,7 @@ $(document).ready(function() {
     }
 
     var settings = {
-        keepRenderingSort: false,
+        keepRenderingSort: true,
         search: {
             left: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
             right: '<input type="text" name="q" class="form-control" placeholder="Search..." />'

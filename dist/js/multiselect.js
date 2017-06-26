@@ -74,6 +74,8 @@
 
 // FIXME: Check if everything works when we use multiple destinations ("right" elements)
 // FIXME: Check if everything works when we use filters
+// FIXME: Provide a switch to tell what part of the select content should be sorted and what shouldn't
+// FIXME: Provide a way to replace the options
 (
     /**
      * Registers multiselect with amd or directly with jQuery.
