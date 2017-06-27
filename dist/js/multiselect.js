@@ -143,7 +143,7 @@
          * @module
          */
         var Multiselect = (function($) {
-
+            // private area - constants
             /** Keycode for Enter. */
             const KEY_ENTER = 13;
 
@@ -181,6 +181,7 @@
 
             var isSafari = isSafariBrowser();
 
+            // private area - functions
             /**
              * Given the settings and the name for an action, looks if the settings contain the selector for the
              * action. If not, it creates its own selector using the action and the id of the left palette.
@@ -633,23 +634,6 @@
                 }
             }
 
-            function getInstance($select) {
-                if (!($select instanceof $)) {
-                    return undefined;
-                }
-                return $select.data(Multiselect.identifier);
-            }
-
-            function setInstance($select, msInstance) {
-                if (!($select instanceof $)) {
-                    return undefined;
-                }
-                $select.data(Multiselect.identifier, msInstance);
-            }
-
-            function isMultiselect($select) {
-                return (getInstance($select) instanceof Multiselect);
-            }
 
             /**
              * Multiselect object constructor
@@ -695,6 +679,7 @@
             }
             // FIXME: If we don't want to expose this class to the outside, i.e. never call it, can we prevent this?
 
+            // public static members
             /** @type {string} This can be used to retrieve a multiselect instance.*/
             Multiselect.identifier = "crlcu.multiselect";
             /**
@@ -873,6 +858,25 @@
                         return value.length > 1;
                     }
                 }
+            };
+
+            // public static functions
+            Multiselect.getInstance = function($select) {
+                if (!($select instanceof $)) {
+                    return undefined;
+                }
+                return $select.data(Multiselect.identifier);
+            };
+
+            Multiselect.setInstance = function($select, msInstance) {
+                if (!($select instanceof $)) {
+                    return undefined;
+                }
+                $select.data(Multiselect.identifier, msInstance);
+            };
+
+            Multiselect.isMultiselect = function($select) {
+                return (getInstance($select) instanceof Multiselect);
             };
 
             Multiselect.create = function($select, options) {
@@ -1302,6 +1306,7 @@
                     }
                 }
             };
+            // TODO: Perhaps don't add the class to jQuery if it is used as an AMD module (or other?)
             $.Multiselect = Multiselect;
             return Multiselect;
         })($);
