@@ -1126,18 +1126,28 @@
                             sortSelectItems($(select), self.callbacks.sort, self.options.keepRenderingFor);
                         });
                     }
-
+                    self.clearFilters();
                 },
 
+                clearFilters: function() {
+                    var searchesToClear = [this.leftSearch, this.rightSearch];
+                    $.each(searchesToClear, function(index, value) {
+                        if (value) value.$filterInput.clear();
+                    });
+                },
+                empty: function() {
+                    this.$left.empty();
+                    this.$right.empty();
+                },
                 replaceItems: function($newOptions) {
                     // TODO: Define option format
                     // TODO: Define how the options are replaced
-                    // 1. empty all selects
-                    // 2. create html for new options, optgroups etc.
-                    // 3. add html to left select
-                    // 4. initialize again? No, we don't need to add search fields again... (move search input creation to constructor?)
-                    // 5. we also don't need to add events again
-                    //
+                    this.empty();
+                    // Format: [{optiontext:value},{optiontext:value}, {groupname:string, contents:{optiontext:value}}]
+                    // TODO: add function toContentHtml
+                    var contentHtml = toContentHtml($newOptions);
+                    this.$left.append(contentHtml);
+                    this.init();
                 },
                 moveToRight: function( $options, event, silent, skipStack ) {
                     if (skipStack === "undefined") {
