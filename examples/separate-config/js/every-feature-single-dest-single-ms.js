@@ -40,7 +40,7 @@ $(document).ready(function() {
             right: '<input type="text" name="q" class="form-control" placeholder="Search..." />'
         }
     };
-    var bla = new $.Multiselect();
+    var blaData = $('#multiselect').data("bla");
     $('#multiselect').multiselect(settings);
     var settingsstring = JSON.stringify(settings, null, 2);
     $("#insert-settings-here").text(settingsstring);

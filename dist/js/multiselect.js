@@ -627,6 +627,30 @@
                 }
             }
 
+            function verifySelect($select) {
+                if (!($select instanceof $) || $select.length !== 1 || !$select.is("select")) {
+                    throw new Error("A single Multiselect requires a single jQuery select element for the left side.");
+                }
+            }
+
+            function getInstance($select) {
+                if (!($select instanceof $)) {
+                    return undefined;
+                }
+                return $select.data(Multiselect.identifier);
+            }
+
+            function setInstance($select, msInstance) {
+                if (!($select instanceof $)) {
+                    return undefined;
+                }
+                $select.data(Multiselect.identifier, msInstance);
+            }
+
+            function isMultiselect($select) {
+                return (getInstance($select) instanceof Multiselect);
+            }
+
             /**
              * Multiselect object constructor
              * @param {jQuery} $select
@@ -634,9 +658,7 @@
              * @constructor
              */
             function Multiselect( $select, settings ) {
-                if (!($select instanceof $) || $select.length !== 1 || !$select.is("select")) {
-                    throw new Error("A single Multiselect requires a single jQuery select element for the left side.");
-                }
+                verifySelect($select);
                 var id = $select.prop('id');
                 /** @member {jQuery} */
                 this.$left = $select;
@@ -673,6 +695,8 @@
             }
             // FIXME: If we don't want to expose this class to the outside, i.e. never call it, can we prevent this?
 
+            /** @type {string} This can be used to retrieve a multiselect instance.*/
+            Multiselect.identifier = "crlcu.multiselect";
             /**
              * Enum for what we want to keep the option order for.
              * @readonly
@@ -851,7 +875,22 @@
                 }
             };
 
+            Multiselect.create = function($select, options) {
+                verifySelect($select);
+                if (!isMultiselect($select)) {
+                    var concreteSettings = $.extend(
+                        {},
+                        Multiselect.defaults.callbacks,
+                        $select.data(),
+                        (typeof options === 'object' && options)
+                    );
+                    var createdMultiselect = new Multiselect($select, concreteSettings);
+                    setInstance($select, createdMultiselect);
+                }
+            };
+
             Multiselect.prototype = {
+                // public instance methods
                 init: function() {
                     var self = this;
                     // initialize the undo/redo functionality
@@ -876,7 +915,7 @@
                     self.callbacks.startUp( self.$left, self.$right );
 
                     // initial sort if necessary
-                    if (self.options.keepRenderingFor !== self.RenderingOptions.ALL && self.callbacks.sort) {
+                    if (self.options.keepRenderingFor !== Multiselect.RenderingOptions.ALL && self.callbacks.sort) {
                         // sort seems to be a comparator function, not a sorting function
                         sortSelectItems(self.$left, self.callbacks.sort, self.options.keepRenderingFor);
 
@@ -1136,7 +1175,7 @@
                         }
 
                         self.moveFromAtoB(self.$right, self.$left, $options);
-                        self.$leftSearch.keyup();
+                        self.$leftSearch.$filterInput.keyup();
 
                         if ( !skipStack ) {
                             self.undoStack.push(['left', $options ]);
@@ -1267,16 +1306,10 @@
             return Multiselect;
         })($);
 
-
+        // with this, you can get the Multiselect instance...
         $.fn.multiselect = function( options ) {
             return this.each(function() {
-                var $this    = $(this),
-                    data     = $this.data('crlcu.multiselect'),
-                    settings = $.extend({}, Multiselect.defaults.callbacks, $this.data(), (typeof options === 'object' && options));
-
-                if (!data) {
-                    $this.data('crlcu.multiselect', (new Multiselect($this, settings)));
-                }
+                Multiselect.create($(this), options);
             });
         };
 
