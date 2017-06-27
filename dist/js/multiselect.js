@@ -634,6 +634,188 @@
                 }
             }
 
+            function addFiltering(filterRelation, filterOptionsCallback) {
+                filterRelation.$filterInput.keyup(function(e) {
+                    var filterValue = e.currentTarget.value;
+                    if (filterOptionsCallback(filterValue)) {
+                        applyFilter(filterValue, filterRelation.$filteredSelects);
+                    } else {
+                        removeFilter(filterRelation.$filteredSelects);
+                    }
+                });
+            }
+
+            function prepareEvents(msInstance) {
+                var self = msInstance;
+
+                // Attach event to left filter
+                if (self.leftSearch) {
+                    addFiltering(self.leftSearch, self.callbacks.fireSearch);
+                }
+
+                // Attach event to right filter
+                if (self.rightSearch) {
+                    addFiltering(self.rightSearch, self.callbacks.fireSearch);
+                }
+
+                // Select all the options from left and right side when submitting the parent form
+                self.$right.closest('form').submit(function() {
+                    // Clear left search input
+                    if (self.leftSearch) {
+                        self.leftSearch.$filterInput.val('').keyup();
+                    }
+                    // Clear right search input
+                    if (self.rightSearch) {
+                        self.rightSearch.$filterInput.val('').keyup();
+                    }
+
+                    self.$left.find('option').prop('selected', self.options.submitAllLeft);
+                    self.$right.find('option').prop('selected', self.options.submitAllRight);
+                });
+
+                // Attach event for double clicking on options from left side
+                self.$left.dblclick('option', function(e) {
+                    e.preventDefault();
+
+                    var $options = getOptionsToMove(self.$left);
+
+                    if ( $options.length ) {
+                        self.moveToRight($options, e);
+                    }
+                });
+
+                // Attach event for pushing ENTER on options from left side
+                self.$left.keydown(function(e) {
+                    if (e.keyCode === KEY_ENTER) {
+                        e.preventDefault();
+
+                        var $options = getOptionsToMove(self.$left);
+
+                        if ( $options.length ) {
+                            self.moveToRight($options, e);
+                        }
+                    }
+                });
+
+                // Attach event for double clicking on options from right side
+                self.$right.dblclick('option', function(e) {
+                    e.preventDefault();
+
+                    var $options = getOptionsToMove(self.$right);
+
+                    if ( $options.length ) {
+                        self.moveToLeft($options, e);
+                    }
+                });
+
+                // Attach event for pushing BACKSPACE or DEL on options from right side
+                self.$right.keydown(function(e) {
+                    if (e.keyCode === KEY_ENTER || e.keyCode === KEY_BACKSPACE || e.keyCode === KEY_DEL) {
+                        e.preventDefault();
+
+                        var $options = getOptionsToMove(self.$right);
+
+                        if ( $options.length ) {
+                            self.moveToLeft($options, e);
+                        }
+                    }
+                });
+
+                // dblclick support for IE (need to deselect other palette)
+                if (isMS) {
+                    self.$left.dblclick(function() {
+                        self.actions.$rightSelected.click();
+                    });
+
+                    self.$right.dblclick(function() {
+                        self.actions.$leftSelected.click();
+                    });
+                }
+
+                self.actions.$rightSelected.click(function(e) {
+                    e.preventDefault();
+
+                    var $options = getOptionsToMove(self.$left);
+
+                    if ( $options.length ) {
+                        self.moveToRight($options, e);
+                    }
+
+                    $(this).blur();
+                });
+
+                self.actions.$leftSelected.click(function(e) {
+                    e.preventDefault();
+
+                    var $options = getOptionsToMove(self.$right);
+
+                    if ( $options.length ) {
+                        self.moveToLeft($options, e);
+                    }
+
+                    $(this).blur();
+                });
+
+                self.actions.$rightAll.click(function(e) {
+                    e.preventDefault();
+                    var $options = getOptionsToMove(self.$left, false);
+
+                    if ( $options.length ) {
+                        self.moveToRight($options, e);
+                    }
+
+                    $(this).blur();
+                });
+
+                self.actions.$leftAll.click(function(e) {
+                    e.preventDefault();
+
+                    var $options = getOptionsToMove(self.$right, false);
+
+                    if ( $options.length ) {
+                        self.moveToLeft($options, e);
+                    }
+
+                    $(this).blur();
+                });
+
+                self.actions.$undo.click(function(e) {
+                    e.preventDefault();
+
+                    self.undo(e);
+                });
+
+                self.actions.$redo.click(function(e) {
+                    e.preventDefault();
+
+                    self.redo(e);
+                });
+
+                // FIXME: MoveUp doesn't work with multiple destinations
+                self.actions.$moveUp.click(function(e) {
+                    e.preventDefault();
+
+                    var $options = getOptionsToMove(self.$right);
+
+                    if ( $options.length ) {
+                        self.moveUp($options, e);
+                    }
+
+                    $(this).blur();
+                });
+
+                self.actions.$moveDown.click(function(e) {
+                    e.preventDefault();
+
+                    var $options = getOptionsToMove(self.$right);
+
+                    if ( $options.length ) {
+                        self.moveDown($options, e);
+                    }
+
+                    $(this).blur();
+                });
+            }
 
             /**
              * Multiselect object constructor
@@ -650,6 +832,7 @@
                 // $right can be more than one (multiple destinations) (then dblclick etc would not be usable
                 // FIXME: switch to indicate we have more than one "right" for ambiguous actions?
                 /** @member {jQuery} one or more select elements */
+                this.$right = $();
                 this.$right = chooseOption($(settings.right),$('#' + id + '_to'), "jQuery");
                 if (!(this.$right instanceof $)) {
                     throw new Error("Something went wrong, the right elements should be jQuery objects, may be undefined.");
@@ -670,11 +853,26 @@
                 this.callbacks = extractCallbacks(settings);
                 validateCallbacks(this.callbacks);
 
+                if (this.options.search) {
+                    // Prepend left filter above left palette
+                    if (this.options.search.left) {
+                        /** @member {FilterRelation} */
+                        this.leftSearch = prependSearchFilter(this.$left, this.options.search.left, this.$left);
+                    }
+                    // Prepend right filter above the first right palette
+                    if (this.options.search.right) {
+                        /** @member {FilterRelation} */
+                        this.rightSearch = prependSearchFilter(this.$right.first(), this.options.search.right, this.$right);
+                    }
+                }
+                // TODO: Separate UI element creation/initialization from data initialization
                 // FIXME: Check if this would be avoidable
                 // FIXME: Check if we can do a union of the options in the multiselect and then index the options appropriately
                 // if (this.options.keepRenderingSort && this.$right.find("option").length > 0) {
                 //     throw new Error("Multiselect can't index the items properly if any are on the right side at the beginning.");
                 // }
+                // Create event listeners
+                prepareEvents(this);
                 this.init();
             }
             // FIXME: If we don't want to expose this class to the outside, i.e. never call it, can we prevent this?
@@ -876,12 +1074,12 @@
             };
 
             Multiselect.isMultiselect = function($select) {
-                return (getInstance($select) instanceof Multiselect);
+                return (Multiselect.getInstance($select) instanceof Multiselect);
             };
 
             Multiselect.create = function($select, options) {
                 verifySelect($select);
-                if (!isMultiselect($select)) {
+                if (!Multiselect.isMultiselect($select)) {
                     var concreteSettings = $.extend(
                         {},
                         Multiselect.defaults.callbacks,
@@ -889,7 +1087,7 @@
                         (typeof options === 'object' && options)
                     );
                     var createdMultiselect = new Multiselect($select, concreteSettings);
-                    setInstance($select, createdMultiselect);
+                    Multiselect.setInstance($select, createdMultiselect);
                 }
             };
 
@@ -929,207 +1127,18 @@
                         });
                     }
 
-                    if (self.options.search) {
-                        // Prepend left filter above left palette
-                        if (self.options.search.left) {
-                            /** @member {FilterRelation} */
-                            self.$leftSearch = prependSearchFilter(self.$left, self.options.search.left, self.$left);
-                        }
-                        // Prepend right filter above the first right palette
-                        if (self.options.search.right) {
-                            /** @member {FilterRelation} */
-                            self.$rightSearch = prependSearchFilter(self.$right.first(), self.options.search.right, self.$right);
-                        }
-                    }
-
-                    // Initialize events
-                    self.events();
                 },
 
-                events: function() {
-                    var self = this;
-
-                    // Attach event to left filter
-                    if (self.$leftSearch) {
-                        self.$leftSearch.$filterInput.keyup(function() {
-                            if (self.callbacks.fireSearch(this.value)) {
-                                applyFilter(this.value, self.$leftSearch.$filteredSelects);
-                            } else {
-                                removeFilter(self.$leftSearch.$filteredSelects);
-                            }
-                        });
-                    }
-
-                    // Attach event to right filter
-                    if (self.$rightSearch) {
-                        self.$rightSearch.$filterInput.keyup(function() {
-                            if (self.callbacks.fireSearch(this.value)) {
-                                applyFilter(this.value, self.$rightSearch.$filteredSelects);
-                            } else {
-                                removeFilter(self.$rightSearch.$filteredSelects);
-                            }
-                        });
-                    }
-
-                    // Select all the options from left and right side when submitting the parent form
-                    self.$right.closest('form').submit(function() {
-                        // Clear left search input
-                        if (self.$leftSearch) {
-                            self.$leftSearch.$filterInput.val('').keyup();
-                        }
-                        // Clear right search input
-                        if (self.$rightSearch) {
-                            self.$rightSearch.$filterInput.val('').keyup();
-                        }
-
-                        self.$left.find('option').prop('selected', self.options.submitAllLeft);
-                        self.$right.find('option').prop('selected', self.options.submitAllRight);
-                    });
-
-                    // Attach event for double clicking on options from left side
-                    self.$left.dblclick('option', function(e) {
-                        e.preventDefault();
-
-                        var $options = getOptionsToMove(self.$left);
-
-                        if ( $options.length ) {
-                            self.moveToRight($options, e);
-                        }
-                    });
-
-                    // Attach event for pushing ENTER on options from left side
-                    self.$left.keydown(function(e) {
-                        if (e.keyCode === KEY_ENTER) {
-                            e.preventDefault();
-
-                            var $options = getOptionsToMove(self.$left);
-
-                            if ( $options.length ) {
-                                self.moveToRight($options, e);
-                            }
-                        }
-                    });
-
-                    // Attach event for double clicking on options from right side
-                    self.$right.dblclick('option', function(e) {
-                        e.preventDefault();
-
-                        var $options = getOptionsToMove(self.$right);
-
-                        if ( $options.length ) {
-                            self.moveToLeft($options, e);
-                        }
-                    });
-
-                    // Attach event for pushing BACKSPACE or DEL on options from right side
-                    self.$right.keydown(function(e) {
-                        if (e.keyCode === KEY_ENTER || e.keyCode === KEY_BACKSPACE || e.keyCode === KEY_DEL) {
-                            e.preventDefault();
-
-                            var $options = getOptionsToMove(self.$right);
-
-                            if ( $options.length ) {
-                                self.moveToLeft($options, e);
-                            }
-                        }
-                    });
-
-                    // dblclick support for IE (need to deselect other palette)
-                    if (isMS) {
-                        self.$left.dblclick(function() {
-                            self.actions.$rightSelected.click();
-                        });
-
-                        self.$right.dblclick(function() {
-                            self.actions.$leftSelected.click();
-                        });
-                    }
-
-                    self.actions.$rightSelected.click(function(e) {
-                        e.preventDefault();
-
-                        var $options = getOptionsToMove(self.$left);
-
-                        if ( $options.length ) {
-                            self.moveToRight($options, e);
-                        }
-
-                        $(this).blur();
-                    });
-
-                    self.actions.$leftSelected.click(function(e) {
-                        e.preventDefault();
-
-                        var $options = getOptionsToMove(self.$right);
-
-                        if ( $options.length ) {
-                            self.moveToLeft($options, e);
-                        }
-
-                        $(this).blur();
-                    });
-
-                    self.actions.$rightAll.click(function(e) {
-                        e.preventDefault();
-                        var $options = getOptionsToMove(self.$left, false);
-
-                        if ( $options.length ) {
-                            self.moveToRight($options, e);
-                        }
-
-                        $(this).blur();
-                    });
-
-                    self.actions.$leftAll.click(function(e) {
-                        e.preventDefault();
-
-                        var $options = getOptionsToMove(self.$right, false);
-
-                        if ( $options.length ) {
-                            self.moveToLeft($options, e);
-                        }
-
-                        $(this).blur();
-                    });
-
-                    self.actions.$undo.click(function(e) {
-                        e.preventDefault();
-
-                        self.undo(e);
-                    });
-
-                    self.actions.$redo.click(function(e) {
-                        e.preventDefault();
-
-                        self.redo(e);
-                    });
-
-                    // FIXME: MoveUp doesn't work with multiple destinations
-                    self.actions.$moveUp.click(function(e) {
-                        e.preventDefault();
-
-                        var $options = getOptionsToMove(self.$right);
-
-                        if ( $options.length ) {
-                            self.moveUp($options, e);
-                        }
-
-                        $(this).blur();
-                    });
-
-                    self.actions.$moveDown.click(function(e) {
-                        e.preventDefault();
-
-                        var $options = getOptionsToMove(self.$right);
-
-                        if ( $options.length ) {
-                            self.moveDown($options, e);
-                        }
-
-                        $(this).blur();
-                    });
+                replaceItems: function($newOptions) {
+                    // TODO: Define option format
+                    // TODO: Define how the options are replaced
+                    // 1. empty all selects
+                    // 2. create html for new options, optgroups etc.
+                    // 3. add html to left select
+                    // 4. initialize again? No, we don't need to add search fields again... (move search input creation to constructor?)
+                    // 5. we also don't need to add events again
+                    //
                 },
-
                 moveToRight: function( $options, event, silent, skipStack ) {
                     if (skipStack === "undefined") {
                         skipStack = false;
@@ -1146,7 +1155,7 @@
                         }
 
                         self.moveFromAtoB(self.$left, self.$right, $options);
-                        self.$rightSearch.$filterInput.keyup();
+                        self.rightSearch.$filterInput.keyup();
                         if (!skipStack) {
                             // FIXME: Does UNDO/REDO work with multiple destinations?
 
@@ -1179,7 +1188,7 @@
                         }
 
                         self.moveFromAtoB(self.$right, self.$left, $options);
-                        self.$leftSearch.$filterInput.keyup();
+                        self.leftSearch.$filterInput.keyup();
 
                         if ( !skipStack ) {
                             self.undoStack.push(['left', $options ]);
