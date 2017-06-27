@@ -34,12 +34,13 @@ $(document).ready(function() {
 
     var settings = {
         keepRenderingSort: true,
+        keepRenderingFor: $.Multiselect.RenderingOptions.OPTGROUPS,
         search: {
             left: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
             right: '<input type="text" name="q" class="form-control" placeholder="Search..." />'
         }
     };
-
+    var bla = new $.Multiselect();
     $('#multiselect').multiselect(settings);
     var settingsstring = JSON.stringify(settings, null, 2);
     $("#insert-settings-here").text(settingsstring);
