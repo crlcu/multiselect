@@ -33,15 +33,72 @@ $(document).ready(function() {
     }
 
     var settings = {
-        keepRenderingSort: true,
         keepRenderingFor: $.Multiselect.RenderingOptions.OPTGROUPS,
         search: {
             left: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
             right: '<input type="text" name="q" class="form-control" placeholder="Search..." />'
         }
     };
-    var blaData = $('#multiselect').data("bla");
-    $('#multiselect').multiselect(settings);
+    var $msElement = $('#multiselect').multiselect(settings);
+    /** @type {SelectContent} newOptions */
+    var newOptions = {
+        options:
+        [
+            {
+                name: "Neue1",
+                value: 1
+            },
+            {
+                name: "Neue2",
+                value: 2
+            },
+            {
+                name: "Neue3",
+                value: 3
+            }
+        ],
+        optgroups:
+        [
+            {
+                label: "Label zuerst",
+                contents:
+                [
+                    {
+                        name: "Neue5",
+                        value: 5
+                    },
+                    {
+                        name: "Neue4",
+                        value: 4
+                    },
+                    {
+                        name: "Neue6",
+                        value: 6
+                    }
+                ]
+            },
+            {
+                label: "Danach Label",
+                contents:
+                    [
+                        {
+                            name: "Neue5",
+                            value: 5
+                        },
+                        {
+                            name: "Neue4",
+                            value: 4
+                        },
+                        {
+                            name: "Neue6",
+                            value: 6
+                        }
+                    ]
+            }
+        ]
+    };
+    var msInstance = $.Multiselect.getInstance($msElement);
+    msInstance.replaceItems(newOptions);
     var settingsstring = JSON.stringify(settings, null, 2);
     $("#insert-settings-here").text(settingsstring);
 });

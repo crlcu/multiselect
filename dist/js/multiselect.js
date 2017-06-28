@@ -108,7 +108,6 @@
 /**
  * @typedef {CallbackFunctions|ElementNames|MultiselectOptions} SettingsObject
  */
-// FIXME: Move ?
 // FIXME: Check if everything works when we use multiple destinations ("right" elements)
 (
     /**
@@ -191,6 +190,8 @@
             const DO_NOT_CHANGE = 0;
 
             const DATA_POSITION = "position";
+
+            const DATA_CONTEXT = "context";
 
             var isMS = isMicrosoftBrowser();
 
@@ -502,7 +503,7 @@
                     var $rightOption = $(rightOption);
                     var $parentOptgroup = $rightOption.parent("optgroup");
                     var duplicateOptionSelector = 'option[value="' + rightOption.value + '"]';
-                    // FIXME: What about matchOptgroupBy?
+                    // FIXME: What about matchOptgroupBy? Shouldn't it be respected here?
                     if ($parentOptgroup.length > 0) {
                         var sameOptgroupSelector = 'optgroup[label="' + $parentOptgroup.attr('label') + '"]';
                         var $sameOptgroup = $left.find(sameOptgroupSelector);
@@ -580,7 +581,7 @@
              * @returns {jQuery} - the select that was sorted
              */
             function sortSelectItems($select, comparatorCallback, keepRenderingFor) {
-                if ($select !== undefined && $select.is("select")) {
+                if (isOnlySelects($select)) {
                     // sort any direct children (can be combination of options and optgroups)
                     // example: oa="aaa", ob="bbb", oc="zzz", oga="ddd", ogb="eee"
                     if (keepRenderingFor !== Multiselect.RenderingOptions.NONE) {
@@ -623,10 +624,9 @@
              * @param {RenderingOptions} keepRenderingFor - whether to store position for some element types
              */
             function storeRenderingSortOrder($select, keepRenderingFor) {
-                if ($select instanceof $ && $select.is("select")) {
+                if (isOnlySelects($select)) {
                     // TODO: First remove the old order?
                     if (keepRenderingFor !== Multiselect.RenderingOptions.NONE) {
-                        // FIXME: Check if this is ok, optgroups start at 0, and options in each group start at 0
                         $select.children().each(function(index, optionOrOptgroup) {
                             var $optionOrOptgroup = $(optionOrOptgroup);
                             var isOptgroup = $optionOrOptgroup.is("optgroup");
@@ -643,8 +643,17 @@
                 }
             }
 
-            function verifySelect($select) {
-                if (!($select instanceof $) || $select.length !== 1 || !$select.is("select")) {
+            function isOnlySelects($elems) {
+                if ($elems instanceof $) {
+                    if ($elems.length > 0 && $elems.is("select")) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            function verifySingleSelect($select) {
+                if (!isOnlySelects($select) || $select.length !== 1) {
                     throw new Error("A single Multiselect requires a single jQuery select element for the left side.");
                 }
             }
@@ -658,6 +667,18 @@
                         removeFilter(filterRelation.$filteredSelects);
                     }
                 });
+            }
+
+            function getButtonContext($msButton) {
+                // FIXME: Probably more checking necessary
+                return $($msButton.data(DATA_CONTEXT));
+            }
+
+            function setButtonContext($msButton, newSelector) {
+                // FIXME: Probably more checking necessary
+                if ($msButton) {
+                    $msButton.data(DATA_CONTEXT, newSelector);
+                }
             }
 
             function prepareEvents(msInstance) {
@@ -695,7 +716,7 @@
                     var $options = getOptionsToMove(self.$left);
 
                     if ( $options.length ) {
-                        self.moveToRight($options, e);
+                        self.moveFromAtoB(self.$left, self.$right.first(), $options, e);
                     }
                 });
 
@@ -707,7 +728,7 @@
                         var $options = getOptionsToMove(self.$left);
 
                         if ( $options.length ) {
-                            self.moveToRight($options, e);
+                            self.moveFromAtoB(self.$left, self.$right.first(), $options, e);
                         }
                     }
                 });
@@ -719,7 +740,7 @@
                     var $options = getOptionsToMove(self.$right);
 
                     if ( $options.length ) {
-                        self.moveToLeft($options, e);
+                        self.moveFromAtoB($(e.currentTarget), self.$left, $options, e);
                     }
                 });
 
@@ -731,7 +752,7 @@
                         var $options = getOptionsToMove(self.$right);
 
                         if ( $options.length ) {
-                            self.moveToLeft($options, e);
+                            self.moveFromAtoB($(e.currentTarget), self.$left, $options, e);
                         }
                     }
                 });
@@ -739,11 +760,15 @@
                 // dblclick support for IE (need to deselect other palette)
                 if (isMS) {
                     self.$left.dblclick(function() {
-                        self.actions.$rightSelected.click();
+                        self.actions.$rightSelected.first().click();
                     });
 
-                    self.$right.dblclick(function() {
-                        self.actions.$leftSelected.click();
+                    self.$right.dblclick(function(e) {
+                        var $activatedSelect = $(e.currentTarget);
+                        var $options = getOptionsToMove($activatedSelect);
+                        if ( $options.length ) {
+                            self.moveFromAtoB($activatedSelect, self.$left, $options, e);
+                        }
                     });
                 }
 
@@ -753,7 +778,9 @@
                     var $options = getOptionsToMove(self.$left);
 
                     if ( $options.length ) {
-                        self.moveToRight($options, e);
+                        var $rightButton = $(e.currentTarget);
+                        var $targetSelect = getButtonContext($rightButton);
+                        self.moveFromAtoB(self.$left, $targetSelect, $options, e);
                     }
 
                     $(this).blur();
@@ -765,7 +792,9 @@
                     var $options = getOptionsToMove(self.$right);
 
                     if ( $options.length ) {
-                        self.moveToLeft($options, e);
+                        var $leftButton = $(e.currentTarget);
+                        var $sourceSelect = getButtonContext($leftButton);
+                        self.moveFromAtoB($sourceSelect, self.$left, $options, e);
                     }
 
                     $(this).blur();
@@ -776,7 +805,9 @@
                     var $options = getOptionsToMove(self.$left, false);
 
                     if ( $options.length ) {
-                        self.moveToRight($options, e);
+                        var $rightButton = $(e.currentTarget);
+                        var $targetSelect = getButtonContext($rightButton);
+                        self.moveFromAtoB(self.$left, $targetSelect, $options, e);
                     }
 
                     $(this).blur();
@@ -788,7 +819,9 @@
                     var $options = getOptionsToMove(self.$right, false);
 
                     if ( $options.length ) {
-                        self.moveToLeft($options, e);
+                        var $leftButton = $(e.currentTarget);
+                        var $sourceSelect = getButtonContext($leftButton);
+                        self.moveFromAtoB($sourceSelect, self.$left, $options, e);
                     }
 
                     $(this).blur();
@@ -806,11 +839,11 @@
                     self.redo(e);
                 });
 
-                // FIXME: MoveUp doesn't work with multiple destinations
                 self.actions.$moveUp.click(function(e) {
                     e.preventDefault();
 
-                    var $options = getOptionsToMove(self.$right);
+                    var $targetSelect = getButtonContext($(e.currentTarget));
+                    var $options = getOptionsToMove($targetSelect);
 
                     if ( $options.length ) {
                         self.moveUp($options, e);
@@ -822,7 +855,8 @@
                 self.actions.$moveDown.click(function(e) {
                     e.preventDefault();
 
-                    var $options = getOptionsToMove(self.$right);
+                    var $targetSelect = getButtonContext($(e.currentTarget));
+                    var $options = getOptionsToMove($targetSelect);
 
                     if ( $options.length ) {
                         self.moveDown($options, e);
@@ -839,8 +873,8 @@
             function toContentHtml(newItems) {
                 var htmlContent = "";
                 var grouplessOptionCount = newItems.options.length;
-                var i = 0;
-                for (i = 0; i < grouplessOptionCount; i++) {
+
+                for (var i = 0; i < grouplessOptionCount; i++) {
                     var option = newItems.options[i];
                     htmlContent += toOption(option);
                 }
@@ -915,13 +949,11 @@
              * @constructor
              */
             function Multiselect( $select, settings ) {
-                verifySelect($select);
+                verifySingleSelect($select);
                 var id = $select.prop('id');
                 /** @member {jQuery} */
                 this.$left = $select;
-                // TODO: Would be cool for performance reasons if there was a way to dynamically update the options so that you don't have to find all options first
                 // $right can be more than one (multiple destinations) (then dblclick etc would not be usable
-                // FIXME: switch to indicate we have more than one "right" for ambiguous actions?
                 /** @member {jQuery} one or more select elements */
                 this.$right = $();
                 this.$right = chooseOption($(settings.right),$('#' + id + '_to'), "jQuery");
@@ -936,6 +968,14 @@
                 }
                 /** @member {ActionButtons} */
                 this.actions = extractActionButtons(id, settings);
+                if (this.$right.length == 1){
+                    setButtonContext(this.actions.$leftAll, "#" + this.$right.attr("id"));
+                    setButtonContext(this.actions.$leftSelected, "#" + this.$right.attr("id"));
+                    setButtonContext(this.actions.$rightSelected, "#" + this.$right.attr("id"));
+                    setButtonContext(this.actions.$rightAll, "#" + this.$right.attr("id"));
+                    setButtonContext(this.actions.$moveUp, "#" + this.$right.attr("id"));
+                    setButtonContext(this.actions.$moveDown, "#" + this.$right.attr("id"));
+                }
                 validateActionButtons(this.actions);
                 /** @member {MultiselectOptions} */
                 this.options = extractMultiselectOptions(settings);
@@ -956,9 +996,7 @@
                         this.rightSearch = prependSearchFilter(this.$right.first(), this.options.search.right, this.$right);
                     }
                 }
-                // TODO: Separate UI element creation/initialization from data initialization
-                // FIXME: Check if this would be avoidable
-                // FIXME: Check if we can do a union of the options in the multiselect and then index the options appropriately
+                // FIXME: keepRendering + options on any right side breaks sorting
                 // if (this.options.keepRenderingFor !== RenderingOptions.NONE && this.$right.find("option").length > 0) {
                 //     throw new Error("Multiselect can't index the items properly if any are on the right side at the beginning.");
                 // }
@@ -966,7 +1004,6 @@
                 prepareEvents(this);
                 this.init();
             }
-            // FIXME: If we don't want to expose this class to the outside, i.e. never call it, can we prevent this?
 
             // public static members
             /** @type {string} This can be used to retrieve a multiselect instance.*/
@@ -1168,7 +1205,7 @@
             };
 
             Multiselect.create = function($select, options) {
-                verifySelect($select);
+                verifySingleSelect($select);
                 if (!Multiselect.isMultiselect($select)) {
                     var concreteSettings = $.extend(
                         {},
@@ -1193,7 +1230,7 @@
                     // decorate the options with their initial positions in the list so that it can be re-established
                     storeRenderingSortOrder(self.$left, self.options.keepRenderingFor);
 
-                    // FIXME: This doesn't work so good, does it?
+                    // FIXME: Each side has independent ordering with this, so moving breaks everything
                     self.$right.each(function(i, select) {
                         storeRenderingSortOrder($(select), self.options.keepRenderingFor);
                     });
@@ -1201,7 +1238,6 @@
                     // startUp could be a function or false
                     // either the default is used or the function; false doesn't amount to anything
                     // startUp preprocessing function
-                    // TODO: With an api, my startUp function could use that to move options around
                     self.callbacks.startUp( self.$left, self.$right );
 
                     // initial sort if necessary
@@ -1255,17 +1291,18 @@
                         self.moveFromAtoB(self.$left, self.$right, $options);
                         self.rightSearch.$filterInput.keyup();
                         if (!skipStack) {
-                            // FIXME: Does UNDO/REDO work with multiple destinations?
+                            // FIXME: UNDO/REDO doesn't work with multiple destinations
 
                             self.undoStack.push(['right', $options ]);
                             self.redoStack = [];
                         }
 
-                        // FIXME: doNotSortRight doesn't exist
+                        // FIXME: doNotSortRight was never set?
                         if (!silent) {
-                            // FIXME: here only a single right element allowed?
-                            // FIXME: You'd only need to sort that $select where something happened...
-                            sortSelectItems(self.$right, self.callbacks.sort, self.options.keepRenderingFor);
+                            self.$right.each(function(i, select) {
+                                // FIXME: You'd only need to sort that $select when its content changed...
+                                sortSelectItems($(select), self.callbacks.sort, self.options.keepRenderingFor);
+                            });
                             self.callbacks.afterMoveToRight( self.$left, self.$right, $options );
                         }
 
@@ -1302,7 +1339,7 @@
                     }
                 },
 
-                moveFromAtoB: function( $source, $destination, $options) {
+                moveFromAtoB: function( $source, $destination, $options, event) {
                     var self = this;
 
                     var $changedOptgroups = $();
@@ -1366,7 +1403,7 @@
                         return false;
                     }
 
-                    $options.each(function(i, optionToMove) {
+                    $($options.get().reverse()).each(function(i, optionToMove) {
                         var $option = $(optionToMove);
                         var $optionNext = $option.next();
                         if ($optionNext.length > 0 && $options.filter($optionNext).length == 0) {
