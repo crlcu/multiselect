@@ -88,12 +88,28 @@
  */
 
 /**
+ * @typedef {Object} OptionRep
+ * @property {string} name
+ * @property {string} value
+ */
+
+/**
+ * @typedef {Object} OptgroupRep
+ * @property {string} label
+ * @property {OptionRep[]} contents
+ */
+
+/**
+ * @typedef {Object} SelectContent
+ * @property {OptionRep[]} options
+ * @property {OptgroupRep[]} optgroups
+ */
+
+/**
  * @typedef {CallbackFunctions|ElementNames|MultiselectOptions} SettingsObject
  */
-// FIXME: Move, keepRendering more options, replace options
+// FIXME: Move ?
 // FIXME: Check if everything works when we use multiple destinations ("right" elements)
-// FIXME: Provide a switch to tell what part of the select content should be sorted and what shouldn't
-// FIXME: Provide a way to replace the options
 (
     /**
      * Registers multiselect with amd or directly with jQuery.
@@ -816,6 +832,82 @@
             }
 
             /**
+             *
+             * @param {SelectContent} newItems
+             */
+            function toContentHtml(newItems) {
+                var htmlContent = "";
+                var grouplessOptionCount = newItems.options.length;
+                var i = 0;
+                for (i = 0; i < grouplessOptionCount; i++) {
+                    var option = newItems.options[i];
+                    htmlContent += toOption(option);
+                }
+                var optgroupCount = newItems.optgroups.length;
+                for (i = 0; i < optgroupCount; i++) {
+                    var optgroup = newItems.optgroups[i];
+                    htmlContent += toOptgroup(optgroup);
+                }
+                return htmlContent;
+            }
+
+            /**
+             *
+             * @param {OptionRep} optionRep
+             */
+            function toOption(optionRep) {
+                var htmlContent = "<option value=";
+                var quote = chooseQuotes(optionRep.value);
+                htmlContent += quote + optionRep.value + quote + ">";
+                htmlContent += optionRep.name;
+                htmlContent += "</option>";
+                return htmlContent;
+            }
+
+            function chooseQuotes(someValue) {
+                const SINGLE_QUOTE = "'";
+                const DOUBLE_QUOTE = '"';
+                if (typeof someValue === "number") {
+                    someValue = someValue.toString();
+                } else if (someValue === "") {
+                    return DOUBLE_QUOTE;
+                }
+
+                var firstSingleQuoteIndex = someValue.indexOf(SINGLE_QUOTE);
+                var firstDoubleQuoteIndex = someValue.indexOf(DOUBLE_QUOTE);
+                if (firstSingleQuoteIndex >= 0 || firstDoubleQuoteIndex >= 0) {
+                    if (firstSingleQuoteIndex < 0) {
+                        return SINGLE_QUOTE;
+                    }
+                    if (firstDoubleQuoteIndex < 0) {
+                        return DOUBLE_QUOTE;
+                    }
+                    if (firstSingleQuoteIndex < firstDoubleQuoteIndex) {
+                        return DOUBLE_QUOTE;
+                    } else {
+                        return SINGLE_QUOTE;
+                    }
+                }
+                return DOUBLE_QUOTE;
+            }
+
+            /**
+             *
+             * @param {OptgroupRep} optgroupRep
+             */
+            function toOptgroup(optgroupRep) {
+                var htmlContent = "<optgroup label=";
+                var quote = chooseQuotes(optgroupRep.label);
+                htmlContent += quote + optgroupRep.label + quote + ">";
+                var optionCount = optgroupRep.contents.length;
+                for (var i = 0; i < optionCount; i++) {
+                    htmlContent += toOption(optgroupRep.contents[i]);
+                }
+                htmlContent += "</optgroup>";
+                return htmlContent;
+            }
+
+            /**
              * Multiselect object constructor
              * @param {jQuery} $select
              * @param {SettingsObject} settings
@@ -1129,20 +1221,20 @@
                 clearFilters: function() {
                     var searchesToClear = [this.leftSearch, this.rightSearch];
                     $.each(searchesToClear, function(index, value) {
-                        if (value) value.$filterInput.clear();
+                        if (value) value.$filterInput.val("").keyup();
                     });
                 },
                 empty: function() {
                     this.$left.empty();
                     this.$right.empty();
                 },
-                replaceItems: function($newOptions) {
-                    // TODO: Define option format
-                    // TODO: Define how the options are replaced
+                /**
+                 *
+                 * @param {SelectContent} newOptions
+                 */
+                replaceItems: function(newOptions) {
                     this.empty();
-                    // Format: [{optiontext:value},{optiontext:value}, {groupname:string, contents:{optiontext:value}}]
-                    // TODO: add function toContentHtml
-                    var contentHtml = toContentHtml($newOptions);
+                    var contentHtml = toContentHtml(newOptions);
                     this.$left.append(contentHtml);
                     this.init();
                 },
