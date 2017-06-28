@@ -36,7 +36,6 @@
 
 /**
  * @typedef {Object} MultiselectOptions
- * @property {boolean} [keepRenderingSort=false] - whether to keep the sort order given by the html option order
  * @property {RenderingOptions} [keepRenderingFor=ALL] - what to keep the rendering order for
  * @property {boolean} [submitAllLeft=true] - whether to submit all visible left options when a form is submitted
  * @property {boolean} [submitAllRight=true] - whether to submit all visible right options when a form is submitted
@@ -236,7 +235,6 @@
              */
             function extractMultiselectOptions(settings) {
                 return {
-                    keepRenderingSort:  chooseOption(settings.keepRenderingSort, Multiselect.defaults.options.keepRenderingSort, "boolean"),
                     keepRenderingFor:   chooseOption(settings.keepRenderingFor, Multiselect.defaults.options.keepRenderingFor, "string"),
                     submitAllLeft:      chooseOption(settings.submitAllLeft, Multiselect.defaults.options.submitAllLeft, "boolean"),
                     submitAllRight:     chooseOption(settings.submitAllRight, Multiselect.defaults.options.submitAllRight, "boolean"),
@@ -868,7 +866,7 @@
                 // TODO: Separate UI element creation/initialization from data initialization
                 // FIXME: Check if this would be avoidable
                 // FIXME: Check if we can do a union of the options in the multiselect and then index the options appropriately
-                // if (this.options.keepRenderingSort && this.$right.find("option").length > 0) {
+                // if (this.options.keepRenderingFor !== RenderingOptions.NONE && this.$right.find("option").length > 0) {
                 //     throw new Error("Multiselect can't index the items properly if any are on the right side at the beginning.");
                 // }
                 // Create event listeners
@@ -896,7 +894,6 @@
                     return "#" + id + "_" + action;
                 },
                 options: {
-                    keepRenderingSort: false,
                     keepRenderingFor: Multiselect.RenderingOptions.ALL,
                     submitAllLeft: true,
                     submitAllRight: true,
@@ -1100,7 +1097,7 @@
                     self.undoStack = [];
                     /** @member {StackElement[]} */
                     self.redoStack = [];
-                    if (self.options.keepRenderingSort) {
+                    if (self.options.keepRenderingFor !== Multiselect.RenderingOptions.NONE) {
                         // decorate the options with their initial positions in the list so that it can be re-established
                         storeRenderingSortOrder(self.$left, self.options.keepRenderingFor);
 
