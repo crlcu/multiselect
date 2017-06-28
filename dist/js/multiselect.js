@@ -49,10 +49,8 @@
  * @property {function} startUp
  * @property {function} sort
  * @property {function} beforeMoveToRight
- * @property {function} moveToRight
  * @property {function} afterMoveToRight
  * @property {function} beforeMoveToLeft
- * @property {function} moveToLeft
  * @property {function} afterMoveToLeft
  * @property {function} beforeMoveUp
  * @property {function} afterMoveUp
@@ -82,9 +80,13 @@
 
 /**
  * @typedef {Object} StackElement
- * @property {jQuery} $source - the element where the options were before the move
- * @property {jQuery} $target - the element where the options were after the move
- * @property {jQuery} $options - which options were moved
+ * @property {jQuery} $lastSource - the element where the options were before the move
+ * @property {jQuery} $lastDestination - the element where the options were after the move
+ * @property {jQuery} $movedOptions - which options were moved
+ */
+
+/**
+ * @typedef {StackElement[]} Stack
  */
 
 /**
@@ -279,10 +281,8 @@
                     startUp: chooseCallback(settings.startUp, Multiselect.defaults.callbacks.startUp),
                     sort: chooseCallback(settings.sort, Multiselect.defaults.callbacks.sort),
                     beforeMoveToRight: chooseCallback(settings.beforeMoveToRight, Multiselect.defaults.callbacks.beforeMoveToRight),
-                    moveToRight: chooseCallback(settings.moveToRight, Multiselect.defaults.callbacks.moveToRight),
                     afterMoveToRight: chooseCallback(settings.afterMoveToRight, Multiselect.defaults.callbacks.afterMoveToRight),
                     beforeMoveToLeft: chooseCallback(settings.beforeMoveToLeft, Multiselect.defaults.callbacks.beforeMoveToLeft),
-                    moveToLeft: chooseCallback(settings.moveToLeft, Multiselect.defaults.callbacks.moveToLeft),
                     afterMoveToLeft: chooseCallback(settings.afterMoveToLeft, Multiselect.defaults.callbacks.afterMoveToLeft),
                     beforeMoveUp: chooseCallback(settings.beforeMoveUp, Multiselect.defaults.callbacks.beforeMoveUp),
                     afterMoveUp: chooseCallback(settings.afterMoveUp, Multiselect.defaults.callbacks.afterMoveUp),
@@ -294,7 +294,7 @@
 
             /**
              * This should ensure the callbacks fulfill some required conditions
-             * (e.g. moveToRight is allowed to be undefined)
+             * (e.g. moveFromAToB is allowed to be undefined)
              * @param {CallbackFunctions} callbacks
              */
             function validateCallbacks(callbacks) {
@@ -716,7 +716,7 @@
                     var $options = getOptionsToMove(self.$left);
 
                     if ( $options.length ) {
-                        self.moveFromAtoB(self.$left, self.$right.first(), $options, e);
+                        self.moveFromAtoB(self.$left, self.$right.first(), $options);
                     }
                 });
 
@@ -728,7 +728,7 @@
                         var $options = getOptionsToMove(self.$left);
 
                         if ( $options.length ) {
-                            self.moveFromAtoB(self.$left, self.$right.first(), $options, e);
+                            self.moveFromAtoB(self.$left, self.$right.first(), $options);
                         }
                     }
                 });
@@ -740,7 +740,7 @@
                     var $options = getOptionsToMove(self.$right);
 
                     if ( $options.length ) {
-                        self.moveFromAtoB($(e.currentTarget), self.$left, $options, e);
+                        self.moveFromAtoB($(e.currentTarget), self.$left, $options);
                     }
                 });
 
@@ -752,7 +752,7 @@
                         var $options = getOptionsToMove(self.$right);
 
                         if ( $options.length ) {
-                            self.moveFromAtoB($(e.currentTarget), self.$left, $options, e);
+                            self.moveFromAtoB($(e.currentTarget), self.$left, $options);
                         }
                     }
                 });
@@ -767,7 +767,7 @@
                         var $activatedSelect = $(e.currentTarget);
                         var $options = getOptionsToMove($activatedSelect);
                         if ( $options.length ) {
-                            self.moveFromAtoB($activatedSelect, self.$left, $options, e);
+                            self.moveFromAtoB($activatedSelect, self.$left, $options);
                         }
                     });
                 }
@@ -780,7 +780,7 @@
                     if ( $options.length ) {
                         var $rightButton = $(e.currentTarget);
                         var $targetSelect = getButtonContext($rightButton);
-                        self.moveFromAtoB(self.$left, $targetSelect, $options, e);
+                        self.moveFromAtoB(self.$left, $targetSelect, $options);
                     }
 
                     $(this).blur();
@@ -794,7 +794,7 @@
                     if ( $options.length ) {
                         var $leftButton = $(e.currentTarget);
                         var $sourceSelect = getButtonContext($leftButton);
-                        self.moveFromAtoB($sourceSelect, self.$left, $options, e);
+                        self.moveFromAtoB($sourceSelect, self.$left, $options);
                     }
 
                     $(this).blur();
@@ -807,7 +807,7 @@
                     if ( $options.length ) {
                         var $rightButton = $(e.currentTarget);
                         var $targetSelect = getButtonContext($rightButton);
-                        self.moveFromAtoB(self.$left, $targetSelect, $options, e);
+                        self.moveFromAtoB(self.$left, $targetSelect, $options);
                     }
 
                     $(this).blur();
@@ -821,7 +821,7 @@
                     if ( $options.length ) {
                         var $leftButton = $(e.currentTarget);
                         var $sourceSelect = getButtonContext($leftButton);
-                        self.moveFromAtoB($sourceSelect, self.$left, $options, e);
+                        self.moveFromAtoB($sourceSelect, self.$left, $options);
                     }
 
                     $(this).blur();
@@ -943,6 +943,47 @@
             }
 
             /**
+             *
+             * @param {Multiselect} msInstance
+             * @param {boolean} isUndo
+             */
+            function moveAndChangeStacks(msInstance, isUndo) {
+                /** @type {StackElement} last */
+                var sourceStack = isUndo ? msInstance.undoStack : msInstance.redoStack;
+                var targetStack = isUndo ? msInstance.redoStack : msInstance.undoStack;
+                var last = sourceStack.pop();
+                if ( last ) {
+                    targetStack.push(last);
+                    var newSource = isUndo ? last.$lastDestination : last.$lastSource;
+                    var newDestination = isUndo ? last.$lastSource : last.$lastDestination;
+                    msInstance.moveFromAtoB(newSource, newDestination, last.$movedOptions, false, true);
+                }
+
+            }
+
+            function moveItems($options, moveUp, beforeMoveCallback, afterMoveCallback) {
+                if ( !beforeMoveCallback( $options ) ) {
+                    return false;
+                }
+                if (moveDown) {
+                    $options = $($options.get().reverse());
+                }
+                $options.each(function(i, optionToMove) {
+                    var $option = $(optionToMove);
+                    var $optionTarget = moveUp ? $option.prev() : $option.next();
+                    if ($optionTarget.length > 0 && $options.filter($optionTarget).length == 0) {
+                        if (moveUp) {
+                            $optionTarget.before($option);
+                        } else {
+                            $optionTarget.after($option);
+                        }
+                    }
+                });
+                afterMoveCallback($options);
+
+            }
+
+            /**
              * Multiselect object constructor
              * @param {jQuery} $select
              * @param {SettingsObject} settings
@@ -1045,7 +1086,7 @@
                     /** will be executed each time before moving option[s] to right
                      *
                      *  IMPORTANT : this method must return boolean value
-                     *      true    : continue to moveToRight method
+                     *      true    : continue to moveFromAToB method
                      *      false   : stop
                      *
                      *  @method beforeMoveToRight
@@ -1058,17 +1099,6 @@
                      **/
                     beforeMoveToRight: function($left, $right, $options) { return true; },
 
-                    /*  will be executed instead of the default action
-                     * (move selected items from left to right palette)
-                     *
-                     *  @method moveToRight
-                     *  @attribute {jQuery} $options HTML object (the option[s] which was selected to be moved)
-                     *  @attribute {object} event - the event that initialised the action
-                     *  @attribute {boolean} silent - that tells if you have to trigger beforeMoveToRight and afterMoveToRight
-                     *  @attribute {boolean} skipStack - that tells if you have to handle the undo/redo stack
-                     *  @return {object} the Multiselect object
-                     **/
-                    moveToRight: undefined,
                     /*  will be executed each time after moving option[s] to right
                      *
                      *  @method afterMoveToRight
@@ -1081,7 +1111,7 @@
                     /** will be executed each time before moving option[s] to left
                      *
                      *  IMPORTANT : this method must return boolean value
-                     *      true    : continue to moveToRight method
+                     *      true    : continue to moveFromAToB method
                      *      false   : stop
                      *
                      *  @method beforeMoveToLeft
@@ -1093,19 +1123,6 @@
                      *  @return {boolean}
                      **/
                     beforeMoveToLeft: function($left, $right, $options) { return true; },
-
-                    /*  will be executed instead of the default action
-                     * (move selected items from right to left palette)
-                     *
-                     *  @method moveToLeft
-                     *  @attribute $right jQuery object
-                     *  @attribute {jQuery} $options HTML object (the option[s] which was selected to be moved)
-                     *  @attribute {object} event - the event that initialised the action
-                     *  @attribute {boolean} silent - that tells if you have to trigger beforeMoveToLeft and afterMoveToLeft
-                     *  @attribute {boolean} skipStack - that tells if you have to handle the undo/redo stack
-                     *  @return {object} the Multiselect object
-                     **/
-                    moveToLeft: undefined,
 
                     /*  will be executed each time after moving option[s] to left
                      *
@@ -1223,9 +1240,9 @@
                 init: function() {
                     var self = this;
                     // initialize the undo/redo functionality
-                    /** @member {StackElement[]} */
+                    /** @type{Stack} self.undoStack */
                     self.undoStack = [];
-                    /** @member {StackElement[]} */
+                    /** @member {Stack} */
                     self.redoStack = [];
                     // decorate the options with their initial positions in the list so that it can be re-established
                     storeRenderingSortOrder(self.$left, self.options.keepRenderingFor);
@@ -1273,74 +1290,22 @@
                     this.$left.append(contentHtml);
                     this.init();
                 },
-                moveToRight: function( $options, event, silent, skipStack ) {
+
+                moveFromAtoB: function( $source, $destination, $options, silent, skipStack) {
                     if (skipStack === "undefined") {
                         skipStack = false;
                     }
-                    var self = this;
-
-                    if (self.callbacks.moveToRight) {
-                        return self.callbacks.moveToRight( self, $options, event, silent, skipStack );
-                    } else {
-                        if (!silent) {
-                            if (!self.callbacks.beforeMoveToRight( self.$left, self.$right, $options ) ) {
-                                return false;
-                            }
-                        }
-
-                        self.moveFromAtoB(self.$left, self.$right, $options);
-                        self.rightSearch.$filterInput.keyup();
-                        if (!skipStack) {
-                            // FIXME: UNDO/REDO doesn't work with multiple destinations
-
-                            self.undoStack.push(['right', $options ]);
-                            self.redoStack = [];
-                        }
-
-                        // FIXME: doNotSortRight was never set?
-                        if (!silent) {
-                            self.$right.each(function(i, select) {
-                                // FIXME: You'd only need to sort that $select when its content changed...
-                                sortSelectItems($(select), self.callbacks.sort, self.options.keepRenderingFor);
-                            });
-                            self.callbacks.afterMoveToRight( self.$left, self.$right, $options );
-                        }
-
-                        return self;
+                    if (silent === "undefined") {
+                        silent = false;
                     }
-                },
-
-                moveToLeft: function( $options, event, silent, skipStack ) {
                     var self = this;
-
-                    if (self.callbacks.moveToLeft) {
-                        return self.callbacks.moveToLeft( self, $options, event, silent, skipStack );
-                    } else {
-                        if (!silent) {
-                            if (!self.callbacks.beforeMoveToLeft( self.$left, self.$right, $options ) ) {
-                                return false;
-                            }
+                    var toLeftSide = ($destination === self.$left);
+                    if (!silent) {
+                        var beforeCallback = (toLeftSide ? self.callbacks.beforeMoveToLeft : self.callbacks.beforeMoveToRight);
+                        if (!beforeCallback(self.$left, self.$right, $options)) {
+                            return false;
                         }
-
-                        self.moveFromAtoB(self.$right, self.$left, $options);
-                        self.leftSearch.$filterInput.keyup();
-
-                        if ( !skipStack ) {
-                            self.undoStack.push(['left', $options ]);
-                            self.redoStack = [];
-                        }
-
-                        if (!silent ) {
-                            sortSelectItems(self.$left, self.callbacks.sort, self.options.keepRenderingFor);
-                            self.callbacks.afterMoveToLeft( self.$left, self.$right, $options );
-                        }
-
-                        return self;
                     }
-                },
-
-                moveFromAtoB: function( $source, $destination, $options, event) {
-                    var self = this;
 
                     var $changedOptgroups = $();
                     $options.each(function(index, option) {
@@ -1375,79 +1340,45 @@
                     if ($changedOptgroups.length > 0) {
                         removeIfEmpty($changedOptgroups);
                     }
+                    if (!skipStack) {
+                        /** @type {StackElement} stackElement */
+                        var stackElement = {
+                            $lastSource: $source,
+                            $lastDestination: $destination,
+                            $movedOptions: $options
+                        };
+                        self.undoStack.push(stackElement);
+                        // TODO: Do we need memory management with the new stack?
+                        self.redoStack = [];
+                    }
+                    sortSelectItems($destination, self.callbacks.sort, self.options.keepRenderingFor);
+                    if (!silent) {
+                        var afterCallback = (toLeftSide ? self.callbacks.afterMoveToLeft : self.callbacks.afterMoveToRight);
+                        afterCallback( self.$left, self.$right, $options );
+                    }
+                    if (self.options.search) {
+                        var filterToClear = toLeftSide ? self.leftSearch.$filterInput : self.rightSearch.$filterInput;
+                        filterToClear.val("").keyup();
+                    }
                     return self;
                 },
 
                 moveUp: function($options) {
-                    var self = this;
-
-                    if ( !self.callbacks.beforeMoveUp( $options ) ) {
-                        return false;
-                    }
-
-                    $options.each(function(i, optionToMove) {
-                        var $option = $(optionToMove);
-                        var $optionPrev = $option.prev();
-                        if ($optionPrev.length > 0 && $options.filter($optionPrev).length == 0) {
-                            $optionPrev.before($option);
-                        }
-                    });
-
-                    self.callbacks.afterMoveUp( $options );
+                    moveItems($options, true, self.callbacks.beforeMoveUp, self.callbacks.afterMoveUp);
                 },
 
                 moveDown: function($options) {
-                    var self = this;
-
-                    if ( !self.callbacks.beforeMoveDown( $options ) ) {
-                        return false;
-                    }
-
-                    $($options.get().reverse()).each(function(i, optionToMove) {
-                        var $option = $(optionToMove);
-                        var $optionNext = $option.next();
-                        if ($optionNext.length > 0 && $options.filter($optionNext).length == 0) {
-                            $optionNext.after($option);
-                        }
-                    });
-
-                    self.callbacks.afterMoveDown( $options );
+                    moveItems($options, false, self.callbacks.beforeMoveDown, self.callbacks.afterMoveDown);
                 },
 
-                undo: function(event) {
-                    var self = this;
-                    var last = self.undoStack.pop();
-
-                    if ( last ) {
-                        self.redoStack.push(last);
-
-                        switch(last[0]) {
-                            case 'left':
-                                self.moveToRight(last[1], event, false, true);
-                                break;
-                            case 'right':
-                                self.moveToLeft(last[1], event, false, true);
-                                break;
-                        }
-                    }
+                undo: function(e) {
+                    e.preventDefault();
+                    moveAndChangeStacks(this, true);
                 },
 
-                redo: function(event) {
-                    var self = this;
-                    var last = self.redoStack.pop();
-
-                    if ( last ) {
-                        self.undoStack.push(last);
-
-                        switch(last[0]) {
-                            case 'left':
-                                self.moveToLeft(last[1], event, false, true);
-                                break;
-                            case 'right':
-                                self.moveToRight(last[1], event, false, true);
-                                break;
-                        }
-                    }
+                redo: function(e) {
+                    e.preventDefault();
+                    moveAndChangeStacks(this, false);
                 }
             };
             // TODO: Perhaps don't add the class to jQuery if it is used as an AMD module (or other?)

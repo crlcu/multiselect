@@ -13,6 +13,8 @@ $(document).ready(function() {
         leftAll: '#multi_d_leftAll_1, #multi_d_leftAll_2',
         moveUp: '#multi_d_moveUp_1, #multi_d_moveUp_2',
         moveDown: '#multi_d_moveDown_1, #multi_d_moveDown_2',
+        undo: '#multi_d_undo',
+        redo: '#multi_d_redo',
         search: {
             left: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
             right: '<input type="text" name="q2" class="form-control" placeholder="Search..." />'
