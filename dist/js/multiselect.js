@@ -358,7 +358,7 @@
                 return null;
             }
 
-            function renderingSortComparison(a, b) {
+            function initialOrderComparison(a, b) {
                 var aPositionIndex = getInitialPosition($(a));
                 var bPositionIndex = getInitialPosition($(b));
                 if (aPositionIndex !== null && bPositionIndex !== null) {
@@ -589,13 +589,13 @@
                         if (keepRenderingFor === Multiselect.RenderingOptions.ALL) {
                             $elementsToSort = $elementsToSort.add($select.children("option"));
                         }
-                        $elementsToSort.sort(renderingSortComparison).appendTo($select);
+                        $elementsToSort.sort(initialOrderComparison).appendTo($select);
 
                         // check for optgroups, if none present we've already sorted everything
                         // if any, sort their children, i.e. all other previously unsorted options
                         if (keepRenderingFor === Multiselect.RenderingOptions.ALL) {
                             $select.find("optgroup").each(function(i, group) {
-                                $(group).children().sort(renderingSortComparison).appendTo(group);
+                                $(group).children().sort(initialOrderComparison).appendTo(group);
                             });
                         }
                     } else {
@@ -624,6 +624,7 @@
              */
             function storeRenderingSortOrder($select, keepRenderingFor) {
                 if ($select instanceof $ && $select.is("select")) {
+                    // TODO: First remove the old order?
                     if (keepRenderingFor !== Multiselect.RenderingOptions.NONE) {
                         // FIXME: Check if this is ok, optgroups start at 0, and options in each group start at 0
                         $select.children().each(function(index, optionOrOptgroup) {
@@ -1189,15 +1190,13 @@
                     self.undoStack = [];
                     /** @member {StackElement[]} */
                     self.redoStack = [];
-                    if (self.options.keepRenderingFor !== Multiselect.RenderingOptions.NONE) {
-                        // decorate the options with their initial positions in the list so that it can be re-established
-                        storeRenderingSortOrder(self.$left, self.options.keepRenderingFor);
+                    // decorate the options with their initial positions in the list so that it can be re-established
+                    storeRenderingSortOrder(self.$left, self.options.keepRenderingFor);
 
-                        // FIXME: This doesn't work so good, does it?
-                        self.$right.each(function(i, select) {
-                            storeRenderingSortOrder($(select), self.options.keepRenderingFor);
-                        });
-                    }
+                    // FIXME: This doesn't work so good, does it?
+                    self.$right.each(function(i, select) {
+                        storeRenderingSortOrder($(select), self.options.keepRenderingFor);
+                    });
 
                     // startUp could be a function or false
                     // either the default is used or the function; false doesn't amount to anything
