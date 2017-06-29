@@ -51,7 +51,7 @@
 /**
  * Additional options wrapper for Multiselect that affects its behaviour
  * @typedef {Object} MultiselectOptions
- * @property {RenderingOptions} [keepRenderingFor=ALL] - what to keep the rendering order for
+ * @property {KeepInitialPositionFor} [keepRenderingFor=ALL] - what to keep the rendering order for
  * @property {boolean} [submitAllLeft=true] - whether to submit all visible left options when a form is submitted
  * @property {boolean} [submitAllRight=true] - whether to submit all visible right options when a form is submitted
  * @property {SearchElements} [search] - the meta information used in the search elements
@@ -512,25 +512,30 @@
              * @returns {jQuery} - returns the element for chaining
              */
             function setInitialPosition($optionOrOptgroup, newPosition) {
-                if ($optionOrOptgroup !== undefined && $optionOrOptgroup.is("option,optgroup")) {
+                if ($optionOrOptgroup instanceof jQuery && $optionOrOptgroup.is("option,optgroup")) {
                     $optionOrOptgroup.data(DATA_POSITION, newPosition);
                 }
                 return $optionOrOptgroup;
             }
 
             /**
-             *
+             * Either prepends the given search filter html to the target select element
+             * just uses an existing input for the filter. Also stores which
+             * selects should be affected by the filter.
              * @param {jQuery} $targetSelect - the select element where the filter should be prepended
              * @param {string|jQuery} searchFilterHtmlOrElement - the html for the search filter or an existing jQuery element
              * @param {jQuery} $filteredSelects - the select elements that should be filtered with this input
-             * @returns {FilterRelation}
+             * @returns {FilterRelation} - the filter/selects relation
              */
             function prependSearchFilter($targetSelect, searchFilterHtmlOrElement, $filteredSelects) {
+                /** The created search filter element
+                 * @type {jQuery} */
                 var $searchFilter = $();
                 if (typeof searchFilterHtmlOrElement === "string") {
                     $searchFilter = $(searchFilterHtmlOrElement);
                     $targetSelect.before($searchFilter);
                 } else if (searchFilterHtmlOrElement instanceof $) {
+                    //noinspection JSValidateTypes
                     $searchFilter = searchFilterHtmlOrElement;
                 }
                 return {
@@ -539,28 +544,46 @@
                 };
             }
 
-            function oldFilterOptions($filterValue, $select) {
+            /**
+             * The old filter function stored for reference.
+             * @param {string} filterValue - the value options must match
+             * @param {jQuery} $select - the select to filter
+             */
+            function oldFilterOptions(filterValue, $select) {
                 // options to show
-                extendedShow($select.find('option:search("' + $filterValue + '")'));
+                extendedShow($select.find('option:search("' + filterValue + '")'));
                 // options to hide
-                extendedHide($select.find('option:not(:search("' + $filterValue + '"))'));
+                extendedHide($select.find('option:not(:search("' + filterValue + '"))'));
                 // optgroups to hide
                 extendedHide($select.find('option.hidden').parent('optgroup').not($(":visible").parent()));
                 // optgroups to show
                 extendedShow($select.find('option:not(.hidden)').parent('optgroup'));
             }
 
-            function applyFilter($filterValue, $selectsToFilter) {
-                if ($filterValue === undefined || $filterValue == "") {
+            /**
+             * Filters the given selects using the filter value
+             * to check which options should be filtered.
+             * @param {string} filterValue - the value to use for choosing options to filter
+             * @param {jQuery} $selectsToFilter - the select elements that should be filtered using the value
+             */
+            function applyFilter(filterValue, $selectsToFilter) {
+                if (!filterValue || filterValue == "") {
                     removeFilter($selectsToFilter);
                 }
+                /** @type {jQuery} */
                 var $allOptions = $selectsToFilter.find("option");
+                /** @type {jQuery} */
                 var $prevHiddenOptions = $allOptions.filter(SELECTOR_HIDDEN);
-                var $matchingOptions = $allOptions.filter(':search("' + $filterValue + '")');
+                /** @type {jQuery} */
+                var $matchingOptions = $allOptions.filter(':search("' + filterValue + '")');
+                /** @type {jQuery} */
                 var $allOptgroups = $selectsToFilter.children("optgroup");
+                /** @type {boolean} */
                 var hasOptgroups = $allOptgroups.length > 0;
+                /** @type {jQuery} */
+                var $prevHiddenOptgroups = $();
                 if (hasOptgroups){
-                    var $prevHiddenOptgroups = $allOptgroups.filter(SELECTOR_HIDDEN);
+                    $prevHiddenOptgroups = $allOptgroups.filter(SELECTOR_HIDDEN);
                 }
                 if ($allOptions.length == $matchingOptions.length) {
                     // edge case: if all options match
@@ -587,19 +610,27 @@
                         // hide all options that do not match and aren't already hidden
                         // show all options that match and aren't already shown
                         // show all previously hidden optgroups that have at least one shown option now
+                        /** @type {jQuery} */
                         var $prevShownOptions = $allOptions.not($prevHiddenOptions);
+                        /** @type {jQuery} */
                         var $additionalOptionsToHide = $prevShownOptions.not($matchingOptions);
+                        /** @type {jQuery} */
                         var $additionalOptionsToShow = $matchingOptions.not($prevShownOptions);
                         extendedHide($additionalOptionsToHide);
                         extendedShow($additionalOptionsToShow);
                         if (hasOptgroups) {
+                            /** @type {jQuery} */
                             var $prevShownOptgroups = $allOptgroups.not($prevHiddenOptgroups);
+                            /** @type {jQuery} */
                             var $additionalOptgroupsToShow = $prevHiddenOptgroups.filter($additionalOptionsToShow.parent());
                             extendedShow($additionalOptgroupsToShow);
                             // hide all previously shown optgroups that have all their remaining shown options hidden
                             $prevShownOptgroups.each(function(i, prevShownOptgroup) {
+                                /** @type {jQuery} */
                                 var $prevShownOptGroup = $(prevShownOptgroup);
+                                /** @type {jQuery} */
                                 var $shownOptions = $(prevShownOptgroup).children(":not(" + SELECTOR_HIDDEN + ")");
+                                /** @type {jQuery} */
                                 var $remainingOptions = $shownOptions.not($additionalOptionsToHide);
                                 if ($remainingOptions.length == 0) {
                                     extendedHide($prevShownOptGroup);
@@ -610,21 +641,39 @@
                 }
             }
 
+            /**
+             * Removes the filter by showing all options and optgroups in the select.
+             * @param {jQuery} $selects - the selects to remove the filter of
+             */
             function removeFilter($selects) {
                 extendedShow($selects.find('option, optgroup'));
             }
 
+            /**
+             * Debug function to measure performance for functions.
+             * Takes a start timestamp and calculates duration using the end which is now.
+             * @param {number} startTimestamp - the start of the measure activity
+             * @param {string} feature - the feature to be tested to better discern in the console log
+             */
             function measurePerformance(startTimestamp, feature) {
                 var endTimestamp = performance.now();
                 var timeSpent = endTimestamp - startTimestamp;
                 console.log("Measuring " + feature + ": " + timeSpent);
             }
 
+            /**
+             * Given a select and the option to return only selected options or all of them,
+             * this returns all requested options (but no invisible/hidden options)
+             * @param {jQuery} $select - the select to find options in
+             * @param {boolean} onlySelected - if true, returns only selected options; if false, returns all options
+             * @returns {jQuery} - the requested options
+             */
             function getOptionsToMove($select, onlySelected) {
                 if (onlySelected === undefined) {
                     onlySelected = true;
                 }
                 // FIXME: Unsure if this is good, as I could define and use my own hidden class
+                /** @type {jQuery} */
                 var $allVisibleOptions = $select.find("option:not(" + SELECTOR_HIDDEN + ")");
                 if (onlySelected) {
                     return $allVisibleOptions.filter(":selected");
@@ -633,14 +682,26 @@
                 }
             }
 
+            /**
+             * Checks the two sides of the Multiselect and removes any duplicate options
+             * (and maybe empty optgroups) from the left side
+             * @param {jQuery} $left - the left select
+             * @param {jQuery} $right - the right selects
+             */
             function removeDuplicateOptions($left, $right) {
+                // FIXME: What if one right element has the same option as another right element?
                 $right.find('option').each(function(index, rightOption) {
+                    /** @type {jQuery} */
                     var $rightOption = $(rightOption);
+                    /** @type {jQuery} */
                     var $parentOptgroup = $rightOption.parent("optgroup");
+                    /** @type {string} */
                     var duplicateOptionSelector = 'option[value="' + rightOption.value + '"]';
                     // FIXME: What about matchOptgroupBy? Shouldn't it be respected here?
                     if ($parentOptgroup.length > 0) {
+                        /** @type {string} */
                         var sameOptgroupSelector = 'optgroup[label="' + $parentOptgroup.attr('label') + '"]';
+                        /** @type {jQuery} */
                         var $sameOptgroup = $left.find(sameOptgroupSelector);
                         if ($sameOptgroup.length > 0) {
                             $sameOptgroup.find(duplicateOptionSelector).each(function(index, duplicateOption) {
@@ -649,14 +710,19 @@
                             removeIfEmpty($sameOptgroup);
                         }
                     } else {
+                        /** @type {jQuery} */
                         var $option = $left.find(duplicateOptionSelector);
                         $option.remove();
                     }
                 });
             }
 
-            // append options
-            // then set the selected attribute to false
+            /**
+             * Appends the options to the target select element and deselects them.
+             * @param {jQuery} $targetSelect - the select where the options should be moved to
+             * @param {jQuery} $options - the options to move
+             * @returns {jQuery} - the select for chaining
+             */
             function moveOptionsTo($targetSelect, $options) {
                 $targetSelect
                     .append($options)
@@ -666,8 +732,14 @@
                 return $targetSelect;
             }
 
+            /**
+             * Checks elements if they contain children. If not, removes the element.
+             * @param {jQuery} $elements - the elements to check (used for optgroups)
+             * @returns {jQuery} - the elements to check for further chaining
+             */
             function removeIfEmpty($elements) {
                 $elements.each(function(i, element) {
+                    /** @type {jQuery} */
                     var $element = $(element);
                     if (!$element.children().length) {
                         $element.remove();
@@ -677,30 +749,43 @@
                 return $elements;
             }
 
+            /**
+             * Shows elements using CSS and jQuery functions.
+             * @param {jQuery} $elements - elements to show
+             * @returns {jQuery} the elements for chaining
+             */
             function extendedShow($elements) {
                 $elements.removeClass(CSS_HIDDEN).show();
                 // FIXME: This would be probably be better using feature based checks (Modernizr etc.)
                 if (isMS || isSafari) {
                     $elements.each(function(index, element) {
                         // Remove <span> to make it compatible with IE
+                        /** @type {jQuery} */
                         var $option = $(element);
-                        var $parent = $option.parent("span");
-                        if ($parent.length > 0) {
-                            $parent.replaceWith(element);
+                        /** @type {jQuery} */
+                        var $anySpanParents = $option.parent("span");
+                        if ($anySpanParents.length > 0) {
+                            $anySpanParents.replaceWith(element);
                         }
                     });
                 }
                 return $elements;
             }
 
+            /**
+             * Hides elements using CSS and jQuery functions.
+             * @param {jQuery} $elements - the elements to hide
+             * @returns {jQuery} the elements for chaining
+             */
             function extendedHide($elements) {
                 $elements.addClass(CSS_HIDDEN).hide();
                 // FIXME: This would be probably be better using feature based checks (Modernizr etc.)
                 if (isMS || isSafari) {
                     $elements.each(function(index, element) {
+                        /** @type {jQuery} */
                         var $option = $(element);
                         // Wrap with <span> to make it compatible with IE
-                        if(!$option.parent().is('span')) {
+                        if(!$option.parent('span').length > 0) {
                             $option.wrap('<span></span>').hide();
                         }
                     });
@@ -710,27 +795,32 @@
             }
 
             /**
-             *
-             * @param {jQuery} $select
+             * Sorts the options and optgroups inside the select using a given comparator callback.
+             * Sorts only those items whose initial order shouldn't be preserved
+             * @param {jQuery} $select - the select to sort
              * @param {function} comparatorCallback
-             * @param {RenderingOptions} keepRenderingFor
-             * @returns {jQuery} - the select that was sorted
+             * @param {KeepInitialPositionFor} keepInitialPositionFor - if we want to keep certain ordering
+             * @returns {jQuery} - the select that was sorted, for chaining
              */
-            function sortSelectItems($select, comparatorCallback, keepRenderingFor) {
+            function sortSelectItems($select, comparatorCallback, keepInitialPositionFor) {
                 if (isOnlySelects($select)) {
                     // sort any direct children (can be combination of options and optgroups)
                     // example: oa="aaa", ob="bbb", oc="zzz", oga="ddd", ogb="eee"
-                    if (keepRenderingFor !== Multiselect.RenderingOptions.NONE) {
+                    //noinspection JSValidateTypes
+                    if (keepInitialPositionFor !== Multiselect.KeepInitialPositionFor.NONE) {
                         // Different approach, as following order would be possible: oa, ob, og1, og2, oc
+                        /** @type {jQuery} */
                         var $elementsToSort = $select.children("optgroup");
-                        if (keepRenderingFor === Multiselect.RenderingOptions.ALL) {
+                        //noinspection JSValidateTypes
+                        if (keepInitialPositionFor === Multiselect.KeepInitialPositionFor.ALL) {
                             $elementsToSort = $elementsToSort.add($select.children("option"));
                         }
                         $elementsToSort.sort(initialOrderComparison).appendTo($select);
 
                         // check for optgroups, if none present we've already sorted everything
                         // if any, sort their children, i.e. all other previously unsorted options
-                        if (keepRenderingFor === Multiselect.RenderingOptions.ALL) {
+                        //noinspection JSValidateTypes
+                        if (keepInitialPositionFor === Multiselect.KeepInitialPositionFor.ALL) {
                             $select.find("optgroup").each(function(i, group) {
                                 $(group).children().sort(initialOrderComparison).appendTo(group);
                             });
@@ -739,6 +829,7 @@
                         // TODO: How about allowing the user decide which in which order this is done?
                         // the options that are not in an optgroup come first
                         $select.children("option").sort(comparatorCallback).appendTo($select);
+                        /** @type {jQuery} */
                         var $optgroups = $select.children("optgroup");
                         if ($optgroups.length > 0) {
                             // then sort the optgroups themselves, if any are there
@@ -749,36 +840,47 @@
                             });
                         }
                     }
-                    return $select;
                 }
-                return null;
+                return $select;
             }
 
             /**
              * Stores the initial rendering order.
-             * @param {jQuery} $select
-             * @param {RenderingOptions} keepRenderingFor - whether to store position for some element types
+             * @param {jQuery} $select - the select to store the initial positions for
+             * @param {KeepInitialPositionFor} keepRenderingFor - which element types to store the position for
+             * @return {jQuery} the select for chaining
              */
             function storeRenderingSortOrder($select, keepRenderingFor) {
                 if (isOnlySelects($select)) {
                     // TODO: First remove the old order?
-                    if (keepRenderingFor !== Multiselect.RenderingOptions.NONE) {
+                    //noinspection JSValidateTypes
+                    if (keepRenderingFor !== Multiselect.KeepInitialPositionFor.NONE) {
                         $select.children().each(function(index, optionOrOptgroup) {
+                            /** @type {jQuery} */
                             var $optionOrOptgroup = $(optionOrOptgroup);
+                            /** @type {boolean} */
                             var isOptgroup = $optionOrOptgroup.is("optgroup");
-                            if (isOptgroup && keepRenderingFor === Multiselect.RenderingOptions.ALL) {
+                            //noinspection JSValidateTypes
+                            if (isOptgroup && keepRenderingFor === Multiselect.KeepInitialPositionFor.ALL) {
                                 $optionOrOptgroup.children().each(function(i, optgroupOption) {
                                     setInitialPosition($(optgroupOption), i);
                                 });
                             }
-                            if (isOptgroup || keepRenderingFor === Multiselect.RenderingOptions.ALL) {
+                            //noinspection JSValidateTypes
+                            if (isOptgroup || keepRenderingFor === Multiselect.KeepInitialPositionFor.ALL) {
                                 setInitialPosition($optionOrOptgroup, index);
                             }
                         });
                     }
                 }
+                return $select;
             }
 
+            /**
+             * Checks if a given element set contains only select elements.
+             * @param {jQuery} $elems - the elements to check
+             * @returns {boolean} - true if only selects present, false otherwise
+             */
             function isOnlySelects($elems) {
                 if ($elems instanceof $) {
                     if ($elems.length > 0 && $elems.is("select")) {
@@ -788,12 +890,23 @@
                 return false;
             }
 
+            /**
+             * Checks if the given element set is only a SINGLE select element, throws an error otherwise.
+             * @param {jQuery} $select - the hopefully single select element
+             */
             function verifySingleSelect($select) {
                 if (!isOnlySelects($select) || $select.length !== 1) {
                     throw new Error("A single Multiselect requires a single jQuery select element for the left side.");
                 }
             }
 
+            /**
+             * Adds the filtering event to a relation between a
+             * filter input and one or more select elements.
+             * Decides whether to filter using the given callback.
+             * @param {FilterRelation} filterRelation - the relation to establish the filter for
+             * @param {function} filterOptionsCallback - the callback to decide whether to filter
+             */
             function addFiltering(filterRelation, filterOptionsCallback) {
                 filterRelation.$filterInput.keyup(function(e) {
                     var filterValue = e.currentTarget.value;
@@ -805,11 +918,21 @@
                 });
             }
 
+            /**
+             * Retrieves the select context for the button.
+             * @param {jQuery} $msButton - the button
+             * @returns {jQuery} - the select referenced by this button
+             */
             function getButtonContext($msButton) {
                 // FIXME: Probably more checking necessary
                 return $($msButton.data(DATA_CONTEXT));
             }
 
+            /**
+             * Sets the select context for this button.
+             * @param {jQuery} $msButton - the button
+             * @param {string} newSelector - the new context
+             */
             function setButtonContext($msButton, newSelector) {
                 // FIXME: Probably more checking necessary
                 if ($msButton) {
@@ -817,6 +940,10 @@
                 }
             }
 
+            /**
+             * Attaches the necessary events to the components of the Multiselect instance.
+             * @param {Multiselect} msInstance - the instance to prepare
+             */
             function prepareEvents(msInstance) {
                 var self = msInstance;
 
@@ -1174,7 +1301,7 @@
                     }
                 }
                 // FIXME: keepRendering + options on any right side breaks sorting
-                // if (this.options.keepRenderingFor !== RenderingOptions.NONE && this.$right.find("option").length > 0) {
+                // if (this.options.keepRenderingFor !== KeepInitialPositionFor.NONE && this.$right.find("option").length > 0) {
                 //     throw new Error("Multiselect can't index the items properly if any are on the right side at the beginning.");
                 // }
                 // Create event listeners
@@ -1188,9 +1315,9 @@
             /**
              * Enum for what we want to keep the option order for.
              * @readonly
-             * @enum {string} RenderingOptions
+             * @enum {string} KeepInitialPositionFor
              */
-            Multiselect.RenderingOptions = {
+            Multiselect.KeepInitialPositionFor = {
                 ALL: "ALL",
                 OPTGROUPS: "OPTGROUPS",
                 NONE: "NONE"
@@ -1201,7 +1328,7 @@
                     return "#" + id + "_" + action;
                 },
                 options: {
-                    keepRenderingFor: Multiselect.RenderingOptions.ALL,
+                    keepRenderingFor: Multiselect.KeepInitialPositionFor.ALL,
                     submitAllLeft: true,
                     submitAllRight: true,
                     search: {},
@@ -1394,7 +1521,7 @@
                     self.callbacks.startUp( self.$left, self.$right );
 
                     // initial sort if necessary
-                    if (self.options.keepRenderingFor !== Multiselect.RenderingOptions.ALL && self.callbacks.sort) {
+                    if (self.options.keepRenderingFor !== Multiselect.KeepInitialPositionFor.ALL && self.callbacks.sort) {
                         // sort seems to be a comparator function, not a sorting function
                         sortSelectItems(self.$left, self.callbacks.sort, self.options.keepRenderingFor);
 
@@ -1522,15 +1649,26 @@
             return Multiselect;
         })($);
 
-        // with this, you can get the Multiselect instance...
+        /**
+         * jQuery extension for creating Multiselect instances.
+         * @param {SettingsObject} options - options for the multiselect instance.
+         * @returns {jQuery} - the elements used
+         */
         $.fn.multiselect = function( options ) {
             return this.each(function() {
                 Multiselect.create($(this), options);
             });
         };
 
-        // this is the custom jQuery selector :search used when filtering
+        /**
+         * Custom jQuery selector :search for filtering
+         * @param elem - the elem currently looked at
+         * @param index - ???
+         * @param meta - ???
+         * @returns {Array|{index: number, input: string}}
+         */
         $.expr[":"].search = function(elem, index, meta) {
+            /** @type {RegExp} */
             var regex = new RegExp(meta[3], "i");
 
             return $(elem).text().match(regex);

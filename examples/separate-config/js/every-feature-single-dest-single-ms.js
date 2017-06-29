@@ -33,7 +33,7 @@ $(document).ready(function() {
     }
 
     var settings = {
-        keepRenderingFor: $.Multiselect.RenderingOptions.OPTGROUPS,
+        keepRenderingFor: $.Multiselect.KeepInitialPositionFor.OPTGROUPS,
         search: {
             left: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
             right: '<input type="text" name="q" class="form-control" placeholder="Search..." />'
