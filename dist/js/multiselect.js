@@ -665,7 +665,7 @@
              * Given a select and the option to return only selected options or all of them,
              * this returns all requested options (but no invisible/hidden options)
              * @param {jQuery} $select - the select to find options in
-             * @param {boolean} onlySelected - if true, returns only selected options; if false, returns all options
+             * @param {boolean} [onlySelected=true] - if true, returns only selected options; if false, returns all options
              * @returns {jQuery} - the requested options
              */
             function getOptionsToMove($select, onlySelected) {
@@ -945,6 +945,7 @@
              * @param {Multiselect} msInstance - the instance to prepare
              */
             function prepareEvents(msInstance) {
+                /** @type {Multiselect} */
                 var self = msInstance;
 
                 // Attach event to left filter
@@ -976,6 +977,7 @@
                 self.$left.dblclick('option', function(e) {
                     e.preventDefault();
 
+                    /** @type {jQuery} */
                     var $options = getOptionsToMove(self.$left);
 
                     if ( $options.length ) {
@@ -988,6 +990,7 @@
                     if (e.keyCode === KEY_ENTER) {
                         e.preventDefault();
 
+                        /** @type {jQuery} */
                         var $options = getOptionsToMove(self.$left);
 
                         if ( $options.length ) {
@@ -1000,6 +1003,7 @@
                 self.$right.dblclick('option', function(e) {
                     e.preventDefault();
 
+                    /** @type {jQuery} */
                     var $options = getOptionsToMove(self.$right);
 
                     if ( $options.length ) {
@@ -1012,6 +1016,7 @@
                     if (e.keyCode === KEY_ENTER || e.keyCode === KEY_BACKSPACE || e.keyCode === KEY_DEL) {
                         e.preventDefault();
 
+                        /** @type {jQuery} */
                         var $options = getOptionsToMove(self.$right);
 
                         if ( $options.length ) {
@@ -1027,7 +1032,9 @@
                     });
 
                     self.$right.dblclick(function(e) {
+                        /** @type {jQuery} */
                         var $activatedSelect = $(e.currentTarget);
+                        /** @type {jQuery} */
                         var $options = getOptionsToMove($activatedSelect);
                         if ( $options.length ) {
                             self.moveFromAtoB($activatedSelect, self.$left, $options);
@@ -1038,10 +1045,13 @@
                 self.actions.$rightSelected.click(function(e) {
                     e.preventDefault();
 
+                    /** @type {jQuery} */
                     var $options = getOptionsToMove(self.$left);
 
                     if ( $options.length ) {
+                        /** @type {jQuery} */
                         var $rightButton = $(e.currentTarget);
+                        /** @type {jQuery} */
                         var $targetSelect = getButtonContext($rightButton);
                         self.moveFromAtoB(self.$left, $targetSelect, $options);
                     }
@@ -1052,10 +1062,13 @@
                 self.actions.$leftSelected.click(function(e) {
                     e.preventDefault();
 
+                    /** @type {jQuery} */
                     var $options = getOptionsToMove(self.$right);
 
                     if ( $options.length ) {
+                        /** @type {jQuery} */
                         var $leftButton = $(e.currentTarget);
+                        /** @type {jQuery} */
                         var $sourceSelect = getButtonContext($leftButton);
                         self.moveFromAtoB($sourceSelect, self.$left, $options);
                     }
@@ -1065,10 +1078,13 @@
 
                 self.actions.$rightAll.click(function(e) {
                     e.preventDefault();
+                    /** @type {jQuery} */
                     var $options = getOptionsToMove(self.$left, false);
 
                     if ( $options.length ) {
+                        /** @type {jQuery} */
                         var $rightButton = $(e.currentTarget);
+                        /** @type {jQuery} */
                         var $targetSelect = getButtonContext($rightButton);
                         self.moveFromAtoB(self.$left, $targetSelect, $options);
                     }
@@ -1079,10 +1095,13 @@
                 self.actions.$leftAll.click(function(e) {
                     e.preventDefault();
 
+                    /** @type {jQuery} */
                     var $options = getOptionsToMove(self.$right, false);
 
                     if ( $options.length ) {
+                        /** @type {jQuery} */
                         var $leftButton = $(e.currentTarget);
+                        /** @type {jQuery} */
                         var $sourceSelect = getButtonContext($leftButton);
                         self.moveFromAtoB($sourceSelect, self.$left, $options);
                     }
@@ -1105,7 +1124,9 @@
                 self.actions.$moveUp.click(function(e) {
                     e.preventDefault();
 
+                    /** @type {jQuery} */
                     var $targetSelect = getButtonContext($(e.currentTarget));
+                    /** @type {jQuery} */
                     var $options = getOptionsToMove($targetSelect);
 
                     if ( $options.length ) {
@@ -1118,7 +1139,9 @@
                 self.actions.$moveDown.click(function(e) {
                     e.preventDefault();
 
+                    /** @type {jQuery} */
                     var $targetSelect = getButtonContext($(e.currentTarget));
+                    /** @type {jQuery} */
                     var $options = getOptionsToMove($targetSelect);
 
                     if ( $options.length ) {
@@ -1134,15 +1157,20 @@
              * @param {SelectContent} newItems
              */
             function toContentHtml(newItems) {
+                /** @type {string} */
                 var htmlContent = "";
+                /** @type {number} */
                 var grouplessOptionCount = newItems.options.length;
 
-                for (var i = 0; i < grouplessOptionCount; i++) {
+                for (/** @type {number} */var i = 0; i < grouplessOptionCount; i++) {
+                    /** @type {OptionRep} */
                     var option = newItems.options[i];
                     htmlContent += toOption(option);
                 }
+                /** @type {number} */
                 var optgroupCount = newItems.optgroups.length;
                 for (i = 0; i < optgroupCount; i++) {
+                    /** @type {OptgroupRep} */
                     var optgroup = newItems.optgroups[i];
                     htmlContent += toOptgroup(optgroup);
                 }
@@ -1154,7 +1182,9 @@
              * @param {OptionRep} optionRep
              */
             function toOption(optionRep) {
+                /** @type {string} */
                 var htmlContent = "<option value=";
+                /** @type {string} */
                 var quote = chooseQuotes(optionRep.value);
                 htmlContent += quote + optionRep.value + quote + ">";
                 htmlContent += optionRep.name;
@@ -1163,7 +1193,9 @@
             }
 
             function chooseQuotes(someValue) {
+                /** @type {string} */
                 const SINGLE_QUOTE = "'";
+                /** @type {string} */
                 const DOUBLE_QUOTE = '"';
                 if (typeof someValue === "number") {
                     someValue = someValue.toString();
@@ -1171,7 +1203,9 @@
                     return DOUBLE_QUOTE;
                 }
 
+                /** @type {number} */
                 var firstSingleQuoteIndex = someValue.indexOf(SINGLE_QUOTE);
+                /** @type {number} */
                 var firstDoubleQuoteIndex = someValue.indexOf(DOUBLE_QUOTE);
                 if (firstSingleQuoteIndex >= 0 || firstDoubleQuoteIndex >= 0) {
                     if (firstSingleQuoteIndex < 0) {
@@ -1194,11 +1228,14 @@
              * @param {OptgroupRep} optgroupRep
              */
             function toOptgroup(optgroupRep) {
+                /** @type {string} */
                 var htmlContent = "<optgroup label=";
+                /** @type {string} */
                 var quote = chooseQuotes(optgroupRep.label);
                 htmlContent += quote + optgroupRep.label + quote + ">";
+                /** @type {number} */
                 var optionCount = optgroupRep.contents.length;
-                for (var i = 0; i < optionCount; i++) {
+                for (/** @type {number} */var i = 0; i < optionCount; i++) {
                     htmlContent += toOption(optgroupRep.contents[i]);
                 }
                 htmlContent += "</optgroup>";
@@ -1211,13 +1248,17 @@
              * @param {boolean} isUndo
              */
             function moveAndChangeStacks(msInstance, isUndo) {
-                /** @type {StackElement} last */
+                /** @type {Stack} */
                 var sourceStack = isUndo ? msInstance.undoStack : msInstance.redoStack;
+                /** @type {Stack} */
                 var targetStack = isUndo ? msInstance.redoStack : msInstance.undoStack;
+                /** @type {StackElement} */
                 var last = sourceStack.pop();
                 if ( last ) {
                     targetStack.push(last);
+                    /** @type {jQuery} */
                     var newSource = isUndo ? last.$lastDestination : last.$lastSource;
+                    /** @type {jQuery} */
                     var newDestination = isUndo ? last.$lastSource : last.$lastDestination;
                     msInstance.moveFromAtoB(newSource, newDestination, last.$movedOptions, false, true);
                 }
@@ -1232,7 +1273,9 @@
                     $options = $($options.get().reverse());
                 }
                 $options.each(function(i, optionToMove) {
+                    /** @type {jQuery} */
                     var $option = $(optionToMove);
+                    /** @type {jQuery} */
                     var $optionTarget = moveUp ? $option.prev() : $option.next();
                     if ($optionTarget.length > 0 && $options.filter($optionTarget).length == 0) {
                         if (moveUp) {
@@ -1254,6 +1297,7 @@
              */
             function Multiselect( $select, settings ) {
                 verifySingleSelect($select);
+                /** @type {string} */
                 var id = $select.prop('id');
                 /** @member {jQuery} */
                 this.$left = $select;
@@ -1287,6 +1331,11 @@
                 /** @member {CallbackFunctions} */
                 this.callbacks = extractCallbacks(settings);
                 validateCallbacks(this.callbacks);
+                // initialize the undo/redo functionality
+                /** @member {Stack} */
+                this.undoStack = [];
+                /** @member {Stack} */
+                this.redoStack = [];
 
                 if (this.options.search) {
                     // Prepend left filter above left palette
@@ -1323,10 +1372,12 @@
                 NONE: "NONE"
             };
 
+            /** @type {object} */
             Multiselect.defaults = {
                 actionSelector: function(id, action) {
                     return "#" + id + "_" + action;
                 },
+                /** @type {MultiselectOptions} */
                 options: {
                     keepRenderingFor: Multiselect.KeepInitialPositionFor.ALL,
                     submitAllLeft: true,
@@ -1337,6 +1388,7 @@
                     // FIXME: matchOptgroupBy is not documented online
                     matchOptgroupBy: 'label'
                 },
+                /** @type {CallbackFunctions} */
                 callbacks: {
                     /** will be executed once - remove from $left all options that are already in $right
                      *
@@ -1487,12 +1539,14 @@
             Multiselect.create = function($select, options) {
                 verifySingleSelect($select);
                 if (!Multiselect.isMultiselect($select)) {
+                    /** @type {SettingsObject} */
                     var concreteSettings = $.extend(
                         {},
                         Multiselect.defaults.callbacks,
                         $select.data(),
                         (typeof options === 'object' && options)
                     );
+                    /** @type {Multiselect} */
                     var createdMultiselect = new Multiselect($select, concreteSettings);
                     Multiselect.setInstance($select, createdMultiselect);
                 }
@@ -1501,11 +1555,10 @@
             Multiselect.prototype = {
                 // public instance methods
                 init: function() {
+                    /** @type {Multiselect} */
                     var self = this;
-                    // initialize the undo/redo functionality
-                    /** @type{Stack} self.undoStack */
+                    // clear the stacks
                     self.undoStack = [];
-                    /** @member {Stack} */
                     self.redoStack = [];
                     // decorate the options with their initial positions in the list so that it can be re-established
                     storeRenderingSortOrder(self.$left, self.options.keepRenderingFor);
@@ -1534,6 +1587,7 @@
                 },
 
                 clearFilters: function() {
+                    /** @type {FilterRelation[]} */
                     var searchesToClear = [this.leftSearch, this.rightSearch];
                     $.each(searchesToClear, function(index, value) {
                         if (value) value.$filterInput.val("").keyup();
@@ -1549,6 +1603,7 @@
                  */
                 replaceItems: function(newOptions) {
                     this.empty();
+                    /** @type {string} */
                     var contentHtml = toContentHtml(newOptions);
                     this.$left.append(contentHtml);
                     this.init();
@@ -1561,17 +1616,21 @@
                     if (silent === "undefined") {
                         silent = false;
                     }
+                    /** @type {Multiselect} */
                     var self = this;
+                    /** @type {boolean} */
                     var toLeftSide = ($destination === self.$left);
                     if (!silent) {
+                        /** @type {function} */
                         var beforeCallback = (toLeftSide ? self.callbacks.beforeMoveToLeft : self.callbacks.beforeMoveToRight);
                         if (!beforeCallback(self.$left, self.$right, $options)) {
                             return false;
                         }
                     }
-
+                    /** @type {jQuery} */
                     var $changedOptgroups = $();
                     $options.each(function(index, option) {
+                        /** @type {jQuery} */
                         var $option = $(option);
 
                         if (self.options.ignoreDisabled && $option.is(':disabled')) {
@@ -1579,6 +1638,7 @@
                         }
 
                         if ($option.parent().is('optgroup')) {
+                            /** @type {jQuery} */
                             var $sourceGroup = $option.parent();
 
                             if (typeof $changedOptgroups === "undefined") {
@@ -1586,7 +1646,9 @@
                             } else {
                                 $changedOptgroups = $changedOptgroups.add($sourceGroup);
                             }
+                            /** @type {string} */
                             var optgroupSelector = 'optgroup[' + self.options.matchOptgroupBy + '="' + $sourceGroup.prop(self.options.matchOptgroupBy) + '"]';
+                            /** @type {jQuery} */
                             var $destinationGroup = $destination.find(optgroupSelector);
 
                             if (!$destinationGroup.length) {
@@ -1616,10 +1678,12 @@
                     }
                     sortSelectItems($destination, self.callbacks.sort, self.options.keepRenderingFor);
                     if (!silent) {
+                        /** @type {function} */
                         var afterCallback = (toLeftSide ? self.callbacks.afterMoveToLeft : self.callbacks.afterMoveToRight);
                         afterCallback( self.$left, self.$right, $options );
                     }
                     if (self.options.search) {
+                        /** @type {jQuery} */
                         var filterToClear = toLeftSide ? self.leftSearch.$filterInput : self.rightSearch.$filterInput;
                         filterToClear.val("").keyup();
                     }
