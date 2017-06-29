@@ -308,7 +308,7 @@
              * This should ensure the action buttons fulfill some required conditions
              * (e.g. perhaps only one button per multiselect)
              * (e.g. perhaps we allow other elements than buttons)
-             * @param {ActionButtons} actions
+             * @param {ActionButtons} actions - action buttons to check
              */
             function validateActionButtons(actions) {
                 // FIXME: Which are required action buttons? Should we error if we can't init them?
@@ -317,8 +317,8 @@
 
             /**
              * Extracts the options for the multiselect instance
-             * @param {SettingsObject} settings
-             * @returns {MultiselectOptions}
+             * @param {SettingsObject} settings - the settings to use
+             * @returns {MultiselectOptions} - extracted multiselect options
              */
             function extractMultiselectOptions(settings) {
                 return {
@@ -334,7 +334,7 @@
             /**
              * This should ensure the options fulfill some required conditions
              * (e.g. search is allowed to contain html and jQuery objects)
-             * @param {MultiselectOptions} options
+             * @param {MultiselectOptions} options - the options to validata
              */
             function validateMultiselectOptions(options) {
                 // FIXME: Validation criteria for options
@@ -342,7 +342,8 @@
 
             /**
              * Extracts the callbacks for the multiselect instance
-             * @param {SettingsObject} settings
+             * @param {SettingsObject} settings - the settings to use
+             * @return {CallbackFunctions} - extracted callback functions to use
              */
             function extractCallbacks(settings) {
                 return {
@@ -363,7 +364,7 @@
             /**
              * This should ensure the callbacks fulfill some required conditions
              * (e.g. moveFromAToB is allowed to be undefined)
-             * @param {CallbackFunctions} callbacks
+             * @param {CallbackFunctions} callbacks -the callbacks to check
              */
             function validateCallbacks(callbacks) {
                 // FIXME: Validation criteria for callbacks
@@ -373,7 +374,7 @@
              * Convenience function to choose a callback function between user provided and default values.
              * @param userCallback - the callback provided by the user
              * @param defaultCallback - the default callback
-             * @returns {function}
+             * @returns {function} - the chosen callback
              */
             function chooseCallback(userCallback, defaultCallback) {
                 return chooseOption(userCallback, defaultCallback, "function");
@@ -404,6 +405,8 @@
              * @returns {boolean} - true if the browser identifies as a Microsoft browser.
              */
             function isMicrosoftBrowser() {
+                /** The user agent string of the browser.
+                 * @type {string} */
                 var ua = window.navigator.userAgent;
                 return ( ua.indexOf(USER_AGENT_IE_UPTO_10) > -1 ||
                     ua.indexOf(USER_AGENT_IE_11) > -1 ||
@@ -416,6 +419,8 @@
              * @returns {boolean} - true if the browser identifies as Safari
              */
             function isSafariBrowser() {
+                /** The user agent string of the browser.
+                 * @type {string} */
                 var ua = window.navigator.userAgent;
                 return (ua.toLowerCase().indexOf(USER_AGENT_SAFARI) > -1);
             }
@@ -423,54 +428,89 @@
             /**
              * This provides lexicographic comparison of two options or optgroups,
              * i.e. the only relevant elements in the multiselect.
-             * @param a - the first element
-             * @param b - the second element
+             * Examples:
+             * 100 &lt; 99
+             * abc100 &lt; abc99
+             * aaa &lt; bbb
+             * @param {HTMLOptionElement|HTMLOptGroupElement} a - the first element
+             * @param {HTMLOptionElement|HTMLOptGroupElement} b - the second element
              * @returns {COMPARISON_RESULTS} - the result of the comparison
              */
             function lexicographicComparison(a, b) {
-                // Elements beginning with "NA"
-                // are sorted first, e.g. "NAME1" before "Item 1"?
-                // compare options by their innnerHtml
+                /** The text used to compare item a
+                 * @type {string} */
                 var aText = getOptionOrOptgroupText(a);
+                /** The text used to compare item b
+                 * @type {string} */
                 var bText = getOptionOrOptgroupText(b);
-                if (aText == null || bText == null) {
+                if (aText === "" || bText === "") {
                     return COMPARISON_RESULTS.DO_NOT_CHANGE;
                 }
                 // lexicographic comparison between strings (compare chars at same index)
-                // e.g. 100 < 99
-                // e.g. abc100 < abc99
-                // e.g. aaa < bbb
                 return (aText < bText) ? COMPARISON_RESULTS.A_COMES_FIRST : COMPARISON_RESULTS.B_COMES_FIRST;
             }
 
+            /**
+             * Takes an option or optgroup and returns the appropriate text to use for comparison.
+             * @param {HTMLOptionElement|HTMLOptGroupElement} optionOrOptgroup - the HTML element to check
+             * @returns {string} - the text for the element (if it is an option or optgroup)
+             */
             function getOptionOrOptgroupText(optionOrOptgroup) {
-                var type = optionOrOptgroup.tagName;
-                if (type == "OPTION") {
+                /** The element tag name
+                 * @type {string} */
+                var tagName = optionOrOptgroup.tagName;
+                if (tagName == "OPTION") {
                     return optionOrOptgroup.innerHTML;
                 }
-                if (type == "OPTGROUP") {
+                if (tagName == "OPTGROUP") {
                     return optionOrOptgroup.label;
                 }
-                return null;
+                return "";
             }
 
+            /**
+             * Comparison using the initial position of elements
+             * stored during the initialization process.
+             * @param {HTMLOptionElement|HTMLOptGroupElement} a - the first element
+             * @param {HTMLOptionElement|HTMLOptGroupElement} b - the second element
+             * @returns {COMPARISON_RESULTS} - the result of the comparison
+             */
             function initialOrderComparison(a, b) {
+                /** The initial index for a
+                 * @type {number} */
                 var aPositionIndex = getInitialPosition($(a));
+                /** The initial index for b
+                 * @type {number} */
                 var bPositionIndex = getInitialPosition($(b));
-                if (aPositionIndex !== null && bPositionIndex !== null) {
-                    return aPositionIndex < bPositionIndex ? A_COMES_FIRST : B_COMES_FIRST;
+                if (aPositionIndex !== -1 && bPositionIndex !== -1) {
+                    return aPositionIndex < bPositionIndex
+                        ? COMPARISON_RESULTS.A_COMES_FIRST
+                        : COMPARISON_RESULTS.B_COMES_FIRST;
                 }
                 // If anything is unclear, do not change positions
-                return 0;
+                return COMPARISON_RESULTS.DO_NOT_CHANGE;
             }
 
+            /**
+             * Returns the initial position (index) inside the multiselect
+             * for the given option or optgroup
+             * @param {jQuery} $optionOrOptgroup - the option or optgroup with the stored position
+             * @returns {number} - the initial position of this element relative to the parent element
+             */
             function getInitialPosition($optionOrOptgroup) {
                 if ($optionOrOptgroup !== undefined && $optionOrOptgroup.is("option,optgroup")) {
                     return $optionOrOptgroup.data(DATA_POSITION);
                 }
-                return null;
+                return -1;
             }
 
+            /**
+             * Stores the initial position (index) inside the multiselect
+             * for the given option or optgroup
+             * @param {jQuery} $optionOrOptgroup - the option or optgroup for which the position should be recorded
+             * @param {number} newPosition - the new stored position for this element
+             * @returns {jQuery} - returns the element for chaining
+             */
             function setInitialPosition($optionOrOptgroup, newPosition) {
                 if ($optionOrOptgroup !== undefined && $optionOrOptgroup.is("option,optgroup")) {
                     $optionOrOptgroup.data(DATA_POSITION, newPosition);
