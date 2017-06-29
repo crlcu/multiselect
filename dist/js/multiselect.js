@@ -8,9 +8,20 @@
  * Licensed under the MIT license (https://github.com/crlcu/multiselect/blob/master/LICENSE)
  */
 
-/** @external {jQuery} */
+/**
+ * The jQuery object.
+ * @external jQuery
+ * */
 
 /**
+ * The jQuery prototype alias.
+ * @external jQuery.fn
+ */
+
+/**
+ * Wraps all button elements for possible actions on the Multiselect elements.
+ * If no element for an action is given,
+ * a DOM search using an assumed default id is used to find the button.
  * @typedef {Object} ActionButtons
  * @property {jQuery} [$leftAll="$('#'+id+'_leftAll')"] - the button to click to move all visible elements in the right palette to the left palette
  * @property {jQuery} [$rightAll=$('#'+id+'_rightAll')] - the button to click to move all visible elements in the left palette to the right palette
@@ -22,7 +33,10 @@
  * @property {jQuery} [$moveDown=$('#'+id+'_moveDown')] - the button to click to move the selected element(s) down one index
  */
 
-/** @typedef {Object} ElementNames
+/**
+ * A wrapper for the part of the options where the user can provide
+ * jQuery selectors for the Multiselect elements
+ * @typedef {Object} ElementNames
  * @property {jQuery} [right] - name of the element to become the right palette
  * @property {jQuery} [leftAll] - name of the element to become the "Move all Left" button
  * @property {jQuery} [rightAll] - name of the element to become the "Move all Right" button
@@ -35,6 +49,7 @@
  */
 
 /**
+ * Additional options wrapper for Multiselect that affects its behaviour
  * @typedef {Object} MultiselectOptions
  * @property {RenderingOptions} [keepRenderingFor=ALL] - what to keep the rendering order for
  * @property {boolean} [submitAllLeft=true] - whether to submit all visible left options when a form is submitted
@@ -45,40 +60,44 @@
  */
 
 /**
+ * Callback wrapper for the functions where Multiselect
+ * provides a way for the user to influence behaviour.
  * @typedef {Object} CallbackFunctions
- * @property {function} startUp
- * @property {function} sort
- * @property {function} beforeMoveToRight
- * @property {function} afterMoveToRight
- * @property {function} beforeMoveToLeft
- * @property {function} afterMoveToLeft
- * @property {function} beforeMoveUp
- * @property {function} afterMoveUp
- * @property {function} beforeMoveDown
- * @property {function} afterMoveDown
- * @property {function} fireSearch
+ * @property {function} startUp - this function is called during initialisation, before the options are sorted
+ * @property {function} sort - used to define a different comparator from the default lexicographical comparison
+ * @property {function} beforeMoveToRight - called before the options are moved to the right side of the multiselect
+ * @property {function} afterMoveToRight - called after the options are moved to the right side of the multiselect
+ * @property {function} beforeMoveToLeft - called before the options are moved to the left side of the multiselect
+ * @property {function} afterMoveToLeft - called after the options are moved to the left side of the multiselect
+ * @property {function} beforeMoveUp - called before options are moved up inside a right side select
+ * @property {function} afterMoveUp - called after options are moved up inside a right side select
+ * @property {function} beforeMoveDown - called before options are moved down inside a right side select
+ * @property {function} afterMoveDown - called after options are moved down inside a right side select
+ * @property {function} fireSearch - called to determine if the filter function for a side should be activated
  */
 
 /**
+ * The settings object containing all possible options and information to create a Multiselect.
+ * @typedef {CallbackFunctions|ElementNames|MultiselectOptions} SettingsObject
+ */
+
+/**
+ * Describes options where the user provides inputs to use as select filters
  * @typedef {Object} SearchElements
- * @property {string} [left] - The html for a new input element to use as a search input for the left palette
- * @property {jQuery} [$left] - the jQuery element for the left element when it's in the DOM
- * @property {string} [right] - The html for a new input element to use as a search input for the right palette
- * @property {jQuery} [$right] - the jQuery element for the right element when it's in the DOM
+ * @property {string|jQuery} [left] - either html for or a jQuery element pointing to the input to use for filtering the left palette
+ * @property {string|jQuery} [right] - either html for or a jQuery element pointing to the input to use for filtering the right palette
  */
 
 /**
+ * The relation between a input used as a filter
+ * and the select elements that are filtered by it
  * @typedef {Object} FilterRelation
  * @property {jQuery} $filterInput - the input that you enter text in so that the select is filtered
  * @property {jQuery} $filteredSelects - the select elements filtered by the input (currently always all right elements)
  */
 
 /**
- * @typedef {Object} MoveRelation
- * @property {jQuery} $moveButton
- */
-
-/**
+ * Element of the stack for the Undo/Redo functionality.
  * @typedef {Object} StackElement
  * @property {jQuery} $lastSource - the element where the options were before the move
  * @property {jQuery} $lastDestination - the element where the options were after the move
@@ -86,61 +105,72 @@
  */
 
 /**
+ * The stack for the Undo/Redo functionality
  * @typedef {StackElement[]} Stack
  */
 
 /**
+ * Representation for an option. (Used when replacing the multiselect items)
  * @typedef {Object} OptionRep
- * @property {string} name
- * @property {string} value
+ * @property {string} name - the text of the option
+ * @property {string} value - the value of the option
  */
 
 /**
+ * Representation for an optgroup. (Used when replacing the multiselect items)
  * @typedef {Object} OptgroupRep
- * @property {string} label
- * @property {OptionRep[]} contents
+ * @property {string} label - the text of the optgroup
+ * @property {OptionRep[]} contents - the contents of the optgroup, i.e. options
  */
 
 /**
+ * Representation for the content of a whole select element (i.e. options and optgroups).
  * @typedef {Object} SelectContent
- * @property {OptionRep[]} options
- * @property {OptgroupRep[]} optgroups
+ * @property {OptionRep[]} options - the options without any optgroup in the select
+ * @property {OptgroupRep[]} optgroups - the optgroups in this select
  */
 
-/**
- * @typedef {CallbackFunctions|ElementNames|MultiselectOptions} SettingsObject
- */
-// FIXME: Check if everything works when we use multiple destinations ("right" elements)
 (
     /**
      * Registers multiselect with amd or directly with jQuery.
-     * // FIXME: Is this correct syntax?
      * @param {function} factory - the factory that creates the multiselect api
      */
     function (factory) {
-        var checkForGlobaljQuery = function() {
+        /**
+         * Check if jQuery is accessible in this script, fail when not.
+         */
+        function checkForGlobaljQuery() {
             if (typeof jQuery === 'undefined') {
                 throw new Error('multiselect requires jQuery');
             }
-        };
+        }
         /**
          * Checks if the current jQuery is of the necessary minimum version.
          * @param {jQuery} $
          */
-        var checkjQueryVersion = function($) {
+        function checkjQueryVersion($) {
             'use strict';
-
+            /**
+             * The required major jQuery version number.
+             * @type {number}
+             */
             const REQ_JQUERY_MAJOR = 1;
 
+            /**
+             * The required minor jQuery version number.
+             * @type {number}
+             */
             const REQ_JQUERY_MINOR = 7;
 
-            /** @type {string[]} version Array containing the jQuery version numbers */
+            /** version Array containing the jQuery version numbers
+             * @type {string[]}
+             */
             var version = $.fn.jquery.split(' ')[0].split('.');
             // main check, changed to better reading
             if ((version[0] <= REQ_JQUERY_MAJOR) && (version[1] <= REQ_JQUERY_MINOR)) {
                 throw new Error('multiselect requires jQuery version ' + REQ_JQUERY_MAJOR + '.' + REQ_JQUERY_MINOR + ' or higher');
             }
-        };
+        }
 
         if (typeof define === 'function' && define.amd) {
             // AMD. Register as an anonymous module depending on jQuery.
@@ -156,56 +186,89 @@
         'use strict';
 
         /**
+         * Multiselect API.
          * @module
          */
         var Multiselect = (function($) {
             // private area - constants
-            /** Keycode for Enter. */
+            /** Keycode for Enter.
+             * @type {number} */
             const KEY_ENTER = 13;
 
-            /** Keycode for Backspace. */
+            /** Keycode for Backspace.
+             * @type {number} */
             const KEY_BACKSPACE = 8;
 
-            /** Keycode for Del. */
+            /** Keycode for Del.
+             * @type {number} */
             const KEY_DEL = 46;
 
-            /** User Agent identification for Internet Explorer up until IE 10. */
+            /** User Agent identification for Internet Explorer up until IE 10.
+             * @type {string} */
             const USER_AGENT_IE_UPTO_10 = "MSIE ";
 
-            /** User Agent identification for the Edge Browser. */
+            /** User Agent identification for the Edge Browser.
+             * @type {string} */
             const USER_AGENT_EDGE = "Edge/";
 
-            /** User Agent identification for Internet Explorer 11. */
+            /** User Agent identification for Internet Explorer 11.
+             * @type {string} */
             const USER_AGENT_IE_11 = "Trident/";
 
-            /** User Agent identification for the Safari browser. */
+            /** User Agent identification for the Safari browser.
+             * @type {string} */
             const USER_AGENT_SAFARI = "safari";
 
+            /** CSS class applied to options that to filtered options.
+             * @type {string} */
             const CSS_HIDDEN = "hidden";
 
+            /** Selector for the filtered option class.
+             * @type {string} */
             const SELECTOR_HIDDEN = "." + CSS_HIDDEN;
 
+            /** Comparator result when a should be sorted to a lower index than b
+             * @type {number} */
             const A_COMES_FIRST = -1;
 
+            /** Comparator result when b should be sorted to a lower index than a
+             * @type {number} */
             const B_COMES_FIRST = 1;
 
+            /** Comparator result a and b should stay in their position.
+             * @type {number} */
             const DO_NOT_CHANGE = 0;
 
+            /** Data attribute used to store the position any select items had
+             * when the multiselect was first initialized.
+             * @type {string} */
             const DATA_POSITION = "position";
 
+            /** Data attribute used to store the context of a button in the multiselect. For example,
+             * when you click a "rightSelected" button,
+             * the context makes clear where the options should be moved to.
+             * @type {string} */
             const DATA_CONTEXT = "context";
 
+            /**
+             * We only checked once if we are in an MS browser.
+             * @type {boolean}
+             */
             var isMS = isMicrosoftBrowser();
 
+            /**
+             * We only checked once if we are in a Safari browser.
+             * @type {boolean}
+             */
             var isSafari = isSafariBrowser();
 
             // private area - functions
             /**
-             * Given the settings and the name for an action, looks if the settings contain the selector for the
+             * Given the settings object and the name for an action, looks if the settings contain the selector for the
              * action. If not, it creates its own selector using the action and the id of the left palette.
-             * @param id - the id part to look for if
-             * @param {ElementNames} settings
-             * @param actionName
+             * @param {string} id - the id part to look for if
+             * @param {ElementNames} settings - the settings object to use
+             * @param {string} actionName - the action to look for in the settings
              */
             function getActionButton(id, settings, actionName) {
                 var selector = "";
@@ -1009,7 +1072,7 @@
                 }
                 /** @member {ActionButtons} */
                 this.actions = extractActionButtons(id, settings);
-                if (this.$right.length == 1){
+                if (this.$right.length == 1) {
                     setButtonContext(this.actions.$leftAll, "#" + this.$right.attr("id"));
                     setButtonContext(this.actions.$leftSelected, "#" + this.$right.attr("id"));
                     setButtonContext(this.actions.$rightSelected, "#" + this.$right.attr("id"));
