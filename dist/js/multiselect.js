@@ -227,17 +227,19 @@
              * @type {string} */
             const SELECTOR_HIDDEN = "." + CSS_HIDDEN;
 
-            /** Comparator result when a should be sorted to a lower index than b
-             * @type {number} */
-            const A_COMES_FIRST = -1;
-
-            /** Comparator result when b should be sorted to a lower index than a
-             * @type {number} */
-            const B_COMES_FIRST = 1;
-
-            /** Comparator result a and b should stay in their position.
-             * @type {number} */
-            const DO_NOT_CHANGE = 0;
+            /**
+             * Enum for the comparator results for sort functions.
+             * @readonly
+             * @enum {number} COMPARISON_RESULTS
+             */
+            const COMPARISON_RESULTS = {
+                /** The first parameter should be on a lower index than the second parameter */
+                A_COMES_FIRST: -1,
+                /** The second parameter should be on a lower index than the first parameter */
+                B_COMES_FIRST: 1,
+                /** The parameters are equal or just should not be moved around */
+                DO_NOT_CHANGE: 0
+            };
 
             /** Data attribute used to store the position any select items had
              * when the multiselect was first initialized.
@@ -264,13 +266,16 @@
 
             // private area - functions
             /**
-             * Given the settings object and the name for an action, looks if the settings contain the selector for the
-             * action. If not, it creates its own selector using the action and the id of the left palette.
+             * Checks if the settings contain the button for the action.
+             * If not, looks for the action button in the DOM, using a generated default.
              * @param {string} id - the id part to look for if
              * @param {ElementNames} settings - the settings object to use
              * @param {string} actionName - the action to look for in the settings
              */
             function getActionButton(id, settings, actionName) {
+                /**
+                 * Chosen selector to use for the search for the button.
+                 * @type {string} */
                 var selector = "";
                 if (settings[actionName]) {
                     selector = settings[actionName];
@@ -281,10 +286,10 @@
             }
 
             /**
-             *
+             * Extracts all supported settings for action buttons from the settings or uses defaults.
              * @param {string} id - id of the element for the left palette
-             * @param {ElementNames} settings
-             * @returns {ActionButtons}
+             * @param {ElementNames} settings - the settings to look in
+             * @returns {ActionButtons} - the wrapper containing all action buttons
              */
             function extractActionButtons(id, settings) {
                 return {
@@ -311,7 +316,7 @@
             }
 
             /**
-             * Extracts the options for the multiselect object
+             * Extracts the options for the multiselect instance
              * @param {SettingsObject} settings
              * @returns {MultiselectOptions}
              */
@@ -336,7 +341,7 @@
             }
 
             /**
-             *
+             * Extracts the callbacks for the multiselect instance
              * @param {SettingsObject} settings
              */
             function extractCallbacks(settings) {
@@ -364,10 +369,24 @@
                 // FIXME: Validation criteria for callbacks
             }
 
+            /**
+             * Convenience function to choose a callback function between user provided and default values.
+             * @param userCallback - the callback provided by the user
+             * @param defaultCallback - the default callback
+             * @returns {function}
+             */
             function chooseCallback(userCallback, defaultCallback) {
                 return chooseOption(userCallback, defaultCallback, "function");
             }
 
+            /**
+             * Generic way to choose between user provided value and default value,
+             * only providing the option type for constraints.
+             * @param userOption - the user provided option value
+             * @param defaultOption - the default option value
+             * @param optionType - the type that any user option should have to be respected
+             * @returns {*} - any value adhering to the optionType
+             */
             function chooseOption(userOption, defaultOption, optionType) {
                 if (userOption !== undefined) {
                     if (optionType === "jQuery" && userOption instanceof $ && userOption.length > 0) {
@@ -380,6 +399,10 @@
                 return defaultOption;
             }
 
+            /**
+             * Using the user agent, this checks if the browser is any relevant Microsoft browser.
+             * @returns {boolean} - true if the browser identifies as a Microsoft browser.
+             */
             function isMicrosoftBrowser() {
                 var ua = window.navigator.userAgent;
                 return ( ua.indexOf(USER_AGENT_IE_UPTO_10) > -1 ||
@@ -388,13 +411,22 @@
                 );
             }
 
+            /**
+             * Using the user agent, this checks if the browser is the Safari browser.
+             * @returns {boolean} - true if the browser identifies as Safari
+             */
             function isSafariBrowser() {
                 var ua = window.navigator.userAgent;
                 return (ua.toLowerCase().indexOf(USER_AGENT_SAFARI) > -1);
             }
 
-            // this only works with options, innerHtml of an option is its text
-            // innerHtml of an optgroup is full inside html code + options + their values
+            /**
+             * This provides lexicographic comparison of two options or optgroups,
+             * i.e. the only relevant elements in the multiselect.
+             * @param a - the first element
+             * @param b - the second element
+             * @returns {COMPARISON_RESULTS} - the result of the comparison
+             */
             function lexicographicComparison(a, b) {
                 // Elements beginning with "NA"
                 // are sorted first, e.g. "NAME1" before "Item 1"?
@@ -402,13 +434,13 @@
                 var aText = getOptionOrOptgroupText(a);
                 var bText = getOptionOrOptgroupText(b);
                 if (aText == null || bText == null) {
-                    return DO_NOT_CHANGE;
+                    return COMPARISON_RESULTS.DO_NOT_CHANGE;
                 }
                 // lexicographic comparison between strings (compare chars at same index)
                 // e.g. 100 < 99
                 // e.g. abc100 < abc99
                 // e.g. aaa < bbb
-                return (aText < bText) ? A_COMES_FIRST : B_COMES_FIRST;
+                return (aText < bText) ? COMPARISON_RESULTS.A_COMES_FIRST : COMPARISON_RESULTS.B_COMES_FIRST;
             }
 
             function getOptionOrOptgroupText(optionOrOptgroup) {
@@ -607,6 +639,7 @@
 
             function extendedShow($elements) {
                 $elements.removeClass(CSS_HIDDEN).show();
+                // FIXME: This would be probably be better using feature based checks (Modernizr etc.)
                 if (isMS || isSafari) {
                     $elements.each(function(index, element) {
                         // Remove <span> to make it compatible with IE
@@ -622,7 +655,7 @@
 
             function extendedHide($elements) {
                 $elements.addClass(CSS_HIDDEN).hide();
-
+                // FIXME: This would be probably be better using feature based checks (Modernizr etc.)
                 if (isMS || isSafari) {
                     $elements.each(function(index, element) {
                         var $option = $(element);
