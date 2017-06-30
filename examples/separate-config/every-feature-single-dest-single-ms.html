@@ -14,9 +14,9 @@
         <div class="row row-eq-height">
             <div class="col-sm-5">
                 <select title="Left Palette" name="from[]" id="multiselect" class="form-control palette" size="8" multiple="multiple">
-                    <option value="1">Item 1</option>
-                    <option value="2">Item 5</option>
-                    <option value="3">Item 2</option>
+                    <option value="1">Änderungen</option>
+                    <option value="2">Übrigens</option>
+                    <option value="3">\Quassel</option>
                     <option value="4">Item 4</option>
                     <option value="5">Item 3</option>
                     <optgroup label="Optgroup 1">
@@ -53,10 +53,10 @@
             <div class="col-sm-2">
                 <button type="button" id="multiselect_undo" class="btn btn-primary btn-block">Undo</button>
                 <button type="button" id="multiselect_redo" class="btn btn-warning btn-block">Redo</button>
-                <button type="button" id="multiselect_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
-                <button type="button" id="multiselect_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
-                <button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
-                <button type="button" id="multiselect_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+                <button type="button" id="multiselect_rightAll" class="btn btn-default btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                <button type="button" id="multiselect_rightSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                <button type="button" id="multiselect_leftSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                <button type="button" id="multiselect_leftAll" class="btn btn-default btn-block"><i class="glyphicon glyphicon-backward"></i></button>
             </div>
             
             <div class="col-sm-5">
@@ -64,13 +64,20 @@
                     <option value="26">Blabla</option>
                     <option value="27">Blablubb</option>
 
+                    <optgroup label="Toll, strukturiert vorgehen!">
+                        <option value="1">Item 1</option>
+                        <option value="2">Item 5</option>
+                        <option value="2">Item 2</option>
+                        <option value="2">Item 4</option>
+                        <option value="3">Item 3</option>
+                    </optgroup>
                 </select>
                 <div class="row">
                 <div class="col-sm-6">
-                <button type="button" id="multiselect_moveUp" class="btn btn-block"><i class="glyphicon glyphicon-arrow-up"></i></button>
+                <button type="button" id="multiselect_moveUp" class="btn btn-default btn-block"><i class="glyphicon glyphicon-arrow-up"></i></button>
                 </div>
                 <div class="col-sm-6">
-                <button type="button" id="multiselect_moveDown" class="btn btn-block"><i class="glyphicon glyphicon-arrow-down"></i></button>
+                <button type="button" id="multiselect_moveDown" class="btn btn-default btn-block"><i class="glyphicon glyphicon-arrow-down"></i></button>
                 </div>
                 </div>
             </div>
