@@ -1201,8 +1201,8 @@
 
             /**
              * Escapes certain HTML chars.
-             * @param {string} value
-             * @returns {string}
+             * @param {string} value - the value to escape
+             * @returns {string} - the escaped value
              */
             function escapeHtml(value) {
                 /** @type {string} */
@@ -1249,8 +1249,9 @@
             }
 
             /**
-             *
-             * @param {OptgroupRep} optgroupRep
+             * Transforms an optgroup representation to its HTML equivalent
+             * @param {OptgroupRep} optgroupRep - the optgroup representation
+             * @return {string} - the optgroup HTML
              */
             function toOptgroupHtml(optgroupRep) {
                 /** @type {string} */
@@ -1268,9 +1269,9 @@
             }
 
             /**
-             *
-             * @param {Multiselect} msInstance
-             * @param {boolean} isUndo
+             * Moves items using the undo/redo memory.
+             * @param {Multiselect} msInstance - the Multiselect instance
+             * @param {boolean} isUndo - if the action is undo or redo (changes the stack movement)
              */
             function moveAndChangeStacks(msInstance, isUndo) {
                 /** @type {Stack} */
@@ -1290,6 +1291,14 @@
 
             }
 
+            /**
+             * Moves the options up or down while activating the appropriate callbacks at the right time.
+             * @param $options - the options to move inside the select
+             * @param moveUp - whether we move up or down
+             * @param beforeMoveCallback - the callback to use before movement
+             * @param afterMoveCallback - the callback to use after movement
+             * @returns {boolean} - true if options were moved
+             */
             function moveItems($options, moveUp, beforeMoveCallback, afterMoveCallback) {
                 if ( !beforeMoveCallback( $options ) ) {
                     return false;
@@ -1311,23 +1320,40 @@
                     }
                 });
                 afterMoveCallback($options);
+                return true;
+            }
 
+            /**
+             * Sets the Multiselect instance for the select.
+             * @param $select - the select that should contain this
+             * @param msInstance - the instance for this select
+             * @returns {jQuery} for chaining
+             */
+            function setInstance($select, msInstance) {
+                if (!($select instanceof $)) {
+                    return undefined;
+                }
+                $select.data(Multiselect.identifier, msInstance);
+                return $select;
             }
 
             /**
              * Multiselect object constructor
-             * @param {jQuery} $select
-             * @param {SettingsObject} settings
+             * @param {jQuery} $select - the initial left select, ID used when looking for default elements
+             * @param {SettingsObject} settings - the settings for this Multiselect instance
              * @constructor
              */
             function Multiselect( $select, settings ) {
                 verifySingleSelect($select);
-                /** @type {string} */
+                /** ID of the left select (used for defaults)
+                 * @type {string} */
                 var id = $select.prop('id');
-                /** @member {jQuery} */
+                /** The left select of this instance
+                 * @member {jQuery} */
                 this.$left = $select;
                 // $right can be more than one (multiple destinations) (then dblclick etc would not be usable
-                /** @member {jQuery} one or more select elements */
+                /** One or more right side (destination) selects
+                 * @member {jQuery} one or more select elements */
                 this.$right = $();
                 this.$right = chooseOption($(settings.right),$('#' + id + '_to'), "jQuery");
                 if (!(this.$right instanceof $)) {
@@ -1339,7 +1365,8 @@
                 if (this.$right.not("select").length > 0) {
                     throw new Error("Some found right element for the multiselect isn't a select element.");
                 }
-                /** @member {ActionButtons} */
+                /** Buttons used in this instance
+                 * @member {ActionButtons} */
                 this.actions = extractActionButtons(id, settings);
                 if (this.$right.length == 1) {
                     setButtonContext(this.actions.$leftAll, "#" + this.$right.attr("id"));
@@ -1350,16 +1377,20 @@
                     setButtonContext(this.actions.$moveDown, "#" + this.$right.attr("id"));
                 }
                 validateActionButtons(this.actions);
-                /** @member {MultiselectOptions} */
+                /** Active options for this instance
+                 * @member {MultiselectOptions} */
                 this.options = extractMultiselectOptions(settings);
                 validateMultiselectOptions(this.options);
-                /** @member {CallbackFunctions} */
+                /** Active callbacks for this instance
+                 * @member {CallbackFunctions} */
                 this.callbacks = extractCallbacks(settings);
                 validateCallbacks(this.callbacks);
                 // initialize the undo/redo functionality
-                /** @member {Stack} */
+                /** The undo stack for this instance.
+                 * @member {Stack} */
                 this.undoStack = [];
-                /** @member {Stack} */
+                /** The redo stack for this instance
+                 * @member {Stack} */
                 this.redoStack = [];
 
                 if (this.options.search) {
@@ -1384,7 +1415,8 @@
             }
 
             // public static members
-            /** @type {string} This can be used to retrieve a multiselect instance.*/
+            /** This can be used to retrieve a multiselect instance.
+             * @type {string} */
             Multiselect.identifier = "crlcu.multiselect";
             /**
              * Enum for what we want to keep the option order for.
@@ -1397,12 +1429,16 @@
                 NONE: "NONE"
             };
 
-            /** @type {object} */
+            /** Default settings object
+             * @type {object} */
             Multiselect.defaults = {
+                /** Function used when looking for elements with default IDs
+                 * @type {function} */
                 actionSelector: function(id, action) {
                     return "#" + id + "_" + action;
                 },
-                /** @type {MultiselectOptions} */
+                /** Default options
+                 * @type {MultiselectOptions} */
                 options: {
                     keepRenderingFor: Multiselect.KeepInitialPositionFor.ALL,
                     submitAllLeft: true,
@@ -1413,7 +1449,8 @@
                     // FIXME: matchOptgroupBy is not documented online
                     matchOptgroupBy: 'label'
                 },
-                /** @type {CallbackFunctions} */
+                /** Default callbacks
+                 * @type {CallbackFunctions} */
                 callbacks: {
                     /** will be executed once - remove from $left all options that are already in $right
                      *
@@ -1543,6 +1580,11 @@
             };
 
             // public static functions
+            /**
+             * Retrieves the Multiselect instance given a select element.
+             * @param $select - the select containing the Multiselect instance.
+             * @returns {Multiselect} the instance
+             */
             Multiselect.getInstance = function($select) {
                 if (!($select instanceof $)) {
                     return undefined;
@@ -1550,18 +1592,22 @@
                 return $select.data(Multiselect.identifier);
             };
 
-            Multiselect.setInstance = function($select, msInstance) {
-                if (!($select instanceof $)) {
-                    return undefined;
-                }
-                $select.data(Multiselect.identifier, msInstance);
-            };
-
+            /**
+             * Checks if the select has a Multiselect.
+             * @param $select - the select to check
+             * @returns {boolean} - true, if the select has a Multiselect instance
+             */
             Multiselect.isMultiselect = function($select) {
                 return (Multiselect.getInstance($select) instanceof Multiselect);
             };
 
-            Multiselect.create = function($select, options) {
+            /**
+             * Creates a Multiselect instance with a given select and the given settings
+             * @param $select - the select to use for the instance
+             * @param settings - the settings object for this instance
+             * @returns {Multiselect} - the created instance
+             */
+            Multiselect.create = function($select, settings) {
                 verifySingleSelect($select);
                 if (!Multiselect.isMultiselect($select)) {
                     /** @type {SettingsObject} */
@@ -1569,16 +1615,23 @@
                         {},
                         Multiselect.defaults.callbacks,
                         $select.data(),
-                        (typeof options === 'object' && options)
+                        (typeof settings === 'object' && settings)
                     );
                     /** @type {Multiselect} */
                     var createdMultiselect = new Multiselect($select, concreteSettings);
                     Multiselect.setInstance($select, createdMultiselect);
+                    return createdMultiselect;
+                } else {
+                    return Multiselect.getInstance($select);
                 }
             };
 
             Multiselect.prototype = {
                 // public instance methods
+                /**
+                 * Initializes the instance (stacks, initial positions, startUp, sorting, filters)
+                 * @type {function}
+                 */
                 init: function() {
                     /** @type {Multiselect} */
                     var self = this;
@@ -1611,6 +1664,9 @@
                     self.clearFilters();
                 },
 
+                /**
+                 * Clears all search input fields
+                 */
                 clearFilters: function() {
                     /** @type {FilterRelation[]} */
                     var searchesToClear = [this.leftSearch, this.rightSearch];
@@ -1618,12 +1674,16 @@
                         if (value) value.$filterInput.val("").keyup();
                     });
                 },
+                /**
+                 * Completely empties the instance
+                 */
                 empty: function() {
                     this.$left.empty();
                     this.$right.empty();
                 },
                 /**
-                 *
+                 * Replaces the content of the Multiselect with the given content.
+                 * Puts all on the left side
                  * @param {SelectContent} newOptions
                  */
                 replaceItems: function(newOptions) {
@@ -1634,6 +1694,16 @@
                     this.init();
                 },
 
+                /**
+                 * Moves options from source to destination.
+                 * Optionally respects the stack and/or callbacks
+                 * @param $source - the source where the options were
+                 * @param $destination - the destination where the options will be
+                 * @param $options - the options to be moved
+                 * @param silent - whether to listen to callback results
+                 * @param skipStack - whether to modify the undo/redo stack while moving
+                 * @returns {Multiselect} the instance
+                 */
                 moveFromAtoB: function( $source, $destination, $options, silent, skipStack) {
                     if (skipStack === "undefined") {
                         skipStack = false;
@@ -1715,19 +1785,35 @@
                     return self;
                 },
 
+                /**
+                 * Moves selected options up
+                 * @param $options - options to move
+                 */
                 moveUp: function($options) {
                     moveItems($options, true, this.callbacks.beforeMoveUp, this.callbacks.afterMoveUp);
                 },
 
+                /**
+                 * Moves selected options down
+                 * @param $options - options to move
+                 */
                 moveDown: function($options) {
                     moveItems($options, false, this.callbacks.beforeMoveDown, this.callbacks.afterMoveDown);
                 },
 
+                /**
+                 * Undoes the last move operation
+                 * @param e - some triggered event
+                 */
                 undo: function(e) {
                     e.preventDefault();
                     moveAndChangeStacks(this, true);
                 },
 
+                /**
+                 * Redoes the last undone move operation
+                 * @param e - some triggered event
+                 */
                 redo: function(e) {
                     e.preventDefault();
                     moveAndChangeStacks(this, false);
@@ -1752,13 +1838,15 @@
         /**
          * Custom jQuery selector :search for filtering
          * @param elem - the elem currently looked at
-         * @param index - ???
-         * @param meta - ???
+         * @param index - the index of the element looked at
+         * @param meta - some additional options?
          * @returns {Array|{index: number, input: string}}
          */
         $.expr[":"].search = function(elem, index, meta) {
+            /** @type {string} */
+            var filterValue = meta[3];
             /** @type {RegExp} */
-            var regex = new RegExp(meta[3], "i");
+            var regex = new RegExp(filterValue, "i");
 
             return $(elem).text().match(regex);
         }
