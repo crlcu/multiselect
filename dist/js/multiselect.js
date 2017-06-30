@@ -1275,7 +1275,7 @@
                 if ( !beforeMoveCallback( $options ) ) {
                     return false;
                 }
-                if (moveDown) {
+                if (!moveUp) {
                     $options = $($options.get().reverse());
                 }
                 $options.each(function(i, optionToMove) {
@@ -1697,11 +1697,11 @@
                 },
 
                 moveUp: function($options) {
-                    moveItems($options, true, self.callbacks.beforeMoveUp, self.callbacks.afterMoveUp);
+                    moveItems($options, true, this.callbacks.beforeMoveUp, this.callbacks.afterMoveUp);
                 },
 
                 moveDown: function($options) {
-                    moveItems($options, false, self.callbacks.beforeMoveDown, self.callbacks.afterMoveDown);
+                    moveItems($options, false, this.callbacks.beforeMoveDown, this.callbacks.afterMoveDown);
                 },
 
                 undo: function(e) {
