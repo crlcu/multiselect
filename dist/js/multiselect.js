@@ -959,8 +959,54 @@
                 /** @type {jQuery} */
                 var $options = getOptionsToMove($source, onlySelected);
                 if ($options.length) {
-                    msInstance.moveFromAtoB($source, $destination, $options);
+                    if (isValidMoveRequest(msInstance, $destination, $options)) {
+                        msInstance.moveFromAtoB($source, $destination, $options);
+                        afterMove(msInstance);
+                    }
                 }
+            }
+
+            /**
+             *
+             * @param {Multiselect} msInstance
+             * @param {jQuery} $destination
+             * @param {jQuery} $options
+             * @returns {boolean}
+             */
+            function isValidMoveRequest(msInstance, $destination, $options) {
+                if (silent) {
+                    return true;
+                }
+                /** @type {boolean} */
+                var toLeftSide = ($destination === msInstance.$left);
+                /** @type {function} */
+                var beforeCallback = (toLeftSide ? msInstance.callbacks.beforeMoveToLeft : msInstance.callbacks.beforeMoveToRight);
+                return beforeCallback(msInstance.$left, msInstance.$right, $options);
+            }
+
+            function afterMove(msInstance, $source, $destination, $options) {
+                /** @type {StackElement} stackElement */
+                var stackElement = {
+                    $lastSource: $source,
+                    $lastDestination: $destination,
+                    $movedOptions: $options
+                };
+                self.undoStack.push(stackElement);
+                // TODO: Do we need memory management with the new stack?
+                self.redoStack = [];
+                sortSelectItems($destination, msInstance.callbacks.sort, msInstance.options.keepRenderingFor);
+                var toLeftSide = ($destination === msInstance.$left);
+                if (!silent) {
+                    /** @type {function} */
+                    var afterCallback = (toLeftSide ? msInstance.callbacks.afterMoveToLeft : msInstance.callbacks.afterMoveToRight);
+                    afterCallback( msInstance.$left, msInstance.$right, $options );
+                }
+                if (msInstance.options.search) {
+                    /** @type {jQuery} */
+                    var filterToClear = toLeftSide ? msInstance.leftSearch.$filterInput : msInstance.rightSearch.$filterInput;
+                    filterToClear.val("").keyup();
+                }
+                return msInstance;
             }
             /**
              * Attaches the necessary events to the components of the Multiselect instance.
@@ -1234,7 +1280,7 @@
                     var newSource = isUndo ? last.$lastDestination : last.$lastSource;
                     /** @type {jQuery} */
                     var newDestination = isUndo ? last.$lastSource : last.$lastDestination;
-                    msInstance.moveFromAtoB(newSource, newDestination, last.$movedOptions, false, true);
+                    msInstance.moveFromAtoB(newSource, newDestination, last.$movedOptions);
                 }
 
             }
@@ -1648,35 +1694,16 @@
                  * @param $source - the source where the options were
                  * @param $destination - the destination where the options will be
                  * @param $options - the options to be moved
-                 * @param silent - whether to listen to callback results
-                 * @param skipStack - whether to modify the undo/redo stack while moving
                  * @returns {Multiselect} the instance
                  */
-                moveFromAtoB: function( $source, $destination, $options, silent, skipStack) {
-                    if (skipStack === "undefined") {
-                        skipStack = false;
-                    }
-                    if (silent === "undefined") {
-                        silent = false;
-                    }
-                    /** @type {Multiselect} */
-                    var self = this;
-                    /** @type {boolean} */
-                    var toLeftSide = ($destination === self.$left);
-                    if (!silent) {
-                        /** @type {function} */
-                        var beforeCallback = (toLeftSide ? self.callbacks.beforeMoveToLeft : self.callbacks.beforeMoveToRight);
-                        if (!beforeCallback(self.$left, self.$right, $options)) {
-                            return false;
-                        }
-                    }
+                moveFromAtoB: function( $source, $destination, $options) {
                     /** @type {jQuery} */
                     var $changedOptgroups = $();
                     $options.each(function(index, option) {
                         /** @type {jQuery} */
                         var $option = $(option);
 
-                        if (self.options.ignoreDisabled && $option.is(':disabled')) {
+                        if (this.options.ignoreDisabled && $option.is(':disabled')) {
                             return true;
                         }
 
@@ -1690,7 +1717,7 @@
                                 $changedOptgroups = $changedOptgroups.add($sourceGroup);
                             }
                             /** @type {string} */
-                            var optgroupSelector = 'optgroup[' + self.options.matchOptgroupBy + '="' + $sourceGroup.prop(self.options.matchOptgroupBy) + '"]';
+                            var optgroupSelector = 'optgroup[' + this.options.matchOptgroupBy + '="' + $sourceGroup.prop(this.options.matchOptgroupBy) + '"]';
                             /** @type {jQuery} */
                             var $destinationGroup = $destination.find(optgroupSelector);
 
@@ -1708,29 +1735,7 @@
                     if ($changedOptgroups.length > 0) {
                         removeIfEmpty($changedOptgroups);
                     }
-                    if (!skipStack) {
-                        /** @type {StackElement} stackElement */
-                        var stackElement = {
-                            $lastSource: $source,
-                            $lastDestination: $destination,
-                            $movedOptions: $options
-                        };
-                        self.undoStack.push(stackElement);
-                        // TODO: Do we need memory management with the new stack?
-                        self.redoStack = [];
-                    }
-                    sortSelectItems($destination, self.callbacks.sort, self.options.keepRenderingFor);
-                    if (!silent) {
-                        /** @type {function} */
-                        var afterCallback = (toLeftSide ? self.callbacks.afterMoveToLeft : self.callbacks.afterMoveToRight);
-                        afterCallback( self.$left, self.$right, $options );
-                    }
-                    if (self.options.search) {
-                        /** @type {jQuery} */
-                        var filterToClear = toLeftSide ? self.leftSearch.$filterInput : self.rightSearch.$filterInput;
-                        filterToClear.val("").keyup();
-                    }
-                    return self;
+                    return this;
                 },
 
                 /**
