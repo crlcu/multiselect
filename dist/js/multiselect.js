@@ -947,6 +947,22 @@
             }
 
             /**
+             * When a move event is triggered, this takes a Multiselect instance
+             * and the source and destination of the move and gets the options that should be moved (some or all).
+             * Then it moves the options
+             * @param msInstance - the Multiselect instance containing the selects
+             * @param $source - the source select of the options
+             * @param $destination - the destination select of the options
+             * @param onlySelected - true if only selected options should be moved
+             */
+            function commenceMovingOptions(msInstance, $source, $destination, onlySelected) {
+                /** @type {jQuery} */
+                var $options = getOptionsToMove($source, onlySelected);
+                if ($options.length) {
+                    msInstance.moveFromAtoB($source, $destination, $options);
+                }
+            }
+            /**
              * Attaches the necessary events to the components of the Multiselect instance.
              * @param {Multiselect} msInstance - the instance to prepare
              */
@@ -982,51 +998,28 @@
                 // Attach event for double clicking on options from left side
                 self.$left.dblclick('option', function(e) {
                     e.preventDefault();
-
-                    /** @type {jQuery} */
-                    var $options = getOptionsToMove(self.$left);
-
-                    if ( $options.length ) {
-                        self.moveFromAtoB(self.$left, self.$right.first(), $options);
-                    }
+                    commenceMovingOptions(this, self.$left, self.$right.first());
                 });
 
                 // Attach event for pushing ENTER on options from left side
                 self.$left.keydown(function(e) {
                     if (e.keyCode === KEY_ENTER) {
                         e.preventDefault();
-
-                        /** @type {jQuery} */
-                        var $options = getOptionsToMove(self.$left);
-                        if ( $options.length ) {
-                            self.moveFromAtoB(self.$left, self.$right.first(), $options);
-                        }
+                        commenceMovingOptions(this, self.$left, self.$right.first());
                     }
                 });
 
                 // Attach event for double clicking on options from right side
                 self.$right.dblclick('option', function(e) {
                     e.preventDefault();
-
-                    /** @type {jQuery} */
-                    var $options = getOptionsToMove(self.$right);
-
-                    if ( $options.length ) {
-                        self.moveFromAtoB($(e.currentTarget), self.$left, $options);
-                    }
+                    commenceMovingOptions(this, $(e.currentTarget), self.$left);
                 });
 
                 // Attach event for pushing BACKSPACE or DEL on options from right side
                 self.$right.keydown(function(e) {
                     if (e.keyCode === KEY_ENTER || e.keyCode === KEY_BACKSPACE || e.keyCode === KEY_DEL) {
                         e.preventDefault();
-
-                        /** @type {jQuery} */
-                        var $options = getOptionsToMove(self.$right);
-
-                        if ( $options.length ) {
-                            self.moveFromAtoB($(e.currentTarget), self.$left, $options);
-                        }
+                        commenceMovingOptions(this, $(e.currentTarget), self.$left);
                     }
                 });
 
@@ -1037,80 +1030,35 @@
                     });
 
                     self.$right.dblclick(function(e) {
-                        /** @type {jQuery} */
-                        var $activatedSelect = $(e.currentTarget);
-                        /** @type {jQuery} */
-                        var $options = getOptionsToMove($activatedSelect);
-                        if ( $options.length ) {
-                            self.moveFromAtoB($activatedSelect, self.$left, $options);
-                        }
+                        commenceMovingOptions(this, $(e.currentTarget), self.$left);
                     });
                 }
 
                 self.actions.$rightSelected.click(function(e) {
                     e.preventDefault();
-
-                    /** @type {jQuery} */
-                    var $options = getOptionsToMove(self.$left);
-
-                    if ( $options.length ) {
-                        /** @type {jQuery} */
-                        var $rightButton = $(e.currentTarget);
-                        /** @type {jQuery} */
-                        var $targetSelect = getButtonContext($rightButton);
-                        self.moveFromAtoB(self.$left, $targetSelect, $options);
-                    }
-
+                    var $targetSelect = getButtonContext($(e.currentTarget));
+                    commenceMovingOptions(this, self.$left, $targetSelect);
                     $(this).blur();
                 });
 
                 self.actions.$leftSelected.click(function(e) {
                     e.preventDefault();
-
-                    /** @type {jQuery} */
-                    var $options = getOptionsToMove(self.$right);
-
-                    if ( $options.length ) {
-                        /** @type {jQuery} */
-                        var $leftButton = $(e.currentTarget);
-                        /** @type {jQuery} */
-                        var $sourceSelect = getButtonContext($leftButton);
-                        self.moveFromAtoB($sourceSelect, self.$left, $options);
-                    }
-
+                    var $sourceSelect = getButtonContext($(e.currentTarget));
+                    commenceMovingOptions(this, $sourceSelect, self.$left);
                     $(this).blur();
                 });
 
                 self.actions.$rightAll.click(function(e) {
                     e.preventDefault();
-                    /** @type {jQuery} */
-                    var $options = getOptionsToMove(self.$left, false);
-
-                    if ( $options.length ) {
-                        /** @type {jQuery} */
-                        var $rightButton = $(e.currentTarget);
-                        /** @type {jQuery} */
-                        var $targetSelect = getButtonContext($rightButton);
-                        self.moveFromAtoB(self.$left, $targetSelect, $options);
-                    }
-
+                    var $targetSelect = getButtonContext($(e.currentTarget));
+                    commenceMovingOptions(this, self.$left, $targetSelect, false);
                     $(this).blur();
                 });
 
                 self.actions.$leftAll.click(function(e) {
                     e.preventDefault();
-
-                    /** @type {jQuery} */
-                    var $options = getOptionsToMove(self.$right, false);
-
-                    if ( $options.length ) {
-                        /** @type {jQuery} */
-                        var $leftButton = $(e.currentTarget);
-                        /** @type {jQuery} */
-                        var $sourceSelect = getButtonContext($leftButton);
-                        self.moveFromAtoB($sourceSelect, self.$left, $options);
-                    }
-
+                    var $sourceSelect = getButtonContext($(e.currentTarget));
+                    commenceMovingOptions(this, $sourceSelect, self.$left, false);
                     $(this).blur();
                 });
 
@@ -1851,4 +1799,4 @@
             return $(elem).text().match(regex);
         }
     })
-);
+)
