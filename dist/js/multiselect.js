@@ -69,6 +69,7 @@
  * @property {function} afterMoveToRight - called after the options are moved to the right side of the multiselect
  * @property {function} beforeMoveToLeft - called before the options are moved to the left side of the multiselect
  * @property {function} afterMoveToLeft - called after the options are moved to the left side of the multiselect
+ * @property {function} move - called instead of the default move function
  * @property {function} beforeMoveUp - called before options are moved up inside a right side select
  * @property {function} afterMoveUp - called after options are moved up inside a right side select
  * @property {function} beforeMoveDown - called before options are moved down inside a right side select
@@ -353,6 +354,7 @@
                     afterMoveToRight: chooseCallback(settings.afterMoveToRight, Multiselect.defaults.callbacks.afterMoveToRight),
                     beforeMoveToLeft: chooseCallback(settings.beforeMoveToLeft, Multiselect.defaults.callbacks.beforeMoveToLeft),
                     afterMoveToLeft: chooseCallback(settings.afterMoveToLeft, Multiselect.defaults.callbacks.afterMoveToLeft),
+                    move: chooseCallback(settings.move, Multiselect.defaults.callbacks.move),
                     beforeMoveUp: chooseCallback(settings.beforeMoveUp, Multiselect.defaults.callbacks.beforeMoveUp),
                     afterMoveUp: chooseCallback(settings.afterMoveUp, Multiselect.defaults.callbacks.afterMoveUp),
                     beforeMoveDown: chooseCallback(settings.beforeMoveDown, Multiselect.defaults.callbacks.beforeMoveDown),
@@ -363,7 +365,6 @@
 
             /**
              * This should ensure the callbacks fulfill some required conditions
-             * (e.g. moveFromAToB is allowed to be undefined)
              * @param {CallbackFunctions} callbacks -the callbacks to check
              */
             function validateCallbacks(callbacks) {
@@ -950,20 +951,72 @@
              * When a move event is triggered, this takes a Multiselect instance
              * and the source and destination of the move and gets the options that should be moved (some or all).
              * Then it moves the options
-             * @param msInstance - the Multiselect instance containing the selects
-             * @param $source - the source select of the options
-             * @param $destination - the destination select of the options
-             * @param onlySelected - true if only selected options should be moved
+             * @param {Multiselect} msInstance - the Multiselect instance containing the selects
+             * @param {jQuery} $source - the source select of the options
+             * @param {jQuery} $destination - the destination select of the options
+             * @param {boolean} onlySelected - true if only selected options should be moved
              */
             function commenceMovingOptions(msInstance, $source, $destination, onlySelected) {
                 /** @type {jQuery} */
                 var $options = getOptionsToMove($source, onlySelected);
                 if ($options.length) {
                     if (isValidMoveRequest(msInstance, $destination, $options)) {
-                        msInstance.moveFromAtoB($source, $destination, $options);
-                        afterMove(msInstance);
+                        msInstance.callbacks.move($source, $destination, $options);
+                        afterMove(msInstance, $source, $destination, $options);
                     }
                 }
+            }
+
+            /**
+             * Moves options from source to destination.
+             * @param {jQuery} $source - the source where the options were
+             * @param {jQuery} $destination - the destination where the options will be
+             * @param {jQuery} $options - the options to be moved
+             */
+            function moveFromAtoB($source, $destination, $options) {
+                var msInstance = Multiselect.getInstance($source);
+                if (!msInstance) msInstance = Multiselect.getInstance($destination);
+                /** @type {jQuery} */
+                var $changedOptgroups = $();
+                $options.each(function(index, option) {
+                    /** @type {jQuery} */
+                    var $option = $(option);
+
+                    if (msInstance.options.ignoreDisabled && $option.is(':disabled')) {
+                        return true;
+                    }
+
+                    if ($option.parent().is('optgroup')) {
+                        /** @type {jQuery} */
+                        var $sourceGroup = $option.parent();
+
+                        if (typeof $changedOptgroups === "undefined") {
+                            $changedOptgroups = $sourceGroup;
+                        } else {
+                            $changedOptgroups = $changedOptgroups.add($sourceGroup);
+                        }
+                        /** @type {string} */
+                        var optgroupSelector = 'optgroup['
+                            + msInstance.options.matchOptgroupBy
+                            + '="' + $sourceGroup.prop(msInstance.options.matchOptgroupBy) + '"]';
+                        /** @type {jQuery} */
+                        var $destinationGroup = $destination.find(optgroupSelector);
+
+                        if (!$destinationGroup.length) {
+                            $destinationGroup = $sourceGroup.clone(true);
+                            $destinationGroup.empty();
+
+                            moveOptionsTo($destination, $destinationGroup);
+                        }
+                        moveOptionsTo($destinationGroup,$option);
+                    } else {
+                        moveOptionsTo($destination, $option);
+                    }
+                });
+                if ($changedOptgroups.length > 0) {
+                    removeIfEmpty($changedOptgroups);
+                }
+                return this;
             }
 
             /**
@@ -974,9 +1027,6 @@
              * @returns {boolean}
              */
             function isValidMoveRequest(msInstance, $destination, $options) {
-                if (silent) {
-                    return true;
-                }
                 /** @type {boolean} */
                 var toLeftSide = ($destination === msInstance.$left);
                 /** @type {function} */
@@ -991,16 +1041,14 @@
                     $lastDestination: $destination,
                     $movedOptions: $options
                 };
-                self.undoStack.push(stackElement);
+                msInstance.undoStack.push(stackElement);
                 // TODO: Do we need memory management with the new stack?
-                self.redoStack = [];
+                msInstance.redoStack = [];
                 sortSelectItems($destination, msInstance.callbacks.sort, msInstance.options.keepRenderingFor);
                 var toLeftSide = ($destination === msInstance.$left);
-                if (!silent) {
-                    /** @type {function} */
-                    var afterCallback = (toLeftSide ? msInstance.callbacks.afterMoveToLeft : msInstance.callbacks.afterMoveToRight);
-                    afterCallback( msInstance.$left, msInstance.$right, $options );
-                }
+                /** @type {function} */
+                var afterCallback = (toLeftSide ? msInstance.callbacks.afterMoveToLeft : msInstance.callbacks.afterMoveToRight);
+                afterCallback( msInstance.$left, msInstance.$right, $options );
                 if (msInstance.options.search) {
                     /** @type {jQuery} */
                     var filterToClear = toLeftSide ? msInstance.leftSearch.$filterInput : msInstance.rightSearch.$filterInput;
@@ -1008,6 +1056,7 @@
                 }
                 return msInstance;
             }
+
             /**
              * Attaches the necessary events to the components of the Multiselect instance.
              * @param {Multiselect} msInstance - the instance to prepare
@@ -1044,28 +1093,28 @@
                 // Attach event for double clicking on options from left side
                 self.$left.dblclick('option', function(e) {
                     e.preventDefault();
-                    commenceMovingOptions(this, self.$left, self.$right.first());
+                    commenceMovingOptions(self, self.$left, self.$right.first());
                 });
 
                 // Attach event for pushing ENTER on options from left side
                 self.$left.keydown(function(e) {
                     if (e.keyCode === KEY_ENTER) {
                         e.preventDefault();
-                        commenceMovingOptions(this, self.$left, self.$right.first());
+                        commenceMovingOptions(self, self.$left, self.$right.first());
                     }
                 });
 
                 // Attach event for double clicking on options from right side
                 self.$right.dblclick('option', function(e) {
                     e.preventDefault();
-                    commenceMovingOptions(this, $(e.currentTarget), self.$left);
+                    commenceMovingOptions(self, $(e.currentTarget), self.$left);
                 });
 
                 // Attach event for pushing BACKSPACE or DEL on options from right side
                 self.$right.keydown(function(e) {
                     if (e.keyCode === KEY_ENTER || e.keyCode === KEY_BACKSPACE || e.keyCode === KEY_DEL) {
                         e.preventDefault();
-                        commenceMovingOptions(this, $(e.currentTarget), self.$left);
+                        commenceMovingOptions(self, $(e.currentTarget), self.$left);
                     }
                 });
 
@@ -1076,35 +1125,35 @@
                     });
 
                     self.$right.dblclick(function(e) {
-                        commenceMovingOptions(this, $(e.currentTarget), self.$left);
+                        commenceMovingOptions(self, $(e.currentTarget), self.$left);
                     });
                 }
 
                 self.actions.$rightSelected.click(function(e) {
                     e.preventDefault();
                     var $targetSelect = getButtonContext($(e.currentTarget));
-                    commenceMovingOptions(this, self.$left, $targetSelect);
+                    commenceMovingOptions(self, self.$left, $targetSelect);
                     $(this).blur();
                 });
 
                 self.actions.$leftSelected.click(function(e) {
                     e.preventDefault();
                     var $sourceSelect = getButtonContext($(e.currentTarget));
-                    commenceMovingOptions(this, $sourceSelect, self.$left);
+                    commenceMovingOptions(self, $sourceSelect, self.$left);
                     $(this).blur();
                 });
 
                 self.actions.$rightAll.click(function(e) {
                     e.preventDefault();
                     var $targetSelect = getButtonContext($(e.currentTarget));
-                    commenceMovingOptions(this, self.$left, $targetSelect, false);
+                    commenceMovingOptions(self, self.$left, $targetSelect, false);
                     $(this).blur();
                 });
 
                 self.actions.$leftAll.click(function(e) {
                     e.preventDefault();
                     var $sourceSelect = getButtonContext($(e.currentTarget));
-                    commenceMovingOptions(this, $sourceSelect, self.$left, false);
+                    commenceMovingOptions(self, $sourceSelect, self.$left, false);
                     $(this).blur();
                 });
 
@@ -1280,7 +1329,7 @@
                     var newSource = isUndo ? last.$lastDestination : last.$lastSource;
                     /** @type {jQuery} */
                     var newDestination = isUndo ? last.$lastSource : last.$lastDestination;
-                    msInstance.moveFromAtoB(newSource, newDestination, last.$movedOptions);
+                    msInstance.callbacks.move(newSource, newDestination, last.$movedOptions);
                 }
 
             }
@@ -1457,7 +1506,7 @@
                     /** will be executed each time before moving option[s] to right
                      *
                      *  IMPORTANT : this method must return boolean value
-                     *      true    : continue to moveFromAToB method
+                     *      true    : continue to move method
                      *      false   : stop
                      *
                      *  @method beforeMoveToRight
@@ -1482,7 +1531,7 @@
                     /** will be executed each time before moving option[s] to left
                      *
                      *  IMPORTANT : this method must return boolean value
-                     *      true    : continue to moveFromAToB method
+                     *      true    : continue to move method
                      *      false   : stop
                      *
                      *  @method beforeMoveToLeft
@@ -1495,7 +1544,7 @@
                      **/
                     beforeMoveToLeft: function($left, $right, $options) { return true; },
 
-                    /*  will be executed each time after moving option[s] to left
+                    /**  will be executed each time after moving option[s] to left
                      *
                      *  @method afterMoveToLeft
                      *  @attribute $left jQuery object
@@ -1503,7 +1552,13 @@
                      *  @attribute $options HTML object (the option[s] which was selected to be moved)
                      **/
                     afterMoveToLeft: function($left, $right, $options) {},
-
+                    /** will be executed instead of the default move function
+                     * @method move
+                     * @attribute $source - the source of the moved options
+                     * @attribute $destination - the destination to move the options to
+                     * @attribute $options - the options to move
+                     */
+                    move: moveFromAtoB,
                     /** will be executed each time before moving option[s] up
                      *
                      *  IMPORTANT : this method must return boolean value
@@ -1541,7 +1596,7 @@
                      **/
                     beforeMoveDown: function($options) { return true; },
 
-                    /*  will be executed each time after moving option[s] down
+                    /**  will be executed each time after moving option[s] down
                      *
                      *  @method afterMoveUp
                      *  @attribute $left jQuery object
@@ -1560,7 +1615,7 @@
                      **/
                     sort: lexicographicComparison,
 
-                    /*  will tell if the search can start
+                    /**  will tell if the search can start
                      *
                      *  @method fireSearch
                      *  @attribute value String
@@ -1613,7 +1668,7 @@
                     );
                     /** @type {Multiselect} */
                     var createdMultiselect = new Multiselect($select, concreteSettings);
-                    Multiselect.setInstance($select, createdMultiselect);
+                    setInstance($select, createdMultiselect);
                     return createdMultiselect;
                 } else {
                     return Multiselect.getInstance($select);
@@ -1686,56 +1741,6 @@
                     var contentHtml = toContentHtml(newOptions);
                     this.$left.append(contentHtml);
                     this.init();
-                },
-
-                /**
-                 * Moves options from source to destination.
-                 * Optionally respects the stack and/or callbacks
-                 * @param $source - the source where the options were
-                 * @param $destination - the destination where the options will be
-                 * @param $options - the options to be moved
-                 * @returns {Multiselect} the instance
-                 */
-                moveFromAtoB: function( $source, $destination, $options) {
-                    /** @type {jQuery} */
-                    var $changedOptgroups = $();
-                    $options.each(function(index, option) {
-                        /** @type {jQuery} */
-                        var $option = $(option);
-
-                        if (this.options.ignoreDisabled && $option.is(':disabled')) {
-                            return true;
-                        }
-
-                        if ($option.parent().is('optgroup')) {
-                            /** @type {jQuery} */
-                            var $sourceGroup = $option.parent();
-
-                            if (typeof $changedOptgroups === "undefined") {
-                                $changedOptgroups = $sourceGroup;
-                            } else {
-                                $changedOptgroups = $changedOptgroups.add($sourceGroup);
-                            }
-                            /** @type {string} */
-                            var optgroupSelector = 'optgroup[' + this.options.matchOptgroupBy + '="' + $sourceGroup.prop(this.options.matchOptgroupBy) + '"]';
-                            /** @type {jQuery} */
-                            var $destinationGroup = $destination.find(optgroupSelector);
-
-                            if (!$destinationGroup.length) {
-                                $destinationGroup = $sourceGroup.clone(true);
-                                $destinationGroup.empty();
-
-                                moveOptionsTo($destination, $destinationGroup);
-                            }
-                            moveOptionsTo($destinationGroup,$option);
-                        } else {
-                            moveOptionsTo($destination, $option);
-                        }
-                    });
-                    if ($changedOptgroups.length > 0) {
-                        removeIfEmpty($changedOptgroups);
-                    }
-                    return this;
                 },
 
                 /**
