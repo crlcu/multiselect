@@ -78,7 +78,7 @@ $(document).ready(function() {
                 ]
             },
             {
-                label: "Danach Label",
+                label: "Blabla\"Blublu",
                 contents:
                     [
                         {

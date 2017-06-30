@@ -998,7 +998,6 @@
 
                         /** @type {jQuery} */
                         var $options = getOptionsToMove(self.$left);
-
                         if ( $options.length ) {
                             self.moveFromAtoB(self.$left, self.$right.first(), $options);
                         }
@@ -1117,13 +1116,11 @@
 
                 self.actions.$undo.click(function(e) {
                     e.preventDefault();
-
                     self.undo(e);
                 });
 
                 self.actions.$redo.click(function(e) {
                     e.preventDefault();
-
                     self.redo(e);
                 });
 
@@ -1159,8 +1156,9 @@
             }
 
             /**
-             *
-             * @param {SelectContent} newItems
+             * Transforms the given select representation to HTML optgroups and options.
+             * @param {SelectContent} newItems - the select content that should be transformed to HTML
+             * @return {string} the HTML select content
              */
             function toContentHtml(newItems) {
                 /** @type {string} */
@@ -1171,33 +1169,54 @@
                 for (/** @type {number} */var i = 0; i < grouplessOptionCount; i++) {
                     /** @type {OptionRep} */
                     var option = newItems.options[i];
-                    htmlContent += toOption(option);
+                    htmlContent += toOptionHtml(option);
                 }
                 /** @type {number} */
                 var optgroupCount = newItems.optgroups.length;
                 for (i = 0; i < optgroupCount; i++) {
                     /** @type {OptgroupRep} */
                     var optgroup = newItems.optgroups[i];
-                    htmlContent += toOptgroup(optgroup);
+                    htmlContent += toOptgroupHtml(optgroup);
                 }
                 return htmlContent;
             }
 
             /**
-             *
-             * @param {OptionRep} optionRep
+             * Transforms an option representation to its HTML equivalent
+             * @param {OptionRep} optionRep - the option to transform
+             * @return {string} the option HTML
              */
-            function toOption(optionRep) {
+            function toOptionHtml(optionRep) {
                 /** @type {string} */
                 var htmlContent = "<option value=";
                 /** @type {string} */
-                var quote = chooseQuotes(optionRep.value);
-                htmlContent += quote + optionRep.value + quote + ">";
+                var value = optionRep.value.toString();
+                /** @type {string} */
+                var quote = chooseQuotes(value);
+                htmlContent += quote + escapeHtml(value) + quote + ">";
                 htmlContent += optionRep.name;
                 htmlContent += "</option>";
                 return htmlContent;
             }
 
+            /**
+             * Escapes certain HTML chars.
+             * @param {string} value
+             * @returns {string}
+             */
+            function escapeHtml(value) {
+                /** @type {string} */
+                var newValue = value.replace('"', "&quot;");
+                newValue = newValue.replace("'", "&apos;");
+                return newValue;
+            }
+
+            /**
+             * Chooses the type of quote that should encase the value.
+             * Looks at the earliest quote to decide.
+             * @param someValue - value that may contain single or double quotes
+             * @returns {string} - the chosen quote (' or ")
+             */
             function chooseQuotes(someValue) {
                 /** @type {string} */
                 const SINGLE_QUOTE = "'";
@@ -1233,16 +1252,16 @@
              *
              * @param {OptgroupRep} optgroupRep
              */
-            function toOptgroup(optgroupRep) {
+            function toOptgroupHtml(optgroupRep) {
                 /** @type {string} */
                 var htmlContent = "<optgroup label=";
                 /** @type {string} */
                 var quote = chooseQuotes(optgroupRep.label);
-                htmlContent += quote + optgroupRep.label + quote + ">";
+                htmlContent += quote + escapeHtml(optgroupRep.label) + quote + ">";
                 /** @type {number} */
                 var optionCount = optgroupRep.contents.length;
                 for (/** @type {number} */var i = 0; i < optionCount; i++) {
-                    htmlContent += toOption(optgroupRep.contents[i]);
+                    htmlContent += toOptionHtml(optgroupRep.contents[i]);
                 }
                 htmlContent += "</optgroup>";
                 return htmlContent;
