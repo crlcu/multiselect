@@ -98,7 +98,7 @@ $(document).ready(function() {
         ]
     };
     var msInstance = $.Multiselect.getInstance($msElement);
-    msInstance.replaceItems(newOptions);
+    // msInstance.replaceItems(newOptions);
     var settingsstring = JSON.stringify(settings, null, 2);
     $("#insert-settings-here").text(settingsstring);
 });
