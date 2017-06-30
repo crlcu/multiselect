@@ -83,15 +83,15 @@ $(document).ready(function() {
                     [
                         {
                             name: "Neue5",
-                            value: 5
+                            value: 7
                         },
                         {
                             name: "Neue4",
-                            value: 4
+                            value: 8
                         },
                         {
                             name: "Neue6",
-                            value: 6
+                            value: 9
                         }
                     ]
             }
