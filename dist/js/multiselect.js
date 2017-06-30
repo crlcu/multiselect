@@ -829,11 +829,23 @@
                 return $select;
             }
 
+            /**
+             * Checks if options should be sorted by position or some other user customizable callback
+             * @param {KeepInitialPositionFor} keepInitialPositionFor - the current setting for this
+             * @returns {boolean} - true if options should be sorted by initial position
+             */
             function shouldOptionsBeSortedByPosition(keepInitialPositionFor) {
+                //noinspection JSValidateTypes
                 return (keepInitialPositionFor === Multiselect.KeepInitialPositionFor.ALL);
             }
 
+            /**
+             * Checks if optgroups should be sorted by position or some other user customizable callback
+             * @param {KeepInitialPositionFor} keepInitialPositionFor - the current setting for this
+             * @returns {boolean} - true if optgroups should be sorted by initial position
+             */
             function shouldOptgroupsBeSortedByPosition(keepInitialPositionFor) {
+                //noinspection JSValidateTypes
                 return (keepInitialPositionFor === Multiselect.KeepInitialPositionFor.OPTGROUPS
                 || keepInitialPositionFor === Multiselect.KeepInitialPositionFor.ALL);
             }
