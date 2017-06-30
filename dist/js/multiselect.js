@@ -804,44 +804,38 @@
              */
             function sortSelectItems($select, comparatorCallback, keepInitialPositionFor) {
                 if (isOnlySelects($select)) {
-                    // sort any direct children (can be combination of options and optgroups)
-                    // example: oa="aaa", ob="bbb", oc="zzz", oga="ddd", ogb="eee"
-                    //noinspection JSValidateTypes
-                    if (keepInitialPositionFor !== Multiselect.KeepInitialPositionFor.NONE) {
-                        // Different approach, as following order would be possible: oa, ob, og1, og2, oc
-                        /** @type {jQuery} */
-                        var $elementsToSort = $select.children("optgroup");
-                        //noinspection JSValidateTypes
-                        if (keepInitialPositionFor === Multiselect.KeepInitialPositionFor.ALL) {
-                            $elementsToSort = $elementsToSort.add($select.children("option"));
-                        }
-                        $elementsToSort.sort(initialOrderComparison).appendTo($select);
-
-                        // check for optgroups, if none present we've already sorted everything
-                        // if any, sort their children, i.e. all other previously unsorted options
-                        //noinspection JSValidateTypes
-                        if (keepInitialPositionFor === Multiselect.KeepInitialPositionFor.ALL) {
-                            $select.find("optgroup").each(function(i, group) {
-                                $(group).children().sort(initialOrderComparison).appendTo(group);
-                            });
-                        }
-                    } else {
-                        // TODO: How about allowing the user decide which in which order this is done?
-                        // the options that are not in an optgroup come first
-                        $select.children("option").sort(comparatorCallback).appendTo($select);
-                        /** @type {jQuery} */
-                        var $optgroups = $select.children("optgroup");
-                        if ($optgroups.length > 0) {
-                            // then sort the optgroups themselves, if any are there
-                            $optgroups.sort(comparatorCallback).appendTo($select);
-                            // then sort their options
-                            $optgroups.each(function(i, optgroup) {
-                                $(optgroup).children().sort(comparatorCallback).appendTo(optgroup);
-                            });
-                        }
+                    var optionComparator = initialOrderComparison;
+                    if (!shouldOptionsBeSortedByPosition(keepInitialPositionFor)) {
+                        optionComparator = comparatorCallback;
+                    }
+                    var optgroupComparator = initialOrderComparison;
+                    if (!shouldOptgroupsBeSortedByPosition(keepInitialPositionFor)) {
+                        optgroupComparator = comparatorCallback;
+                    }
+                    // TODO: How about allowing the user to decide if optgroup-less options come first or last?
+                    // the options that are not in an optgroup come first
+                    $select.children("option").sort(optionComparator).appendTo($select);
+                    /** @type {jQuery} */
+                    var $optgroups = $select.children("optgroup");
+                    if ($optgroups.length > 0) {
+                        // then sort the optgroups themselves, if any are there
+                        $optgroups.sort(optgroupComparator).appendTo($select);
+                        // then sort their options
+                        $optgroups.each(function(i, optgroup) {
+                            $(optgroup).children().sort(optionComparator).appendTo(optgroup);
+                        });
                     }
                 }
                 return $select;
+            }
+
+            function shouldOptionsBeSortedByPosition(keepInitialPositionFor) {
+                return (keepInitialPositionFor === Multiselect.KeepInitialPositionFor.ALL);
+            }
+
+            function shouldOptgroupsBeSortedByPosition(keepInitialPositionFor) {
+                return (keepInitialPositionFor === Multiselect.KeepInitialPositionFor.OPTGROUPS
+                || keepInitialPositionFor === Multiselect.KeepInitialPositionFor.ALL);
             }
 
             /**
