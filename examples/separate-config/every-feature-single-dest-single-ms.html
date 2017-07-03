@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>jQuery multiselect plugin with two sides bla</title>
+    <title>jQuery multiselect plugin with two sides</title>
     <meta charset="utf-8">
     <link rel="icon" type="image/x-icon" href="https://github.com/favicon.ico" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
@@ -9,7 +9,7 @@
 </head>
 <body>
     <div id="wrap" class="container">
-        <h4 id="demo-zero-configuration-separate-js">Zero configuration, separate JS file</h4>
+        <h4 id="demo-every-feature-single-dest-single-ms-separate-js">Single Instance, Single Destination, separate JS config file</h4>
         
         <div class="row row-eq-height">
             <div class="col-sm-5">
@@ -57,6 +57,7 @@
                 <button type="button" id="multiselect_rightSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
                 <button type="button" id="multiselect_leftSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
                 <button type="button" id="multiselect_leftAll" class="btn btn-default btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+                <button type="button" id="replaceItemsButton" class="btn btn-warning btn-block">Replace Items Now</button>
             </div>
             
             <div class="col-sm-5">
@@ -76,6 +77,10 @@
         </div>
     </div>
     <pre id="insert-settings-here" class="prettyprint">
+
+    </pre>
+    These items will replace the old ones:<br/>
+    <pre id="new-items-here" class="prettyprint">
 
     </pre>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>

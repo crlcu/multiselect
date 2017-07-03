@@ -98,7 +98,14 @@ $(document).ready(function() {
         ]
     };
     var msInstance = $.Multiselect.getInstance($msElement);
-    // msInstance.replaceItems(newOptions);
     var settingsstring = JSON.stringify(settings, null, 2);
     $("#insert-settings-here").text(settingsstring);
+    var newItemsString = JSON.stringify(newOptions, null, 2);
+    $("#new-items-here").text(newItemsString);
+    $("#replaceItemsButton").click(function(e) {
+        e.preventDefault();
+        var $msElement = $('#multiselect');
+        var msInstance = $.Multiselect.getInstance($msElement);
+        msInstance.replaceItems(newOptions);
+    })
 });
