@@ -281,7 +281,7 @@
                 if (settings[actionName]) {
                     selector = settings[actionName];
                 } else {
-                    selector = Multiselect.defaults.actionSelector(id, actionName);
+                    selector = buildActionSelector(id, actionName);
                 }
                 return $(selector);
             }
@@ -559,6 +559,16 @@
                 extendedHide($select.find('option.hidden').parent('optgroup').not($(":visible").parent()));
                 // optgroups to show
                 extendedShow($select.find('option:not(.hidden)').parent('optgroup'));
+            }
+
+            /**
+             * This builds the default action selector used to find elements the user didn't provide.
+             * @param id - preferably the id of the left palette
+             * @param actionName - the action looked for
+             * @returns {string} - the default selector for this action
+             */
+            function buildActionSelector(id, actionName) {
+                    return "#" + id + "_" + actionName;
             }
 
             /**
@@ -1486,11 +1496,6 @@
             /** Default settings object
              * @type {object} */
             Multiselect.defaults = {
-                /** Function used when looking for elements with default IDs
-                 * @type {function} */
-                actionSelector: function(id, action) {
-                    return "#" + id + "_" + action;
-                },
                 /** Default options
                  * @type {MultiselectOptions} */
                 options: {
