@@ -499,7 +499,7 @@
              * @returns {number} - the initial position of this element relative to the parent element
              */
             function getInitialPosition($optionOrOptgroup) {
-                if ($optionOrOptgroup !== undefined && $optionOrOptgroup.is("option,optgroup")) {
+                if ($optionOrOptgroup instanceof $ && $optionOrOptgroup.is("option,optgroup")) {
                     return $optionOrOptgroup.data(DATA_POSITION);
                 }
                 return -1;
@@ -513,7 +513,7 @@
              * @returns {jQuery} - returns the element for chaining
              */
             function setInitialPosition($optionOrOptgroup, newPosition) {
-                if ($optionOrOptgroup instanceof jQuery && $optionOrOptgroup.is("option,optgroup")) {
+                if ($optionOrOptgroup instanceof $ && $optionOrOptgroup.is("option,optgroup")) {
                     $optionOrOptgroup.data(DATA_POSITION, newPosition);
                 }
                 return $optionOrOptgroup;
@@ -562,6 +562,17 @@
             }
 
             /**
+             * Builds the selector for the jQuery custom selector search extension.
+             * @param someValue - the value to search for
+             * @returns {string} - the selector for this value
+             */
+            function buildSearchSelector(someValue) {
+                /** @type {string} */
+                var quote = chooseQuotes(someValue);
+                return ":search(" + quote + someValue + quote + ")";
+            }
+
+            /**
              * Filters the given selects using the filter value
              * to check which options should be filtered.
              * @param {string} filterValue - the value to use for choosing options to filter
@@ -576,14 +587,14 @@
                 /** @type {jQuery} */
                 var $prevHiddenOptions = $allOptions.filter(SELECTOR_HIDDEN);
                 /** @type {jQuery} */
-                var $matchingOptions = $allOptions.filter(':search("' + filterValue + '")');
+                var $matchingOptions = $allOptions.filter(buildSearchSelector(filterValue));
                 /** @type {jQuery} */
                 var $allOptgroups = $selectsToFilter.children("optgroup");
                 /** @type {boolean} */
                 var hasOptgroups = $allOptgroups.length > 0;
                 /** @type {jQuery} */
                 var $prevHiddenOptgroups = $();
-                if (hasOptgroups){
+                if (hasOptgroups) {
                     $prevHiddenOptgroups = $allOptgroups.filter(SELECTOR_HIDDEN);
                 }
                 if ($allOptions.length == $matchingOptions.length) {
