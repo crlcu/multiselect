@@ -965,7 +965,7 @@
              * @param {Multiselect} msInstance - the Multiselect instance containing the selects
              * @param {jQuery} $source - the source select of the options
              * @param {jQuery} $destination - the destination select of the options
-             * @param {boolean} onlySelected - true if only selected options should be moved
+             * @param {boolean} [onlySelected=true] - true if only selected options should be moved
              */
             function commenceMovingOptions(msInstance, $source, $destination, onlySelected) {
                 /** @type {jQuery} */
@@ -1712,6 +1712,7 @@
                     self.callbacks.startUp( self.$left, self.$right );
 
                     // initial sort if necessary
+                    //noinspection JSValidateTypes
                     if (self.options.keepRenderingFor !== Multiselect.KeepInitialPositionFor.ALL && self.callbacks.sort) {
                         // sort seems to be a comparator function, not a sorting function
                         sortSelectItems(self.$left, self.callbacks.sort, self.options.keepRenderingFor);
@@ -1740,6 +1741,7 @@
                 empty: function() {
                     this.$left.empty();
                     this.$right.empty();
+                    //FIXME: Also empty stacks?
                 },
                 /**
                  * Replaces the content of the Multiselect with the given content.
