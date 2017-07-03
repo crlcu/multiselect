@@ -1828,4 +1828,4 @@
             return $(elem).text().match(regex);
         }
     })
-)
+);
