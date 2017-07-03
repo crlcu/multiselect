@@ -1347,10 +1347,11 @@
                 if ( last ) {
                     targetStack.push(last);
                     /** @type {jQuery} */
-                    var newSource = isUndo ? last.$lastDestination : last.$lastSource;
+                    var $newSource = isUndo ? last.$lastDestination : last.$lastSource;
                     /** @type {jQuery} */
-                    var newDestination = isUndo ? last.$lastSource : last.$lastDestination;
-                    msInstance.callbacks.move(newSource, newDestination, last.$movedOptions);
+                    var $newDestination = isUndo ? last.$lastSource : last.$lastDestination;
+                    msInstance.callbacks.move($newSource, $newDestination, last.$movedOptions);
+                    sortSelectItems($newDestination, msInstance.callbacks.sort, msInstance.options.keepRenderingFor);
                 }
 
             }
