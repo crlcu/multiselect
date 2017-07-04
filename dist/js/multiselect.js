@@ -568,7 +568,7 @@
              * @returns {string} - the default selector for this action
              */
             function buildActionSelector(id, actionName) {
-                    return "#" + id + "_" + actionName;
+                return "#" + id + "_" + actionName;
             }
 
             /**
@@ -1826,6 +1826,7 @@
             var regex = new RegExp(filterValue, "i");
 
             return $(elem).text().match(regex);
-        }
+        };
+        return Multiselect;
     })
 );
