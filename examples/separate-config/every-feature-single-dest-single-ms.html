@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>jQuery multiselect plugin with two sides</title>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/x-icon" href="https://github.com/favicon.ico" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
+</head>
+<body>
+    <div id="wrap" class="container">
+        <h4 id="demo-every-feature-single-dest-single-ms-separate-js">Single Instance, Single Destination, separate JS config file</h4>
+        
+        <div class="row row-eq-height">
+            <div class="col-sm-5">
+                <select title="Left Palette" name="from[]" id="multiselect" class="form-control palette" size="8" multiple="multiple">
+                    <option value="1">Änderungen</option>
+                    <option value="2">Übrigens</option>
+                    <option value="3">\Quassel</option>
+                    <option value="4">Ahahaha""Blabla</option>
+                    <option value="5">Item 3</option>
+                    <optgroup label="Optgroup 1">
+                        <option value="6">abcd</option>
+                        <option value="7">abca</option>
+                        <option value="8">abc2</option>
+                        <option value="9">abc4</option>
+                        <option value="10">abc1</option>
+                    </optgroup>
+                    <optgroup label="Optgroup 2">
+                        <option value="11">Item 1</option>
+                        <option value="12">Item 5</option>
+                        <option value="13">Item 2</option>
+                        <option value="14">Item 4</option>
+                        <option value="15">Item 3</option>
+                    </optgroup>
+                    <optgroup label="Optgroup 3">
+                        <option value="16">Item 1</option>
+                        <option value="17">Item 5</option>
+                        <option value="18">Item 2</option>
+                        <option value="19">Item 4</option>
+                        <option value="20">Item 3</option>
+                    </optgroup>
+                    <optgroup label="Optgroup 4">
+                        <option value="21">Item 1</option>
+                        <option value="22">Item 5</option>
+                        <option value="23">Item 2</option>
+                        <option value="24">Item 4</option>
+                        <option value="25">Item 3</option>
+                    </optgroup>
+                </select>
+            </div>
+            
+            <div class="col-sm-2">
+                <button type="button" id="multiselect_undo" class="btn btn-primary btn-block">Undo</button>
+                <button type="button" id="multiselect_redo" class="btn btn-warning btn-block">Redo</button>
+                <button type="button" id="multiselect_rightAll" class="btn btn-default btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                <button type="button" id="multiselect_rightSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                <button type="button" id="multiselect_leftSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                <button type="button" id="multiselect_leftAll" class="btn btn-default btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+                <button type="button" id="replaceItemsButton" class="btn btn-warning btn-block">Replace Items Now</button>
+            </div>
+            
+            <div class="col-sm-5">
+                <select title="Right Palette" name="to[]" id="multiselect_to" class="form-control palette" size="8" multiple="multiple">
+                    <option value="26">Blabla</option>
+                    <option value="27">Blablubb</option>
+                </select>
+                <div class="row">
+                <div class="col-sm-6">
+                <button type="button" id="multiselect_moveUp" class="btn btn-default btn-block"><i class="glyphicon glyphicon-arrow-up"></i></button>
+                </div>
+                <div class="col-sm-6">
+                <button type="button" id="multiselect_moveDown" class="btn btn-default btn-block"><i class="glyphicon glyphicon-arrow-down"></i></button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <pre id="insert-settings-here" class="prettyprint">
+
+    </pre>
+    These items will replace the old ones:<br/>
+    <pre id="new-items-here" class="prettyprint">
+
+    </pre>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../dist/js/multiselect.js"></script>
+<script type="text/javascript" src="js/every-feature-single-dest-single-ms.js"></script>
+
+</body>
+</html>
