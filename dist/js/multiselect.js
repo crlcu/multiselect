@@ -662,6 +662,11 @@ if (typeof jQuery === 'undefined') {
         });
     };
 
+    $.fn.destroyData = function( ) {
+        $(this).data('crlcu.multiselect', null);
+        return this;
+    };
+
     // append options
     // then set the selected attribute to false
     $.fn.move = function( $options ) {
