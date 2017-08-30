@@ -330,30 +330,30 @@ if (typeof jQuery === 'undefined') {
 
                 if ( typeof self.callbacks.moveToRight == 'function' ) {
                     return self.callbacks.moveToRight( self, $options, event, silent, skipStack );
-                } else {
-                    if ( typeof self.callbacks.beforeMoveToRight == 'function' && !silent ) {
-                        if ( !self.callbacks.beforeMoveToRight( self.$left, self.$right, $options ) ) {
-                            return false;
-                        }
-                    }
-
-                    self.moveFromAtoB(self.$left, self.$right, $options, event, silent, skipStack);
-
-                    if ( !skipStack ) {
-                        self.undoStack.push(['right', $options ]);
-                        self.redoStack = [];
-                    }
-
-                    if ( typeof self.callbacks.sort == 'function' && !silent && !self.doNotSortRight ) {
-                        self.$right.mSort(self.callbacks.sort);
-                    }
-
-                    if ( typeof self.callbacks.afterMoveToRight == 'function' && !silent ) {
-                        self.callbacks.afterMoveToRight( self.$left, self.$right, $options );
-                    }
-
-                    return self;
                 }
+
+                if ( typeof self.callbacks.beforeMoveToRight == 'function' && !silent ) {
+                    if ( !self.callbacks.beforeMoveToRight( self.$left, self.$right, $options ) ) {
+                        return false;
+                    }
+                }
+
+                self.moveFromAtoB(self.$left, self.$right, $options, event, silent, skipStack);
+
+                if ( !skipStack ) {
+                    self.undoStack.push(['right', $options ]);
+                    self.redoStack = [];
+                }
+
+                if ( typeof self.callbacks.sort == 'function' && !silent && !self.doNotSortRight ) {
+                    self.$right.mSort(self.callbacks.sort);
+                }
+
+                if ( typeof self.callbacks.afterMoveToRight == 'function' && !silent ) {
+                    self.callbacks.afterMoveToRight( self.$left, self.$right, $options );
+                }
+
+                return self;
             },
 
             moveToLeft: function( $options, event, silent, skipStack ) {
@@ -361,34 +361,38 @@ if (typeof jQuery === 'undefined') {
 
                 if ( typeof self.callbacks.moveToLeft == 'function' ) {
                     return self.callbacks.moveToLeft( self, $options, event, silent, skipStack );
-                } else {
-                    if ( typeof self.callbacks.beforeMoveToLeft == 'function' && !silent ) {
-                        if ( !self.callbacks.beforeMoveToLeft( self.$left, self.$right, $options ) ) {
-                            return false;
-                        }
-                    }
-
-                    self.moveFromAtoB(self.$right, self.$left, $options, event, silent, skipStack);
-
-                    if ( !skipStack ) {
-                        self.undoStack.push(['left', $options ]);
-                        self.redoStack = [];
-                    }
-
-                    if ( typeof self.callbacks.sort == 'function' && !silent ) {
-                        self.$left.mSort(self.callbacks.sort);
-                    }
-
-                    if ( typeof self.callbacks.afterMoveToLeft == 'function' && !silent ) {
-                        self.callbacks.afterMoveToLeft( self.$left, self.$right, $options );
-                    }
-
-                    return self;
                 }
+
+                if ( typeof self.callbacks.beforeMoveToLeft == 'function' && !silent ) {
+                    if ( !self.callbacks.beforeMoveToLeft( self.$left, self.$right, $options ) ) {
+                        return false;
+                    }
+                }
+
+                self.moveFromAtoB(self.$right, self.$left, $options, event, silent, skipStack);
+
+                if ( !skipStack ) {
+                    self.undoStack.push(['left', $options ]);
+                    self.redoStack = [];
+                }
+
+                if ( typeof self.callbacks.sort == 'function' && !silent ) {
+                    self.$left.mSort(self.callbacks.sort);
+                }
+
+                if ( typeof self.callbacks.afterMoveToLeft == 'function' && !silent ) {
+                    self.callbacks.afterMoveToLeft( self.$left, self.$right, $options );
+                }
+
+                return self;
             },
 
             moveFromAtoB: function( $source, $destination, $options, event, silent, skipStack ) {
                 var self = this;
+
+                if ( typeof self.callbacks.moveFromAtoB == 'function' ) {
+                    return self.callbacks.moveFromAtoB(self, $source, $destination, $options, event, silent, skipStack);
+                }
 
                 $options.each(function(index, option) {
                     var $option = $(option);
