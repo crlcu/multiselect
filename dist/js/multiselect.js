@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.3.13
+ * Multiselect v2.4.0
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2016 Adrian Crisan
@@ -191,7 +191,16 @@ if (typeof jQuery === 'undefined') {
                         self.moveToRight($options, e);
                     }
                 });
-                
+
+                // Attach event for clicking on optgroup's from left side
+                self.$left.on('click', 'optgroup', function(e) {
+                    if ($(e.target).prop('tagName') == 'OPTGROUP') {
+                        $(this)
+                            .children()
+                            .prop('selected', true);
+                    }
+                });
+
                 // Attach event for pushing ENTER on options from left side
                 self.$left.on('keypress', function(e) {
                     if (e.keyCode === 13) {
@@ -213,6 +222,15 @@ if (typeof jQuery === 'undefined') {
 
                     if ( $options.length ) {
                         self.moveToLeft($options, e);
+                    }
+                });
+
+                // Attach event for clicking on optgroup's from right side
+                self.$right.on('click', 'optgroup', function(e) {
+                    if ($(e.target).prop('tagName') == 'OPTGROUP') {
+                        $(this)
+                            .children()
+                            .prop('selected', true);
                     }
                 });
 
