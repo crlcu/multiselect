@@ -671,7 +671,7 @@ if (typeof jQuery === 'undefined') {
     var ua = window.navigator.userAgent;
     var isIE = (ua.indexOf("MSIE ") + ua.indexOf("Trident/") + ua.indexOf("Edge/")) > -3;
     var isSafari = ua.toLowerCase().indexOf("safari") > -1;
-    var isFirefox = typeof InstallTrigger !== 'undefined';
+    var isFirefox = ua.toLowerCase().indexOf("firefox") > -1;
 
     $.fn.multiselect = function( options ) {
         return this.each(function() {
