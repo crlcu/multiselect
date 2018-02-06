@@ -13,7 +13,6 @@ jQuery multiselect plugin with two sides. The user can select one or more items 
 
 Several quick start options are available:
 
-- [Download the latest release](https://github.com/crlcu/multiselect/archive/v1.0.4.zip).
 - Clone the repo: `git clone https://github.com/crlcu/multiselect.git` or
 - Install with [Bower](http://bower.io): `bower install multiselect-two-sides`.
 
