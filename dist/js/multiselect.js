@@ -1,7 +1,7 @@
 /*
  * @license
  *
- * Multiselect v2.4.1
+ * Multiselect v2.5.1
  * http://crlcu.github.io/multiselect/
  *
  * Copyright (c) 2016-2018 Adrian Crisan
@@ -79,6 +79,15 @@ if (typeof jQuery === 'undefined') {
 
             this.callbacks = settings;
 
+            if ( typeof this.callbacks.sort == 'function' ) {
+                var sort = this.callbacks.sort;
+
+                this.callbacks.sort = {
+                    left: sort,
+                    right: sort,
+                };
+            }
+
             this.init();
         }
 
@@ -92,8 +101,13 @@ if (typeof jQuery === 'undefined') {
                     self.skipInitSort = true;
 
                     if (self.callbacks.sort !== false) {
-                        self.callbacks.sort = function(a, b) {
-                            return $(a).data('position') > $(b).data('position') ? 1 : -1;
+                        self.callbacks.sort = {
+                            left: function(a, b) {
+                                return $(a).data('position') > $(b).data('position') ? 1 : -1;
+                            },
+                            right: function(a, b) {
+                                return $(a).data('position') > $(b).data('position') ? 1 : -1;
+                            },
                         };
                     }
 
@@ -108,12 +122,16 @@ if (typeof jQuery === 'undefined') {
                     self.callbacks.startUp( self.$left, self.$right );
                 }
 
-                if ( !self.skipInitSort && typeof self.callbacks.sort == 'function' ) {
-                    self.$left.mSort(self.callbacks.sort);
+                if ( !self.skipInitSort ) {
+                    if ( typeof self.callbacks.sort.left == 'function' ) {
+                        self.$left.mSort(self.callbacks.sort.left);
+                    }
 
-                    self.$right.each(function(i, select) {
-                        $(select).mSort(self.callbacks.sort);
-                    });
+                    if ( typeof self.callbacks.sort.right == 'function' ) {
+                        self.$right.each(function(i, select) {
+                            $(select).mSort(self.callbacks.sort.right);
+                        });
+                    }
                 }
 
                 // Append left filter
@@ -363,8 +381,8 @@ if (typeof jQuery === 'undefined') {
                     self.redoStack = [];
                 }
 
-                if ( typeof self.callbacks.sort == 'function' && !silent && !self.doNotSortRight ) {
-                    self.$right.mSort(self.callbacks.sort);
+                if ( typeof self.callbacks.sort.right == 'function' && !silent && !self.doNotSortRight ) {
+                    self.$right.mSort(self.callbacks.sort.right);
                 }
 
                 if ( typeof self.callbacks.afterMoveToRight == 'function' && !silent ) {
@@ -394,8 +412,8 @@ if (typeof jQuery === 'undefined') {
                     self.redoStack = [];
                 }
 
-                if ( typeof self.callbacks.sort == 'function' && !silent ) {
-                    self.$left.mSort(self.callbacks.sort);
+                if ( typeof self.callbacks.sort.left == 'function' && !silent ) {
+                    self.$left.mSort(self.callbacks.sort.left);
                 }
 
                 if ( typeof self.callbacks.afterMoveToLeft == 'function' && !silent ) {

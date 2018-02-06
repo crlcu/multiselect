@@ -60,75 +60,55 @@
     </div>
     
     <div id="wrap" class="container">            
-        <h4 id="demo-undo-redo">Undo / Redo</h4>
+        <h4 id="demo-keep-rendering-sort">Keep rendering sort</h4>
             
             <div class="row">
                 <div class="col-xs-5">
-                    <select name="from[]" id="undo_redo" class="form-control" size="13" multiple="multiple">
-                        <option value="1">C++</option>
-                        <option value="2">C#</option>
-                        <option value="3">Haskell</option>
-                        <option value="4">Java</option>
-                        <option value="5">JavaScript</option>
-                        <option value="6">Lisp</option>
-                        <option value="7">Lua</option>
-                        <option value="8">MATLAB</option>
-                        <option value="9">NewLISP</option>
-                        <option value="10">PHP</option>
-                        <option value="11">Perl</option>
-                        <option value="12">SQL</option>
-                        <option value="13">Unix shell</option>
+                    <select name="from[]" id="customSort" class="form-control" size="8" multiple="multiple">
+                        <option value="1" data-position="1">Item 1</option>
+                        <option value="5" data-position="2">Item 5</option>
+                        <option value="2" data-position="3">Item 2</option>
+                        <option value="4" data-position="4">Item 4</option>
+                        <option value="3" data-position="5">Item 3</option>
                     </select>
                 </div>
                 
                 <div class="col-xs-2">
-                    <button type="button" id="undo_redo_undo" class="btn btn-primary btn-block">undo</button>
-                    <button type="button" id="undo_redo_rightAll" class="btn btn-default btn-block"><i class="glyphicon glyphicon-forward"></i></button>
-                    <button type="button" id="undo_redo_rightSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
-                    <button type="button" id="undo_redo_leftSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
-                    <button type="button" id="undo_redo_leftAll" class="btn btn-default btn-block"><i class="glyphicon glyphicon-backward"></i></button>
-                    <button type="button" id="undo_redo_redo" class="btn btn-warning btn-block">redo</button>
+                    <button type="button" id="customSort_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                    <button type="button" id="customSort_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                    <button type="button" id="customSort_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                    <button type="button" id="customSort_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
                 </div>
                 
                 <div class="col-xs-5">
-                    <select name="to[]" id="undo_redo_to" class="form-control" size="13" multiple="multiple"></select>
+                    <select name="to[]" id="customSort_to" class="form-control" size="8" multiple="multiple"></select>
                 </div>
             </div>
-
+            
             <div class="row">
                 <div class="col-xs-12">
                     <h5>HTML</h5>
 <pre class="prettyprint linenums">
 &lt;div class=&quot;row&quot;&gt;
     &lt;div class=&quot;col-xs-5&quot;&gt;
-        &lt;select name=&quot;from[]&quot; id=&quot;undo_redo&quot; class=&quot;form-control&quot; size=&quot;13&quot; multiple=&quot;multiple&quot;&gt;
-            &lt;option value=&quot;1&quot;&gt;C++&lt;/option&gt;
-            &lt;option value=&quot;2&quot;&gt;C#&lt;/option&gt;
-            &lt;option value=&quot;3&quot;&gt;Haskell&lt;/option&gt;
-            &lt;option value=&quot;4&quot;&gt;Java&lt;/option&gt;
-            &lt;option value=&quot;5&quot;&gt;JavaScript&lt;/option&gt;
-            &lt;option value=&quot;6&quot;&gt;Lisp&lt;/option&gt;
-            &lt;option value=&quot;7&quot;&gt;Lua&lt;/option&gt;
-            &lt;option value=&quot;8&quot;&gt;MATLAB&lt;/option&gt;
-            &lt;option value=&quot;9&quot;&gt;NewLISP&lt;/option&gt;
-            &lt;option value=&quot;10&quot;&gt;PHP&lt;/option&gt;
-            &lt;option value=&quot;11&quot;&gt;Perl&lt;/option&gt;
-            &lt;option value=&quot;12&quot;&gt;SQL&lt;/option&gt;
-            &lt;option value=&quot;13&quot;&gt;Unix shell&lt;/option&gt;
+        &lt;select name=&quot;from[]&quot; id=&quot;customSort&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;
+            &lt;option value=&quot;1&quot;&gt;Item 1&lt;/option&gt;
+            &lt;option value=&quot;5&quot;&gt;Item 5&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;Item 2&lt;/option&gt;
+            &lt;option value=&quot;4&quot;&gt;Item 4&lt;/option&gt;
+            &lt;option value=&quot;3&quot;&gt;Item 3&lt;/option&gt;
         &lt;/select&gt;
     &lt;/div&gt;
     
     &lt;div class=&quot;col-xs-2&quot;&gt;
-        &lt;button type=&quot;button&quot; id=&quot;undo_redo_undo&quot; class=&quot;btn btn-primary btn-block&quot;&gt;undo&lt;/button&gt;
-        &lt;button type=&quot;button&quot; id=&quot;undo_redo_rightAll&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-        &lt;button type=&quot;button&quot; id=&quot;undo_redo_rightSelected&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-        &lt;button type=&quot;button&quot; id=&quot;undo_redo_leftSelected&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-        &lt;button type=&quot;button&quot; id=&quot;undo_redo_leftAll&quot; class=&quot;btn btn-default btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
-        &lt;button type=&quot;button&quot; id=&quot;undo_redo_redo&quot; class=&quot;btn btn-warning btn-block&quot;&gt;redo&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;customSort_rightAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-forward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;customSort_rightSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;customSort_leftSelected&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;customSort_leftAll&quot; class=&quot;btn btn-block&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-backward&quot;&gt;&lt;/i&gt;&lt;/button&gt;
     &lt;/div&gt;
     
     &lt;div class=&quot;col-xs-5&quot;&gt;
-        &lt;select name=&quot;to[]&quot; id=&quot;undo_redo_to&quot; class=&quot;form-control&quot; size=&quot;13&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
+        &lt;select name=&quot;to[]&quot; id=&quot;customSort_to&quot; class=&quot;form-control&quot; size=&quot;8&quot; multiple=&quot;multiple&quot;&gt;&lt;/select&gt;
     &lt;/div&gt;
 &lt;/div&gt;
 </pre>
@@ -136,7 +116,16 @@
 <pre class="prettyprint linenums">
 &lt;script type=&quot;text/javascript&quot;&gt;
 jQuery(document).ready(function($) {
-    $(&#39;#undo_redo&#39;).multiselect();
+    $(&#39;#customSort&#39;).multiselect({
+        sort: {
+            left: function(a, b) {
+                return a.value > b.value ? 1 : -1;
+            },
+            right: function(a, b) {
+                return a.value > b.value ? -1 : 1;
+            }
+        }
+    });
 });
 &lt;/script&gt;
 </pre>
@@ -164,7 +153,16 @@ $(document).ready(function() {
     // make code pretty
     window.prettyPrint && prettyPrint();
 
-    $('#undo_redo').multiselect();
+    $('#customSort').multiselect({
+        sort: {
+            left: function(a, b) {
+                return a.value > b.value ? 1 : -1;
+            },
+            right: function(a, b) {
+                return a.value < b.value ? 1 : -1;
+            }
+        }
+    });
 });
 </script>
 </body>
