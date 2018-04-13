@@ -148,6 +148,10 @@ if (typeof jQuery === 'undefined') {
 
                 // Initialize events
                 self.events();
+
+                if ( typeof self.callbacks.afterInit == 'function' && !silent ) {
+                    self.callbacks.afterInit();
+                }
             },
 
             events: function() {
@@ -223,7 +227,7 @@ if (typeof jQuery === 'undefined') {
                 self.$left.on('keypress', function(e) {
                     if (e.keyCode === 13) {
                         e.preventDefault();
-                        
+
                         var $options = self.$left.find('option:selected');
 
                         if ( $options.length ) {
@@ -445,7 +449,7 @@ if (typeof jQuery === 'undefined') {
                         if (!$destinationGroup.length) {
                             $destinationGroup = $sourceGroup.clone(true);
                             $destinationGroup.empty();
-                            
+
                             $destination.move($destinationGroup);
                         }
 
@@ -558,6 +562,15 @@ if (typeof jQuery === 'undefined') {
                     }
                 });
             },
+
+            /** will be executed after initialize plugin
+             *
+             *  @method afterInit
+             *
+             *  @default true
+             *  @return {boolean}
+             **/
+            afterInit: function(){ return true; },
 
             /** will be executed each time before moving option[s] to right
              *
