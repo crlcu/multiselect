@@ -148,8 +148,7 @@ if (typeof jQuery === 'undefined') {
 
                 // Initialize events
                 self.events();
-
-                if ( typeof self.callbacks.afterInit == 'function' && !silent ) {
+                if ( typeof self.callbacks.afterInit == 'function' ) {
                     self.callbacks.afterInit();
                 }
             },
