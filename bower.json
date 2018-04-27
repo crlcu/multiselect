@@ -6,7 +6,7 @@
     "Adrian Crisan <adrian.crisan88@gmail.com>"
   ],
   "description": "jQuery multiselect plugin with two sides",
-  "main": "js/multiselect.min.js",
+  "main": "dist/js/multiselect.min.js",
   "keywords": [
     "multiselect"
   ],
