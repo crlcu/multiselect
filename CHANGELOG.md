@@ -6,9 +6,13 @@ All notable changes to this project will be documented in this file. See [standa
 ## [2.5.1](https://github.com/crlcu/multiselect/compare/v2.5.0...v2.5.1) (2018-04-27)
 
 
+### Patches
+
+* change the value for the main path ([22414f8](https://github.com/crlcu/multiselect/commit/22414f8))
+
 ### Features
 
-* now we can have different sort functions for left and right ([d5fc6a1](https://github.com/crlcu/multiselect/commit/d5fc6a1))
+* add afterInit event ([22e1523](https://github.com/crlcu/multiselect/commit/22e1523))
 
 
 
