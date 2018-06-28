@@ -67,15 +67,18 @@ if (typeof jQuery === 'undefined') {
             delete settings.moveDown;
 
             this.options = {
-                keepRenderingSort:  settings.keepRenderingSort,
-                submitAllLeft:      settings.submitAllLeft !== undefined ? settings.submitAllLeft : true,
-                submitAllRight:     settings.submitAllRight !== undefined ? settings.submitAllRight : true,
-                search:             settings.search,
-                ignoreDisabled:     settings.ignoreDisabled !== undefined ? settings.ignoreDisabled : false,
-                matchOptgroupBy:    settings.matchOptgroupBy !== undefined ? settings.matchOptgroupBy : 'label'
+                keepRenderingSortLeft:  settings.keepRenderingSortLeft,
+                keepRenderingSortRight: settings.keepRenderingSortRight,
+                skipInitSortLeft:       settings.skipInitSortLeft !== undefined ? settings.skipInitSortLeft : true,
+                skipInitSortRight:      settings.skipInitSortRight !== undefined ? settings.skipInitSortRight : true,
+                submitAllLeft:          settings.submitAllLeft !== undefined ? settings.submitAllLeft : true,
+                submitAllRight:         settings.submitAllRight !== undefined ? settings.submitAllRight : true,
+                search:                 settings.search,
+                ignoreDisabled:         settings.ignoreDisabled !== undefined ? settings.ignoreDisabled : false,
+                matchOptgroupBy:        settings.matchOptgroupBy !== undefined ? settings.matchOptgroupBy : 'label'
             };
 
-            delete settings.keepRenderingSort, settings.submitAllLeft, settings.submitAllRight, settings.search, settings.ignoreDisabled, settings.matchOptgroupBy;
+            delete settings.keepRenderingSortLeft, settings.keepRenderingSortRight, settings.submitAllLeft, settings.submitAllRight, settings.search, settings.ignoreDisabled, settings.matchOptgroupBy, settings.initialSortRight;
 
             this.callbacks = settings;
 
@@ -97,21 +100,40 @@ if (typeof jQuery === 'undefined') {
                 self.undoStack = [];
                 self.redoStack = [];
 
-                if (self.options.keepRenderingSort) {
-                    self.skipInitSort = true;
+                if (self.options.keepRenderingSortLeft && self.options.keepRenderingSortLeft === true) {
+                    if ( !self.options.skipInitSortLeft ) {
+                        if ( typeof self.callbacks.sort.left == 'function' ) {
+                            self.$left.each(function(i, select) {
+                                $(select).mSort(self.callbacks.sort.left);
+                            });
+                        }
+                    }
+                    self.options.skipInitSortLeft = true;
 
                     if (self.callbacks.sort !== false) {
-                        self.callbacks.sort = {
-                            left: function(a, b) {
-                                return $(a).data('position') > $(b).data('position') ? 1 : -1;
-                            },
-                            right: function(a, b) {
-                                return $(a).data('position') > $(b).data('position') ? 1 : -1;
-                            },
+                        self.callbacks.sort.left = function(a, b) {
+                            return $(a).data('position') > $(b).data('position') ? 1 : -1;
                         };
                     }
 
                     self.$left.attachIndex();
+                }
+
+                if (self.options.keepRenderingSortRight && self.options.keepRenderingSortRight === true) {
+                    if ( !self.options.skipInitSortRight ) {
+                        if ( typeof self.callbacks.sort.right == 'function' ) {
+                            self.$right.each(function(i, select) {
+                                $(select).mSort(self.callbacks.sort.right);
+                            });
+                        }
+                    }
+                    self.options.skipInitSortRight = true;
+
+                    if (self.callbacks.sort !== false) {
+                        self.callbacks.sort.right = function(a, b) {
+                            return $(a).data('position') > $(b).data('position') ? 1 : -1;
+                        };
+                    }
 
                     self.$right.each(function(i, select) {
                         $(select).attachIndex();
@@ -122,11 +144,13 @@ if (typeof jQuery === 'undefined') {
                     self.callbacks.startUp( self.$left, self.$right );
                 }
 
-                if ( !self.skipInitSort ) {
+                if ( !self.skipInitSortLeft ) {
                     if ( typeof self.callbacks.sort.left == 'function' ) {
                         self.$left.mSort(self.callbacks.sort.left);
                     }
+                }
 
+                if ( !self.skipInitSortRight ) {
                     if ( typeof self.callbacks.sort.right == 'function' ) {
                         self.$right.each(function(i, select) {
                             $(select).mSort(self.callbacks.sort.right);
