@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.5.3"></a>
+## [2.5.3](https://github.com/crlcu/multiselect/compare/v2.5.2...v2.5.3) (2018-07-16)
+
+
+### Bug Fixes
+
+* [#152](https://github.com/crlcu/multiselect/issues/152) - ignoreDisabled: true does not work with optgroups ([afc5d8c](https://github.com/crlcu/multiselect/commit/afc5d8c))
+
+
+
 <a name="2.5.2"></a>
 ## [2.5.2](https://github.com/crlcu/multiselect/compare/v2.5.1...v2.5.2) (2018-07-10)
 
