@@ -206,7 +206,7 @@ if (typeof jQuery === 'undefined') {
                 self.$left.on('dblclick', 'option', function(e) {
                     e.preventDefault();
 
-                    var $options = self.$left.find('option:selected:visible');
+                    var $options = self.$left.find('option:selected:not(.hidden)');
 
                     if ( $options.length ) {
                         self.moveToRight($options, e);
@@ -227,7 +227,7 @@ if (typeof jQuery === 'undefined') {
                     if (e.keyCode === 13) {
                         e.preventDefault();
 
-                        var $options = self.$left.find('option:selected:visible');
+                        var $options = self.$left.find('option:selected:not(.hidden)');
 
                         if ( $options.length ) {
                             self.moveToRight($options, e);
@@ -239,7 +239,7 @@ if (typeof jQuery === 'undefined') {
                 self.$right.on('dblclick', 'option', function(e) {
                     e.preventDefault();
 
-                    var $options = self.$right.find('option:selected:visible');
+                    var $options = self.$right.find('option:selected:not(.hidden)');
 
                     if ( $options.length ) {
                         self.moveToLeft($options, e);
@@ -260,7 +260,7 @@ if (typeof jQuery === 'undefined') {
                     if (e.keyCode === 8 || e.keyCode === 46) {
                         e.preventDefault();
 
-                        var $options = self.$right.find('option:selected:visible');
+                        var $options = self.$right.find('option:selected:not(.hidden)');
 
                         if ( $options.length ) {
                             self.moveToLeft($options, e);
@@ -282,7 +282,7 @@ if (typeof jQuery === 'undefined') {
                 self.actions.$rightSelected.on('click', function(e) {
                     e.preventDefault();
 
-                    var $options = self.$left.find('option:selected:visible');
+                    var $options = self.$left.find('option:selected:not(.hidden)');
 
                     if ( $options.length ) {
                         self.moveToRight($options, e);
@@ -294,7 +294,7 @@ if (typeof jQuery === 'undefined') {
                 self.actions.$leftSelected.on('click', function(e) {
                     e.preventDefault();
 
-                    var $options = self.$right.find('option:selected:visible');
+                    var $options = self.$right.find('option:selected:not(.hidden)');
 
                     if ( $options.length ) {
                         self.moveToLeft($options, e);
