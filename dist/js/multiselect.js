@@ -754,7 +754,7 @@ if (typeof jQuery === 'undefined') {
             });
         }
         if(isFirefox){
-            this.attr('disabled', false)
+            this.prop('disabled', false)
         }
 
         return this;
@@ -772,7 +772,7 @@ if (typeof jQuery === 'undefined') {
             });
         }
         if(isFirefox){
-            this.attr('disabled', true)
+            this.prop('disabled', true)
         }
         return this;
     };
