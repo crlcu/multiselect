@@ -1,10 +1,10 @@
 /*
  * @license
  *
- * Multiselect v2.5.5
+ * Multiselect v2.5.6
  * http://crlcu.github.io/multiselect/
  *
- * Copyright (c) 2016-2018 Adrian Crisan
+ * Copyright (c) 2016-2020 Adrian Crisan
  * Licensed under the MIT license (https://github.com/crlcu/multiselect/blob/master/LICENSE)
  */
 
