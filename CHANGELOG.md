@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [2.5.7](https://github.com/crlcu/multiselect/compare/v2.5.6...v2.5.7) (2020-05-06)
 
+* Remove unused dependency
+
 ### [2.5.6](https://github.com/crlcu/multiselect/compare/v2.5.5...v2.5.6) (2020-05-06)
 
 * Upgrade dev dependencies
