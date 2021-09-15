@@ -367,14 +367,14 @@ if (typeof jQuery === 'undefined') {
             moveToRight: function( $options, event, silent, skipStack ) {
                 var self = this;
 
-                if ( typeof self.callbacks.moveToRight == 'function' ) {
-                    return self.callbacks.moveToRight( self, $options, event, silent, skipStack );
-                }
-
                 if ( typeof self.callbacks.beforeMoveToRight == 'function' && !silent ) {
                     if ( !self.callbacks.beforeMoveToRight( self.$left, self.$right, $options ) ) {
                         return false;
                     }
+                }
+
+                if ( typeof self.callbacks.moveToRight == 'function' ) {
+                    self.callbacks.moveToRight( self, $options, event, silent, skipStack );
                 }
 
                 self.moveFromAtoB(self.$left, self.$right, $options, event, silent, skipStack);
