@@ -398,14 +398,14 @@ if (typeof jQuery === 'undefined') {
             moveToLeft: function( $options, event, silent, skipStack ) {
                 var self = this;
 
-                if ( typeof self.callbacks.moveToLeft == 'function' ) {
-                    return self.callbacks.moveToLeft( self, $options, event, silent, skipStack );
-                }
 
                 if ( typeof self.callbacks.beforeMoveToLeft == 'function' && !silent ) {
                     if ( !self.callbacks.beforeMoveToLeft( self.$left, self.$right, $options ) ) {
                         return false;
                     }
+                }
+                if ( typeof self.callbacks.moveToLeft == 'function' ) {
+                    self.callbacks.moveToLeft( self, $options, event, silent, skipStack );
                 }
 
                 self.moveFromAtoB(self.$right, self.$left, $options, event, silent, skipStack);
@@ -545,7 +545,7 @@ if (typeof jQuery === 'undefined') {
         return Multiselect;
     })($);
 
-    $.multiselect = {
+    $.multiselect2 = {
         defaults: {
             /** will be executed once - remove from $left all options that are already in $right
              *
@@ -709,11 +709,11 @@ if (typeof jQuery === 'undefined') {
     var isSafari = ua.toLowerCase().indexOf("safari") > -1;
     var isFirefox = ua.toLowerCase().indexOf("firefox") > -1;
 
-    $.fn.multiselect = function( options ) {
+    $.fn.multiselect2 = function( options ) {
         return this.each(function() {
             var $this    = $(this),
                 data     = $this.data('crlcu.multiselect'),
-                settings = $.extend({}, $.multiselect.defaults, $this.data(), (typeof options === 'object' && options));
+                settings = $.extend({}, $.multiselect2.defaults, $this.data(), (typeof options === 'object' && options));
 
             if (!data) {
                 $this.data('crlcu.multiselect', (data = new Multiselect($this, settings)));
