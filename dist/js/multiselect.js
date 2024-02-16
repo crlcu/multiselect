@@ -398,14 +398,14 @@ if (typeof jQuery === 'undefined') {
             moveToLeft: function( $options, event, silent, skipStack ) {
                 var self = this;
 
-                if ( typeof self.callbacks.moveToLeft == 'function' ) {
-                    return self.callbacks.moveToLeft( self, $options, event, silent, skipStack );
-                }
 
                 if ( typeof self.callbacks.beforeMoveToLeft == 'function' && !silent ) {
                     if ( !self.callbacks.beforeMoveToLeft( self.$left, self.$right, $options ) ) {
                         return false;
                     }
+                }
+                if ( typeof self.callbacks.moveToLeft == 'function' ) {
+                    self.callbacks.moveToLeft( self, $options, event, silent, skipStack );
                 }
 
                 self.moveFromAtoB(self.$right, self.$left, $options, event, silent, skipStack);
