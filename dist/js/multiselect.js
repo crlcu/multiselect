@@ -545,7 +545,7 @@ if (typeof jQuery === 'undefined') {
         return Multiselect;
     })($);
 
-    $.multiselect2 = {
+    $.multiselect = {
         defaults: {
             /** will be executed once - remove from $left all options that are already in $right
              *
@@ -709,11 +709,11 @@ if (typeof jQuery === 'undefined') {
     var isSafari = ua.toLowerCase().indexOf("safari") > -1;
     var isFirefox = ua.toLowerCase().indexOf("firefox") > -1;
 
-    $.fn.multiselect2 = function( options ) {
+    $.fn.multiselect = function( options ) {
         return this.each(function() {
             var $this    = $(this),
                 data     = $this.data('crlcu.multiselect'),
-                settings = $.extend({}, $.multiselect2.defaults, $this.data(), (typeof options === 'object' && options));
+                settings = $.extend({}, $.multiselect.defaults, $this.data(), (typeof options === 'object' && options));
 
             if (!data) {
                 $this.data('crlcu.multiselect', (data = new Multiselect($this, settings)));
